@@ -4,10 +4,6 @@ lexer grammar Js_Lexer;
     package antlr;
 }
 
-// syntax tokens
-ID: [a-zA-Z][a-zA-Z0-9_]*;
-PRIM_TYPE: NUM | STRING | BOOL | NULL | UNDEFINED;
-
 // keywords tokens
 DO: 'do';
 FOR: 'for';
@@ -15,8 +11,16 @@ FUNCTION: 'function';
 IF: 'if';
 IN: 'in';
 OF: 'of';
+RETURN: 'return';
 WHILE: 'while';
 DECLARERS: 'var' | 'let' | 'const';
+
+// syntax tokens
+ID: [a-zA-Z][a-zA-Z0-9_]*;
+PRIM_TYPE: NUM | STRING | BOOL | NULL | UNDEFINED;
+MULTILINE_COMMENT: '/*' .*? '*/' -> channel(HIDDEN);
+LINE_COMMENT: '//' ~([\n\r])* -> channel(HIDDEN);
+//COMMETN: (MULTILINE_COMMENT | LINE_COMMENT) -> channel(HIDDEN);
 
 // type tokens
 INT: [0-9]+;
@@ -24,9 +28,9 @@ FLOAT: [0-9]*'.'[0-9]+;
 NUM: INT | FLOAT;
 fragment STRING_ALLOWED_CHARS: ' '|'\\b'|'\\f'|'\\r'|'\\n'|'\\t'|'\\"'|'\\\''|'\\`'|'\\';
 STRING
-    : '"' (~('"' | [\n\r]) | STRING_ALLOWED_CHARS | '\'')* '"'
-    | '\'' (~('\'' | [\n\r]) | STRING_ALLOWED_CHARS | '"')* '\''
-    | '`' (~('`') | STRING_ALLOWED_CHARS | '\'' | '"' | [\n\r])* '`'
+    : '"' (~('"' | [\n\r]) | STRING_ALLOWED_CHARS)* '"'
+    | '\'' (~('\'' | [\n\r]) | STRING_ALLOWED_CHARS)* '\''
+    | '`' (~('`') | STRING_ALLOWED_CHARS | [\n\r])* '`'
     ;
 BOOL: 'true' | 'false';
 NULL: 'null';
@@ -66,6 +70,7 @@ DIV_ASSIGN_OP: DIV_OP ASSIGNMENT_OP;
 REM_ASSIGN_OP: REM_OP ASSIGNMENT_OP;
 AND_ASSIGN_OP: AND ASSIGNMENT_OP;
 OR_ASSIGN_OP: OR ASSIGNMENT_OP;
+NULL_ASSIGN_OP: NULL_COALES_OP ASSIGNMENT_OP;
 ASSIGNMENTS_OP
     : ASSIGNMENT_OP
     | ADD_ASSIGN_OP
@@ -76,14 +81,14 @@ ASSIGNMENTS_OP
     | REM_ASSIGN_OP
     | AND_ASSIGN_OP
     | OR_ASSIGN_OP
+    | NULL_ASSIGN_OP
     ; // 2
 ARROW: '=>'; // 2
 
 // general tokens
-WS: [ \n\t\r]+ -> skip;
+LINE_END: SEMICOLON | NEWLINE | SEMICOLON NEWLINE;
 NEWLINE: [\n\r]+;
 SEMICOLON: ';';
-LINE_END: SEMICOLON | NEWLINE;
 COMMA: ',';
 OPEN_BRACKET: '(';
 CLOSE_BRACKE: ')';
@@ -91,6 +96,4 @@ OPEN_SQUARE_BRACKET: '[';
 CLOSE_SQUARE_BRACKET: ']';
 OPEN_CURLY_BRACES: '{';
 CLOSE_CURLY_BRACES: '}';
-MULTILINE_COMMENT: '/*' .*? '*/';
-LINE_COMMENT: '////' ~([\n\r])*;
-COMMENT: (MULTILINE_COMMENT | LINE_COMMENT) -> skip;
+WS: [ \n\t\r]+ -> skip;

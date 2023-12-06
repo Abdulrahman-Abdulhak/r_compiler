@@ -7,21 +7,24 @@ options {
 program: line* EOF;
 
 line:
-    ( statement
-    | function
+    ( function
+    | statement
     | if
     | while
     | for
     | forin
     | forof
     | doWhile
-    | NEWLINE
-    | returnable
+    | return
     ) LINE_END;
 
-statement: declare | assignment | functionCall | expression;
-
 function: arrowFunction | normalFunction;
+
+statement
+    : declare           #variableDeclaration
+    | assignment        #assigning
+    | expression        #normalExpression
+    ;
 
 if: IF expression scopeBody;
 
@@ -35,33 +38,35 @@ forof: FOR OPEN_BRACKET DECLARERS? ID OF expression CLOSE_BRACKE scopeBody;
 
 doWhile: DO scopeBody WHILE expression;
 
-returnable: PRIM_TYPE | object | array | function | ID;
+return: RETURN expression;
 
-declare: DECLARERS ID ((ASSIGNMENT_OP ID)* ASSIGNMENT_OP returnable)?;
+declare: DECLARERS ID assignmentRightHand? (COMMA ID assignmentRightHand)*;
 
-assignment: ID (ASSIGNMENT_OP ID)* ASSIGNMENT_OP returnable;
+assignment: ID assignmentsRightHand;
 
-functionCall: ID param block;
+assignmentRightHand: (ASSIGNMENT_OP ID)* ASSIGNMENT_OP expression;
+assignmentsRightHand: (ASSIGNMENTS_OP ID)* ASSIGNMENTS_OP expression;
 
-arrowFunction: param ARROW (block | returnable);
+arrowFunction: args ARROW (block | expression);
 
-normalFunction: FUNCTION ID? param block;
+normalFunction: FUNCTION ID? args block;
+
+functionCall: ID param;
 
 expression
-    : OPEN_BRACKET expression CLOSE_BRACKE
-    | functionCall
-    | expression INCREMENTS_OP
-    | INCREMENTS_OP expression
-    | LOGIC_NOT_OP expression
-    | expression POW_OP expression
-    | expression MULTIPLICATIVE_OP expression
-    | expression ADDITIVE_OP expression
-    | expression COMPARE_OP expression
-    | expression EQUAL_COMPARE_OP expression
-    | expression AND expression
-    | expression (OR || NULL_COALES_OP) expression
-    | ID
-    | returnable
+    : OPEN_BRACKET expression CLOSE_BRACKE             #parentheses
+    | functionCall                                     #funcCall
+    | expression INCREMENTS_OP                         #postIncre
+    | INCREMENTS_OP expression                         #preInc
+    | LOGIC_NOT_OP expression                          #logicalNOT
+    | expression POW_OP expression                     #pow
+    | expression MULTIPLICATIVE_OP expression          #mult
+    | expression ADDITIVE_OP expression                #add
+    | expression COMPARE_OP expression                 #compare
+    | expression EQUAL_COMPARE_OP expression           #compareWithEqual
+    | expression AND expression                        #logicalAND
+    | expression (OR | NULL_COALES_OP) expression      #logicalOR_logicalNull
+    | returnable                                       #byVal
     ;
 
 scopeBody: block | line;
@@ -74,4 +79,14 @@ object: OPEN_CURLY_BRACES ((ID COLON returnable COMMA)*ID COLON returnable COMMA
 
 array: OPEN_SQUARE_BRACKET ((returnable COMMA)*returnable COMMA?)? CLOSE_SQUARE_BRACKET;
 
+args: OPEN_BRACKET ((ID COMMA)*(ID))? CLOSE_BRACKE;
+
 param: OPEN_BRACKET ((returnable COMMA)*(returnable))? CLOSE_BRACKE;
+
+returnable
+    : PRIM_TYPE       #primitive
+    | object          #objectVal
+    | array           #arrayVal
+    | function        #functionVal
+    | ID              #variable
+    ;

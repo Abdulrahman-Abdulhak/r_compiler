@@ -28,15 +28,41 @@ public interface Js_ParserListener extends ParseTreeListener {
 	 */
 	void exitLine(Js_Parser.LineContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link Js_Parser#statement}.
+	 * Enter a parse tree produced by the {@code variableDeclaration}
+	 * labeled alternative in {@link Js_Parser#statement}.
 	 * @param ctx the parse tree
 	 */
-	void enterStatement(Js_Parser.StatementContext ctx);
+	void enterVariableDeclaration(Js_Parser.VariableDeclarationContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link Js_Parser#statement}.
+	 * Exit a parse tree produced by the {@code variableDeclaration}
+	 * labeled alternative in {@link Js_Parser#statement}.
 	 * @param ctx the parse tree
 	 */
-	void exitStatement(Js_Parser.StatementContext ctx);
+	void exitVariableDeclaration(Js_Parser.VariableDeclarationContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code assigning}
+	 * labeled alternative in {@link Js_Parser#statement}.
+	 * @param ctx the parse tree
+	 */
+	void enterAssigning(Js_Parser.AssigningContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code assigning}
+	 * labeled alternative in {@link Js_Parser#statement}.
+	 * @param ctx the parse tree
+	 */
+	void exitAssigning(Js_Parser.AssigningContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code p}
+	 * labeled alternative in {@link Js_Parser#statement}.
+	 * @param ctx the parse tree
+	 */
+	void enterP(Js_Parser.PContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code p}
+	 * labeled alternative in {@link Js_Parser#statement}.
+	 * @param ctx the parse tree
+	 */
+	void exitP(Js_Parser.PContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link Js_Parser#function}.
 	 * @param ctx the parse tree
@@ -108,15 +134,15 @@ public interface Js_ParserListener extends ParseTreeListener {
 	 */
 	void exitDoWhile(Js_Parser.DoWhileContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link Js_Parser#returnable}.
+	 * Enter a parse tree produced by {@link Js_Parser#return}.
 	 * @param ctx the parse tree
 	 */
-	void enterReturnable(Js_Parser.ReturnableContext ctx);
+	void enterReturn(Js_Parser.ReturnContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link Js_Parser#returnable}.
+	 * Exit a parse tree produced by {@link Js_Parser#return}.
 	 * @param ctx the parse tree
 	 */
-	void exitReturnable(Js_Parser.ReturnableContext ctx);
+	void exitReturn(Js_Parser.ReturnContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link Js_Parser#declare}.
 	 * @param ctx the parse tree
@@ -138,15 +164,25 @@ public interface Js_ParserListener extends ParseTreeListener {
 	 */
 	void exitAssignment(Js_Parser.AssignmentContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link Js_Parser#functionCall}.
+	 * Enter a parse tree produced by {@link Js_Parser#assignmentRightHand}.
 	 * @param ctx the parse tree
 	 */
-	void enterFunctionCall(Js_Parser.FunctionCallContext ctx);
+	void enterAssignmentRightHand(Js_Parser.AssignmentRightHandContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link Js_Parser#functionCall}.
+	 * Exit a parse tree produced by {@link Js_Parser#assignmentRightHand}.
 	 * @param ctx the parse tree
 	 */
-	void exitFunctionCall(Js_Parser.FunctionCallContext ctx);
+	void exitAssignmentRightHand(Js_Parser.AssignmentRightHandContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link Js_Parser#assignmentsRightHand}.
+	 * @param ctx the parse tree
+	 */
+	void enterAssignmentsRightHand(Js_Parser.AssignmentsRightHandContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link Js_Parser#assignmentsRightHand}.
+	 * @param ctx the parse tree
+	 */
+	void exitAssignmentsRightHand(Js_Parser.AssignmentsRightHandContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link Js_Parser#arrowFunction}.
 	 * @param ctx the parse tree
@@ -168,15 +204,171 @@ public interface Js_ParserListener extends ParseTreeListener {
 	 */
 	void exitNormalFunction(Js_Parser.NormalFunctionContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link Js_Parser#expression}.
+	 * Enter a parse tree produced by {@link Js_Parser#functionCall}.
 	 * @param ctx the parse tree
 	 */
-	void enterExpression(Js_Parser.ExpressionContext ctx);
+	void enterFunctionCall(Js_Parser.FunctionCallContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link Js_Parser#expression}.
+	 * Exit a parse tree produced by {@link Js_Parser#functionCall}.
 	 * @param ctx the parse tree
 	 */
-	void exitExpression(Js_Parser.ExpressionContext ctx);
+	void exitFunctionCall(Js_Parser.FunctionCallContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code add}
+	 * labeled alternative in {@link Js_Parser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void enterAdd(Js_Parser.AddContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code add}
+	 * labeled alternative in {@link Js_Parser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void exitAdd(Js_Parser.AddContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code parentheses}
+	 * labeled alternative in {@link Js_Parser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void enterParentheses(Js_Parser.ParenthesesContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code parentheses}
+	 * labeled alternative in {@link Js_Parser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void exitParentheses(Js_Parser.ParenthesesContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code logicalNOT}
+	 * labeled alternative in {@link Js_Parser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void enterLogicalNOT(Js_Parser.LogicalNOTContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code logicalNOT}
+	 * labeled alternative in {@link Js_Parser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void exitLogicalNOT(Js_Parser.LogicalNOTContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code compare}
+	 * labeled alternative in {@link Js_Parser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void enterCompare(Js_Parser.CompareContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code compare}
+	 * labeled alternative in {@link Js_Parser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void exitCompare(Js_Parser.CompareContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code mult}
+	 * labeled alternative in {@link Js_Parser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void enterMult(Js_Parser.MultContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code mult}
+	 * labeled alternative in {@link Js_Parser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void exitMult(Js_Parser.MultContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code logicalAND}
+	 * labeled alternative in {@link Js_Parser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void enterLogicalAND(Js_Parser.LogicalANDContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code logicalAND}
+	 * labeled alternative in {@link Js_Parser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void exitLogicalAND(Js_Parser.LogicalANDContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code logicalOR_logicalNull}
+	 * labeled alternative in {@link Js_Parser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void enterLogicalOR_logicalNull(Js_Parser.LogicalOR_logicalNullContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code logicalOR_logicalNull}
+	 * labeled alternative in {@link Js_Parser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void exitLogicalOR_logicalNull(Js_Parser.LogicalOR_logicalNullContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code preInc}
+	 * labeled alternative in {@link Js_Parser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void enterPreInc(Js_Parser.PreIncContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code preInc}
+	 * labeled alternative in {@link Js_Parser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void exitPreInc(Js_Parser.PreIncContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code byVal}
+	 * labeled alternative in {@link Js_Parser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void enterByVal(Js_Parser.ByValContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code byVal}
+	 * labeled alternative in {@link Js_Parser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void exitByVal(Js_Parser.ByValContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code pow}
+	 * labeled alternative in {@link Js_Parser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void enterPow(Js_Parser.PowContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code pow}
+	 * labeled alternative in {@link Js_Parser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void exitPow(Js_Parser.PowContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code funcCall}
+	 * labeled alternative in {@link Js_Parser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void enterFuncCall(Js_Parser.FuncCallContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code funcCall}
+	 * labeled alternative in {@link Js_Parser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void exitFuncCall(Js_Parser.FuncCallContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code postIncre}
+	 * labeled alternative in {@link Js_Parser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void enterPostIncre(Js_Parser.PostIncreContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code postIncre}
+	 * labeled alternative in {@link Js_Parser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void exitPostIncre(Js_Parser.PostIncreContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code compareWithEqual}
+	 * labeled alternative in {@link Js_Parser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void enterCompareWithEqual(Js_Parser.CompareWithEqualContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code compareWithEqual}
+	 * labeled alternative in {@link Js_Parser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void exitCompareWithEqual(Js_Parser.CompareWithEqualContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link Js_Parser#scopeBody}.
 	 * @param ctx the parse tree
@@ -187,6 +379,16 @@ public interface Js_ParserListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitScopeBody(Js_Parser.ScopeBodyContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link Js_Parser#postInc}.
+	 * @param ctx the parse tree
+	 */
+	void enterPostInc(Js_Parser.PostIncContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link Js_Parser#postInc}.
+	 * @param ctx the parse tree
+	 */
+	void exitPostInc(Js_Parser.PostIncContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link Js_Parser#block}.
 	 * @param ctx the parse tree
@@ -228,6 +430,16 @@ public interface Js_ParserListener extends ParseTreeListener {
 	 */
 	void exitArray(Js_Parser.ArrayContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link Js_Parser#args}.
+	 * @param ctx the parse tree
+	 */
+	void enterArgs(Js_Parser.ArgsContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link Js_Parser#args}.
+	 * @param ctx the parse tree
+	 */
+	void exitArgs(Js_Parser.ArgsContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link Js_Parser#param}.
 	 * @param ctx the parse tree
 	 */
@@ -237,4 +449,64 @@ public interface Js_ParserListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitParam(Js_Parser.ParamContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code primitive}
+	 * labeled alternative in {@link Js_Parser#returnable}.
+	 * @param ctx the parse tree
+	 */
+	void enterPrimitive(Js_Parser.PrimitiveContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code primitive}
+	 * labeled alternative in {@link Js_Parser#returnable}.
+	 * @param ctx the parse tree
+	 */
+	void exitPrimitive(Js_Parser.PrimitiveContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code objectVal}
+	 * labeled alternative in {@link Js_Parser#returnable}.
+	 * @param ctx the parse tree
+	 */
+	void enterObjectVal(Js_Parser.ObjectValContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code objectVal}
+	 * labeled alternative in {@link Js_Parser#returnable}.
+	 * @param ctx the parse tree
+	 */
+	void exitObjectVal(Js_Parser.ObjectValContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code arrayVal}
+	 * labeled alternative in {@link Js_Parser#returnable}.
+	 * @param ctx the parse tree
+	 */
+	void enterArrayVal(Js_Parser.ArrayValContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code arrayVal}
+	 * labeled alternative in {@link Js_Parser#returnable}.
+	 * @param ctx the parse tree
+	 */
+	void exitArrayVal(Js_Parser.ArrayValContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code functionVal}
+	 * labeled alternative in {@link Js_Parser#returnable}.
+	 * @param ctx the parse tree
+	 */
+	void enterFunctionVal(Js_Parser.FunctionValContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code functionVal}
+	 * labeled alternative in {@link Js_Parser#returnable}.
+	 * @param ctx the parse tree
+	 */
+	void exitFunctionVal(Js_Parser.FunctionValContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code variable}
+	 * labeled alternative in {@link Js_Parser#returnable}.
+	 * @param ctx the parse tree
+	 */
+	void enterVariable(Js_Parser.VariableContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code variable}
+	 * labeled alternative in {@link Js_Parser#returnable}.
+	 * @param ctx the parse tree
+	 */
+	void exitVariable(Js_Parser.VariableContext ctx);
 }
