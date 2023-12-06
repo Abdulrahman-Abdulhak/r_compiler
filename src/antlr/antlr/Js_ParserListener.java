@@ -102,6 +102,26 @@ public interface Js_ParserListener extends ParseTreeListener {
 	 */
 	void exitFor(Js_Parser.ForContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link Js_Parser#forExpression1}.
+	 * @param ctx the parse tree
+	 */
+	void enterForExpression1(Js_Parser.ForExpression1Context ctx);
+	/**
+	 * Exit a parse tree produced by {@link Js_Parser#forExpression1}.
+	 * @param ctx the parse tree
+	 */
+	void exitForExpression1(Js_Parser.ForExpression1Context ctx);
+	/**
+	 * Enter a parse tree produced by {@link Js_Parser#expressionList}.
+	 * @param ctx the parse tree
+	 */
+	void enterExpressionList(Js_Parser.ExpressionListContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link Js_Parser#expressionList}.
+	 * @param ctx the parse tree
+	 */
+	void exitExpressionList(Js_Parser.ExpressionListContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link Js_Parser#forin}.
 	 * @param ctx the parse tree
 	 */
@@ -399,16 +419,6 @@ public interface Js_ParserListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitBlock(Js_Parser.BlockContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link Js_Parser#forExpression1}.
-	 * @param ctx the parse tree
-	 */
-	void enterForExpression1(Js_Parser.ForExpression1Context ctx);
-	/**
-	 * Exit a parse tree produced by {@link Js_Parser#forExpression1}.
-	 * @param ctx the parse tree
-	 */
-	void exitForExpression1(Js_Parser.ForExpression1Context ctx);
 	/**
 	 * Enter a parse tree produced by {@link Js_Parser#object}.
 	 * @param ctx the parse tree

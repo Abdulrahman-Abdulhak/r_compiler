@@ -67,6 +67,18 @@ public interface Js_ParserVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitFor(Js_Parser.ForContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link Js_Parser#forExpression1}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitForExpression1(Js_Parser.ForExpression1Context ctx);
+	/**
+	 * Visit a parse tree produced by {@link Js_Parser#expressionList}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitExpressionList(Js_Parser.ExpressionListContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link Js_Parser#forin}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -242,12 +254,6 @@ public interface Js_ParserVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitBlock(Js_Parser.BlockContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link Js_Parser#forExpression1}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitForExpression1(Js_Parser.ForExpression1Context ctx);
 	/**
 	 * Visit a parse tree produced by {@link Js_Parser#object}.
 	 * @param ctx the parse tree

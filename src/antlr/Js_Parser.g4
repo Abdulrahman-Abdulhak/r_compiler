@@ -31,7 +31,11 @@ if: IF scopeHead scopeBody;
 
 while: WHILE scopeHead scopeBody;
 
-for: FOR OPEN_BRACKET forExpression1? SEMICOLON statement? SEMICOLON statement? CLOSE_BRACKET scopeBody;
+// for syntax: for(expression 1; expression 2; expression 3) bodyScobe
+// expression 1:
+for: FOR OPEN_BRACKET forExpression1? SEMICOLON expressionList? SEMICOLON expressionList? CLOSE_BRACKET scopeBody;
+forExpression1: declare | expressionList;
+expressionList: (expression COMMA)* expression;
 
 forin: FOR OPEN_BRACKET DECLARERS? ID IN expression CLOSE_BRACKET scopeBody;
 
@@ -73,8 +77,6 @@ scopeHead: OPEN_BRACKET expression CLOSE_BRACKET;
 scopeBody: block | lineStart;
 
 block: OPEN_CURLY_BRACES line* CLOSE_CURLY_BRACES;
-
-forExpression1: (statement COMMA)* statement;
 
 object: OPEN_CURLY_BRACES ((ID COLON returnable COMMA)*ID COLON returnable COMMA?)? CLOSE_CURLY_BRACES;
 
