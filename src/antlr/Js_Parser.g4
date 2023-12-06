@@ -9,7 +9,7 @@ program: line* EOF;
 line: lineStart LINE_END;
 
 lineStart
-    :function
+    : function
     | statement
     | if
     | while
@@ -24,30 +24,25 @@ function: arrowFunction | normalFunction;
 
 statement
     : declare           #variableDeclaration
-    | assignment        #assigning
     | expression        #normalExpression
     ;
 
-if: IF expression scopeBody;
+if: IF scopeHead scopeBody;
 
-while: WHILE expression scopeBody;
+while: WHILE scopeHead scopeBody;
 
-for: FOR OPEN_BRACKET forExpression1? SEMICOLON statement? SEMICOLON statement? CLOSE_BRACKE scopeBody;
+for: FOR OPEN_BRACKET forExpression1? SEMICOLON statement? SEMICOLON statement? CLOSE_BRACKET scopeBody;
 
-forin: FOR OPEN_BRACKET DECLARERS? ID IN expression CLOSE_BRACKE scopeBody;
+forin: FOR OPEN_BRACKET DECLARERS? ID IN expression CLOSE_BRACKET scopeBody;
 
-forof: FOR OPEN_BRACKET DECLARERS? ID OF expression CLOSE_BRACKE scopeBody;
+forof: FOR OPEN_BRACKET DECLARERS? ID OF expression CLOSE_BRACKET scopeBody;
 
-doWhile: DO scopeBody WHILE expression;
+doWhile: DO scopeBody WHILE scopeHead;
 
 return: RETURN expression;
 
 declare: DECLARERS ID assignmentRightHand? (COMMA ID assignmentRightHand)*;
-
-assignment: ID assignmentsRightHand;
-
 assignmentRightHand: (ASSIGNMENT_OP ID)* ASSIGNMENT_OP expression;
-assignmentsRightHand: (assinmentOp ID)* assinmentOp expression;
 
 arrowFunction: args ARROW (block | expression);
 
@@ -56,7 +51,7 @@ normalFunction: FUNCTION ID? args block;
 functionCall: ID param;
 
 expression
-    : OPEN_BRACKET expression CLOSE_BRACKE             #parentheses
+    : OPEN_BRACKET expression CLOSE_BRACKET             #parentheses
     | functionCall                                     #funcCall
     | expression incrementsOp                          #postIncre
     | incrementsOp expression                          #preInc
@@ -68,9 +63,13 @@ expression
     | expression EQUAL_COMPARE_OP expression           #compareWithEqual
     | expression AND expression                        #logicalAND
     | expression (OR | NULL_COALES_OP) expression      #logicalOR_logicalNull
+    | assignment                                       #assign
     | returnable                                       #byVal
     ;
 
+assignment: ID (assinmentOp ID)* assinmentOp expression;
+
+scopeHead: OPEN_BRACKET expression CLOSE_BRACKET;
 scopeBody: block | lineStart;
 
 block: OPEN_CURLY_BRACES line* CLOSE_CURLY_BRACES;
@@ -81,9 +80,9 @@ object: OPEN_CURLY_BRACES ((ID COLON returnable COMMA)*ID COLON returnable COMMA
 
 array: OPEN_SQUARE_BRACKET ((returnable COMMA)*returnable COMMA?)? CLOSE_SQUARE_BRACKET;
 
-args: OPEN_BRACKET ((ID COMMA)*(ID))? CLOSE_BRACKE;
+args: OPEN_BRACKET ((ID COMMA)*(ID))? CLOSE_BRACKET;
 
-param: OPEN_BRACKET ((returnable COMMA)*(returnable))? CLOSE_BRACKE;
+param: OPEN_BRACKET ((returnable COMMA)*(returnable))? CLOSE_BRACKET;
 
 returnable
     : PRIM_TYPE       #primitive
@@ -93,7 +92,7 @@ returnable
     | ID              #variable
     ;
 
-incrementsOp: INCREMENT_OP | DECREMENT_OP; // post: 15, pre: 14
+incrementsOp: INCREMENT_OP | DECREMENT_OP;
 
 multiplicativeOp: MULT_OP | DIV_OP | REM_OP;
 

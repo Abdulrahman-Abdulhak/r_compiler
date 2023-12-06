@@ -23,6 +23,12 @@ public interface Js_ParserVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitLine(Js_Parser.LineContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link Js_Parser#lineStart}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitLineStart(Js_Parser.LineStartContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link Js_Parser#function}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -35,13 +41,6 @@ public interface Js_ParserVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitVariableDeclaration(Js_Parser.VariableDeclarationContext ctx);
-	/**
-	 * Visit a parse tree produced by the {@code assigning}
-	 * labeled alternative in {@link Js_Parser#statement}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitAssigning(Js_Parser.AssigningContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code normalExpression}
 	 * labeled alternative in {@link Js_Parser#statement}.
@@ -98,23 +97,11 @@ public interface Js_ParserVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitDeclare(Js_Parser.DeclareContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link Js_Parser#assignment}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitAssignment(Js_Parser.AssignmentContext ctx);
-	/**
 	 * Visit a parse tree produced by {@link Js_Parser#assignmentRightHand}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitAssignmentRightHand(Js_Parser.AssignmentRightHandContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link Js_Parser#assignmentsRightHand}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitAssignmentsRightHand(Js_Parser.AssignmentsRightHandContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link Js_Parser#arrowFunction}.
 	 * @param ctx the parse tree
@@ -225,6 +212,25 @@ public interface Js_ParserVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitCompareWithEqual(Js_Parser.CompareWithEqualContext ctx);
 	/**
+	 * Visit a parse tree produced by the {@code assign}
+	 * labeled alternative in {@link Js_Parser#expression}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitAssign(Js_Parser.AssignContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link Js_Parser#assignment}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitAssignment(Js_Parser.AssignmentContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link Js_Parser#scopeHead}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitScopeHead(Js_Parser.ScopeHeadContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link Js_Parser#scopeBody}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -301,4 +307,28 @@ public interface Js_ParserVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitVariable(Js_Parser.VariableContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link Js_Parser#incrementsOp}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitIncrementsOp(Js_Parser.IncrementsOpContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link Js_Parser#multiplicativeOp}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitMultiplicativeOp(Js_Parser.MultiplicativeOpContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link Js_Parser#additiveOp}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitAdditiveOp(Js_Parser.AdditiveOpContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link Js_Parser#assinmentOp}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitAssinmentOp(Js_Parser.AssinmentOpContext ctx);
 }
