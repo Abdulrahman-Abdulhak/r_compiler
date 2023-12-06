@@ -22,8 +22,8 @@ MULTILINE_COMMENT: '/*' .*? '*/' -> channel(HIDDEN);
 LINE_COMMENT: '//' ~([\n\r])* -> channel(HIDDEN);
 
 // type tokens
-INT: [0-9]+;
-FLOAT: [0-9]*'.'[0-9]+;
+INT: '-'?[0-9]+;
+FLOAT: '-'?[0-9]*'.'[0-9]+;
 NUM: INT | FLOAT;
 fragment STRING_ALLOWED_CHARS: '\\"' | '\\\'' | '\\`';
 STRING
