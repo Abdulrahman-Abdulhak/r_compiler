@@ -16,21 +16,20 @@ WHILE: 'while';
 DECLARERS: 'var' | 'let' | 'const';
 
 // syntax tokens
-ID: [a-zA-Z][a-zA-Z0-9_]*;
+ID: [a-zA-Z_][a-zA-Z0-9_]*;
 PRIM_TYPE: NUM | STRING | BOOL | NULL | UNDEFINED;
 MULTILINE_COMMENT: '/*' .*? '*/' -> channel(HIDDEN);
 LINE_COMMENT: '//' ~([\n\r])* -> channel(HIDDEN);
-//COMMETN: (MULTILINE_COMMENT | LINE_COMMENT) -> channel(HIDDEN);
 
 // type tokens
 INT: [0-9]+;
 FLOAT: [0-9]*'.'[0-9]+;
 NUM: INT | FLOAT;
-fragment STRING_ALLOWED_CHARS: ' '|'\\b'|'\\f'|'\\r'|'\\n'|'\\t'|'\\"'|'\\\''|'\\`'|'\\';
+fragment STRING_ALLOWED_CHARS: '\\"' | '\\\'' | '\\`';
 STRING
     : '"' (~('"' | [\n\r]) | STRING_ALLOWED_CHARS)* '"'
     | '\'' (~('\'' | [\n\r]) | STRING_ALLOWED_CHARS)* '\''
-    | '`' (~('`') | STRING_ALLOWED_CHARS | [\n\r])* '`'
+    | '`' (~('`') | STRING_ALLOWED_CHARS)* '`'
     ;
 BOOL: 'true' | 'false';
 NULL: 'null';
@@ -38,20 +37,17 @@ UNDEFINED: 'undefined';
 
 // operator tokens, and their priority valu. (the heigher the more priority it has).
 // Increment Operators
-INCREMENT_OP: ADD_OP ADD_OP;
-DECREMENT_OP: SUP_OP SUP_OP;
-INCREMENTS_OP: INCREMENT_OP | DECREMENT_OP; // post: 15, pre: 14
+INCREMENT_OP: ADD_OP ADD_OP; // post: 15, pre: 14
+DECREMENT_OP: SUP_OP SUP_OP; // post: 15, pre: 14
 // NOT Operators
 LOGIC_NOT_OP: '!'; // 14
 // Arithmetic Operators
 POW_OP: '**'; // 13
-MULT_OP: '*';
-DIV_OP: '/';
-REM_OP: '%';
-MULTIPLICATIVE_OP: MULT_OP | DIV_OP | REM_OP; // 12
-ADD_OP: '+';
-SUP_OP: '-';
-ADDITIVE_OP: ADD_OP | SUP_OP; // 11
+MULT_OP: '*'; // 12
+DIV_OP: '/'; // 12
+REM_OP: '%'; // 12
+ADD_OP: '+'; // 11
+SUP_OP: '-'; // 11
 // Comparison Operators
 COMPARE_OP: '<' | '<=' | '>' | '>='; // 9
 EQUAL_COMPARE_OP: '==' | '===' | '!=' | '!=='; // 8
@@ -60,8 +56,9 @@ AND: '&&'; // 4
 OR: '||'; // 3
 NULL_COALES_OP: '??'; // 3
 // Assignment Operators
+// they're all with the priority value of 2.
 ASSIGNMENT_OP: '=';
-COLON: ':'; // 2
+COLON: ':';
 ADD_ASSIGN_OP: ADD_OP ASSIGNMENT_OP;
 SUB_ASSIGN_OP: SUP_OP ASSIGNMENT_OP;
 MULT_ASSIGN_OP: MULT_OP ASSIGNMENT_OP;
@@ -71,19 +68,7 @@ REM_ASSIGN_OP: REM_OP ASSIGNMENT_OP;
 AND_ASSIGN_OP: AND ASSIGNMENT_OP;
 OR_ASSIGN_OP: OR ASSIGNMENT_OP;
 NULL_ASSIGN_OP: NULL_COALES_OP ASSIGNMENT_OP;
-ASSIGNMENTS_OP
-    : ASSIGNMENT_OP
-    | ADD_ASSIGN_OP
-    | SUB_ASSIGN_OP
-    | MULT_ASSIGN_OP
-    | POW_ASSIGN_OP
-    | DIV_ASSIGN_OP
-    | REM_ASSIGN_OP
-    | AND_ASSIGN_OP
-    | OR_ASSIGN_OP
-    | NULL_ASSIGN_OP
-    ; // 2
-ARROW: '=>'; // 2
+ARROW: '=>';
 
 // general tokens
 LINE_END: SEMICOLON | NEWLINE | SEMICOLON NEWLINE;

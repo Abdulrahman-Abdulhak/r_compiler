@@ -41,6 +41,18 @@ public class Js_ParserBaseListener implements Js_ParserListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterFunction(Js_Parser.FunctionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitFunction(Js_Parser.FunctionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterVariableDeclaration(Js_Parser.VariableDeclarationContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -65,25 +77,13 @@ public class Js_ParserBaseListener implements Js_ParserListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterP(Js_Parser.PContext ctx) { }
+	@Override public void enterNormalExpression(Js_Parser.NormalExpressionContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitP(Js_Parser.PContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterFunction(Js_Parser.FunctionContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitFunction(Js_Parser.FunctionContext ctx) { }
+	@Override public void exitNormalExpression(Js_Parser.NormalExpressionContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -420,18 +420,6 @@ public class Js_ParserBaseListener implements Js_ParserListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitScopeBody(Js_Parser.ScopeBodyContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterPostInc(Js_Parser.PostIncContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitPostInc(Js_Parser.PostIncContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

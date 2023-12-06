@@ -23,6 +23,12 @@ public interface Js_ParserVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitLine(Js_Parser.LineContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link Js_Parser#function}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitFunction(Js_Parser.FunctionContext ctx);
+	/**
 	 * Visit a parse tree produced by the {@code variableDeclaration}
 	 * labeled alternative in {@link Js_Parser#statement}.
 	 * @param ctx the parse tree
@@ -37,18 +43,12 @@ public interface Js_ParserVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitAssigning(Js_Parser.AssigningContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code p}
+	 * Visit a parse tree produced by the {@code normalExpression}
 	 * labeled alternative in {@link Js_Parser#statement}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitP(Js_Parser.PContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link Js_Parser#function}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitFunction(Js_Parser.FunctionContext ctx);
+	T visitNormalExpression(Js_Parser.NormalExpressionContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link Js_Parser#if}.
 	 * @param ctx the parse tree
@@ -230,12 +230,6 @@ public interface Js_ParserVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitScopeBody(Js_Parser.ScopeBodyContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link Js_Parser#postInc}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitPostInc(Js_Parser.PostIncContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link Js_Parser#block}.
 	 * @param ctx the parse tree

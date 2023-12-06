@@ -6,8 +6,10 @@ options {
 
 program: line* EOF;
 
-line:
-    ( function
+line: lineStart LINE_END;
+
+lineStart
+    :function
     | statement
     | if
     | while
@@ -16,7 +18,7 @@ line:
     | forof
     | doWhile
     | return
-    ) LINE_END;
+    ;
 
 function: arrowFunction | normalFunction;
 
@@ -45,7 +47,7 @@ declare: DECLARERS ID assignmentRightHand? (COMMA ID assignmentRightHand)*;
 assignment: ID assignmentsRightHand;
 
 assignmentRightHand: (ASSIGNMENT_OP ID)* ASSIGNMENT_OP expression;
-assignmentsRightHand: (ASSIGNMENTS_OP ID)* ASSIGNMENTS_OP expression;
+assignmentsRightHand: (assinmentOp ID)* assinmentOp expression;
 
 arrowFunction: args ARROW (block | expression);
 
@@ -56,12 +58,12 @@ functionCall: ID param;
 expression
     : OPEN_BRACKET expression CLOSE_BRACKE             #parentheses
     | functionCall                                     #funcCall
-    | expression INCREMENTS_OP                         #postIncre
-    | INCREMENTS_OP expression                         #preInc
+    | expression incrementsOp                          #postIncre
+    | incrementsOp expression                          #preInc
     | LOGIC_NOT_OP expression                          #logicalNOT
     | expression POW_OP expression                     #pow
-    | expression MULTIPLICATIVE_OP expression          #mult
-    | expression ADDITIVE_OP expression                #add
+    | expression multiplicativeOp expression           #mult
+    | expression additiveOp expression                 #add
     | expression COMPARE_OP expression                 #compare
     | expression EQUAL_COMPARE_OP expression           #compareWithEqual
     | expression AND expression                        #logicalAND
@@ -69,7 +71,7 @@ expression
     | returnable                                       #byVal
     ;
 
-scopeBody: block | line;
+scopeBody: block | lineStart;
 
 block: OPEN_CURLY_BRACES line* CLOSE_CURLY_BRACES;
 
@@ -89,4 +91,23 @@ returnable
     | array           #arrayVal
     | function        #functionVal
     | ID              #variable
+    ;
+
+incrementsOp: INCREMENT_OP | DECREMENT_OP; // post: 15, pre: 14
+
+multiplicativeOp: MULT_OP | DIV_OP | REM_OP;
+
+additiveOp: ADD_OP | SUP_OP;
+
+assinmentOp
+    : ASSIGNMENT_OP
+    | ADD_ASSIGN_OP
+    | SUB_ASSIGN_OP
+    | MULT_ASSIGN_OP
+    | POW_ASSIGN_OP
+    | DIV_ASSIGN_OP
+    | REM_ASSIGN_OP
+    | AND_ASSIGN_OP
+    | OR_ASSIGN_OP
+    | NULL_ASSIGN_OP
     ;

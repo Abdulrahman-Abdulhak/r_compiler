@@ -28,6 +28,16 @@ public interface Js_ParserListener extends ParseTreeListener {
 	 */
 	void exitLine(Js_Parser.LineContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link Js_Parser#function}.
+	 * @param ctx the parse tree
+	 */
+	void enterFunction(Js_Parser.FunctionContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link Js_Parser#function}.
+	 * @param ctx the parse tree
+	 */
+	void exitFunction(Js_Parser.FunctionContext ctx);
+	/**
 	 * Enter a parse tree produced by the {@code variableDeclaration}
 	 * labeled alternative in {@link Js_Parser#statement}.
 	 * @param ctx the parse tree
@@ -52,27 +62,17 @@ public interface Js_ParserListener extends ParseTreeListener {
 	 */
 	void exitAssigning(Js_Parser.AssigningContext ctx);
 	/**
-	 * Enter a parse tree produced by the {@code p}
+	 * Enter a parse tree produced by the {@code normalExpression}
 	 * labeled alternative in {@link Js_Parser#statement}.
 	 * @param ctx the parse tree
 	 */
-	void enterP(Js_Parser.PContext ctx);
+	void enterNormalExpression(Js_Parser.NormalExpressionContext ctx);
 	/**
-	 * Exit a parse tree produced by the {@code p}
+	 * Exit a parse tree produced by the {@code normalExpression}
 	 * labeled alternative in {@link Js_Parser#statement}.
 	 * @param ctx the parse tree
 	 */
-	void exitP(Js_Parser.PContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link Js_Parser#function}.
-	 * @param ctx the parse tree
-	 */
-	void enterFunction(Js_Parser.FunctionContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link Js_Parser#function}.
-	 * @param ctx the parse tree
-	 */
-	void exitFunction(Js_Parser.FunctionContext ctx);
+	void exitNormalExpression(Js_Parser.NormalExpressionContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link Js_Parser#if}.
 	 * @param ctx the parse tree
@@ -379,16 +379,6 @@ public interface Js_ParserListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitScopeBody(Js_Parser.ScopeBodyContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link Js_Parser#postInc}.
-	 * @param ctx the parse tree
-	 */
-	void enterPostInc(Js_Parser.PostIncContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link Js_Parser#postInc}.
-	 * @param ctx the parse tree
-	 */
-	void exitPostInc(Js_Parser.PostIncContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link Js_Parser#block}.
 	 * @param ctx the parse tree
