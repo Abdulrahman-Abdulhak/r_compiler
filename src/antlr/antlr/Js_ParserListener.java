@@ -162,6 +162,26 @@ public interface Js_ParserListener extends ParseTreeListener {
 	 */
 	void exitDoWhile(Js_Parser.DoWhileContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link Js_Parser#loopScopeBody}.
+	 * @param ctx the parse tree
+	 */
+	void enterLoopScopeBody(Js_Parser.LoopScopeBodyContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link Js_Parser#loopScopeBody}.
+	 * @param ctx the parse tree
+	 */
+	void exitLoopScopeBody(Js_Parser.LoopScopeBodyContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link Js_Parser#loopLine}.
+	 * @param ctx the parse tree
+	 */
+	void enterLoopLine(Js_Parser.LoopLineContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link Js_Parser#loopLine}.
+	 * @param ctx the parse tree
+	 */
+	void exitLoopLine(Js_Parser.LoopLineContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link Js_Parser#return}.
 	 * @param ctx the parse tree
 	 */
@@ -245,6 +265,18 @@ public interface Js_ParserListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitParentheses(Js_Parser.ParenthesesContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code new}
+	 * labeled alternative in {@link Js_Parser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void enterNew(Js_Parser.NewContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code new}
+	 * labeled alternative in {@link Js_Parser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void exitNew(Js_Parser.NewContext ctx);
 	/**
 	 * Enter a parse tree produced by the {@code logicalNOT}
 	 * labeled alternative in {@link Js_Parser#expression}.
@@ -481,6 +513,26 @@ public interface Js_ParserListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitParam(Js_Parser.ParamContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link Js_Parser#paramSpreadable}.
+	 * @param ctx the parse tree
+	 */
+	void enterParamSpreadable(Js_Parser.ParamSpreadableContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link Js_Parser#paramSpreadable}.
+	 * @param ctx the parse tree
+	 */
+	void exitParamSpreadable(Js_Parser.ParamSpreadableContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link Js_Parser#paramInput}.
+	 * @param ctx the parse tree
+	 */
+	void enterParamInput(Js_Parser.ParamInputContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link Js_Parser#paramInput}.
+	 * @param ctx the parse tree
+	 */
+	void exitParamInput(Js_Parser.ParamInputContext ctx);
 	/**
 	 * Enter a parse tree produced by the {@code primitive}
 	 * labeled alternative in {@link Js_Parser#returnable}.

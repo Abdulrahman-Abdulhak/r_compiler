@@ -103,6 +103,18 @@ public interface Js_ParserVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitDoWhile(Js_Parser.DoWhileContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link Js_Parser#loopScopeBody}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitLoopScopeBody(Js_Parser.LoopScopeBodyContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link Js_Parser#loopLine}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitLoopLine(Js_Parser.LoopLineContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link Js_Parser#return}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -152,6 +164,13 @@ public interface Js_ParserVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitParentheses(Js_Parser.ParenthesesContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code new}
+	 * labeled alternative in {@link Js_Parser#expression}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitNew(Js_Parser.NewContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code logicalNOT}
 	 * labeled alternative in {@link Js_Parser#expression}.
@@ -291,6 +310,18 @@ public interface Js_ParserVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitParam(Js_Parser.ParamContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link Js_Parser#paramSpreadable}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitParamSpreadable(Js_Parser.ParamSpreadableContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link Js_Parser#paramInput}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitParamInput(Js_Parser.ParamInputContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code primitive}
 	 * labeled alternative in {@link Js_Parser#returnable}.

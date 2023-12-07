@@ -4,12 +4,25 @@ lexer grammar Js_Lexer;
     package antlr;
 }
 
+// general tokens
+SEMICOLON: ';';
+COMMA: ',';
+COLON: ':';
+OPEN_BRACKET: '(';
+CLOSE_BRACKET: ')';
+OPEN_SQUARE_BRACKET: '[';
+CLOSE_SQUARE_BRACKET: ']';
+OPEN_CURLY_BRACES: '{';
+CLOSE_CURLY_BRACES: '}';
+
 // keywords tokens
+CONTINUE: 'continue';
 DO: 'do';
 FOR: 'for';
 FUNCTION: 'function';
 IF: 'if';
 IN: 'in';
+NEW: 'new';
 OF: 'of';
 RETURN: 'return';
 WHILE: 'while';
@@ -18,8 +31,8 @@ DECLARERS: 'var' | 'let' | 'const';
 // syntax tokens
 ID: [a-zA-Z_][a-zA-Z0-9_]*;
 PRIM_TYPE: NUM | STRING | BOOL | NULL | UNDEFINED;
-MULTILINE_COMMENT: '/*' .*? '*/' -> channel(HIDDEN);
-LINE_COMMENT: '//' ~([\n\r])* -> channel(HIDDEN);
+MULTILINE_COMMENT: '/*' .*? '*/' -> skip;
+LINE_COMMENT: '//' ~([\n\r])* -> skip;
 
 // type tokens
 INT: '-'?[0-9]+;
@@ -61,7 +74,6 @@ TERNARY_OP2: COLON; // presedence of 2 compined with above
 // Assignment Operators
 // they're all with the priority value of 2.
 ASSIGNMENT_OP: '=';
-COLON: ':';
 ADD_ASSIGN_OP: ADD_OP ASSIGNMENT_OP;
 SUB_ASSIGN_OP: SUP_OP ASSIGNMENT_OP;
 MULT_ASSIGN_OP: MULT_OP ASSIGNMENT_OP;
@@ -72,15 +84,9 @@ AND_ASSIGN_OP: AND ASSIGNMENT_OP;
 OR_ASSIGN_OP: OR ASSIGNMENT_OP;
 NULL_ASSIGN_OP: NULL_COALES_OP ASSIGNMENT_OP;
 ARROW: '=>';
+REST_OP: SPREAD_OP;
+SPREAD_OP: '...';
 
-// general tokens
-SEMICOLON: ';';
-COMMA: ',';
-OPEN_BRACKET: '(';
-CLOSE_BRACKET: ')';
-OPEN_SQUARE_BRACKET: '[';
-CLOSE_SQUARE_BRACKET: ']';
-OPEN_CURLY_BRACES: '{';
-CLOSE_CURLY_BRACES: '}';
-NEWLINE: [\n\r]+;
-WS: [ \n\t\r]+ -> skip;
+// skipabale tokens
+NEWLINE: [\r\n\u2028\u2029]+ -> skip;
+WS: [\t\u000B\u000C\u0020\u00A0]+ -> skip;
