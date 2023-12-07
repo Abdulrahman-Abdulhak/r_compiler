@@ -6,7 +6,7 @@ options {
 
 program: line* EOF;
 
-line: lineStart LINE_END;
+line: lineStart lineEnd;
 
 lineStart
     : function
@@ -19,6 +19,8 @@ lineStart
     | doWhile
     | return
     ;
+
+lineEnd: SEMICOLON | NEWLINE | SEMICOLON NEWLINE;
 
 function: arrowFunction | normalFunction;
 
