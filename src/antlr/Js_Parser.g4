@@ -20,7 +20,7 @@ lineStart
     | return
     ;
 
-lineEnd: SEMICOLON | NEWLINE | SEMICOLON NEWLINE;
+lineEnd: SEMICOLON | NEWLINE | NEWLINE SEMICOLON NEWLINE;
 
 function: arrowFunction | normalFunction;
 
@@ -57,20 +57,21 @@ normalFunction: FUNCTION ID? args block;
 functionCall: ID param;
 
 expression
-    : OPEN_BRACKET expression CLOSE_BRACKET             #parentheses
-    | functionCall                                     #funcCall
-    | expression incrementsOp                          #postIncre
-    | incrementsOp expression                          #preInc
-    | LOGIC_NOT_OP expression                          #logicalNOT
-    | expression POW_OP expression                     #pow
-    | expression multiplicativeOp expression           #mult
-    | expression additiveOp expression                 #add
-    | expression COMPARE_OP expression                 #compare
-    | expression EQUAL_COMPARE_OP expression           #compareWithEqual
-    | expression AND expression                        #logicalAND
-    | expression (OR | NULL_COALES_OP) expression      #logicalOR_logicalNull
-    | assignment                                       #assign
-    | returnable                                       #byVal
+    : OPEN_BRACKET expression CLOSE_BRACKET                             #parentheses
+    | functionCall                                                      #funcCall
+    | expression incrementsOp                                           #postIncre
+    | incrementsOp expression                                           #preInc
+    | LOGIC_NOT_OP expression                                           #logicalNOT
+    | expression POW_OP expression                                      #pow
+    | expression multiplicativeOp expression                            #mult
+    | expression additiveOp expression                                  #add
+    | expression COMPARE_OP expression                                  #compare
+    | expression EQUAL_COMPARE_OP expression                            #compareWithEqual
+    | expression AND expression                                         #logicalAND
+    | expression (OR | NULL_COALES_OP) expression                       #logicalOR_logicalNull
+    | expression TERNARY_OP1 expression TERNARY_OP2 expression          #ternary
+    | assignment                                                        #assign
+    | returnable                                                        #byVal
     ;
 
 assignment: ID (assinmentOp ID)* assinmentOp expression;

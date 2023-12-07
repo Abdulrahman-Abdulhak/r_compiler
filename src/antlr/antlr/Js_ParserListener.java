@@ -38,6 +38,16 @@ public interface Js_ParserListener extends ParseTreeListener {
 	 */
 	void exitLineStart(Js_Parser.LineStartContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link Js_Parser#lineEnd}.
+	 * @param ctx the parse tree
+	 */
+	void enterLineEnd(Js_Parser.LineEndContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link Js_Parser#lineEnd}.
+	 * @param ctx the parse tree
+	 */
+	void exitLineEnd(Js_Parser.LineEndContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link Js_Parser#function}.
 	 * @param ctx the parse tree
 	 */
@@ -355,6 +365,18 @@ public interface Js_ParserListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitPostIncre(Js_Parser.PostIncreContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code ternary}
+	 * labeled alternative in {@link Js_Parser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void enterTernary(Js_Parser.TernaryContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code ternary}
+	 * labeled alternative in {@link Js_Parser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void exitTernary(Js_Parser.TernaryContext ctx);
 	/**
 	 * Enter a parse tree produced by the {@code compareWithEqual}
 	 * labeled alternative in {@link Js_Parser#expression}.

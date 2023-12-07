@@ -29,6 +29,12 @@ public interface Js_ParserVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitLineStart(Js_Parser.LineStartContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link Js_Parser#lineEnd}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitLineEnd(Js_Parser.LineEndContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link Js_Parser#function}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -216,6 +222,13 @@ public interface Js_ParserVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitPostIncre(Js_Parser.PostIncreContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code ternary}
+	 * labeled alternative in {@link Js_Parser#expression}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitTernary(Js_Parser.TernaryContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code compareWithEqual}
 	 * labeled alternative in {@link Js_Parser#expression}.

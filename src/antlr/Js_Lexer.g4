@@ -55,6 +55,9 @@ EQUAL_COMPARE_OP: '==' | '===' | '!=' | '!=='; // 8
 AND: '&&'; // 4
 OR: '||'; // 3
 NULL_COALES_OP: '??'; // 3
+// Ternary Operator
+TERNARY_OP1: '?';
+TERNARY_OP2: COLON; // presedence of 2 compined with above
 // Assignment Operators
 // they're all with the priority value of 2.
 ASSIGNMENT_OP: '=';
