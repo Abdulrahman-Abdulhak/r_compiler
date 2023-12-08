@@ -14,6 +14,7 @@ OPEN_SQUARE_BRACKET: '[';
 CLOSE_SQUARE_BRACKET: ']';
 OPEN_CURLY_BRACES: '{';
 CLOSE_CURLY_BRACES: '}';
+DOT: '.';
 
 // keywords tokens
 CONTINUE: 'continue';
