@@ -59,19 +59,19 @@ public interface Js_ParserVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitArgs(Js_Parser.ArgsContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code variableDeclaration}
+	 * Visit a parse tree produced by the {@code declaration}
 	 * labeled alternative in {@link Js_Parser#statement}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitVariableDeclaration(Js_Parser.VariableDeclarationContext ctx);
+	T visitDeclaration(Js_Parser.DeclarationContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code normalExpression}
+	 * Visit a parse tree produced by the {@code exp}
 	 * labeled alternative in {@link Js_Parser#statement}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitNormalExpression(Js_Parser.NormalExpressionContext ctx);
+	T visitExp(Js_Parser.ExpContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code noUse}
 	 * labeled alternative in {@link Js_Parser#statement}.
@@ -133,13 +133,6 @@ public interface Js_ParserVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitMult(Js_Parser.MultContext ctx);
-	/**
-	 * Visit a parse tree produced by the {@code memberGetSqB}
-	 * labeled alternative in {@link Js_Parser#expression}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitMemberGetSqB(Js_Parser.MemberGetSqBContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code logicalAND}
 	 * labeled alternative in {@link Js_Parser#expression}.
@@ -225,19 +218,25 @@ public interface Js_ParserVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitAssign(Js_Parser.AssignContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code byName}
+	 * Visit a parse tree produced by the {@code fromMemory}
 	 * labeled alternative in {@link Js_Parser#functionCall}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitByName(Js_Parser.ByNameContext ctx);
+	T visitFromMemory(Js_Parser.FromMemoryContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code byIIFE}
+	 * Visit a parse tree produced by the {@code asIIFE}
 	 * labeled alternative in {@link Js_Parser#functionCall}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitByIIFE(Js_Parser.ByIIFEContext ctx);
+	T visitAsIIFE(Js_Parser.AsIIFEContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link Js_Parser#callables}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitCallables(Js_Parser.CallablesContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link Js_Parser#incrementsOp}.
 	 * @param ctx the parse tree
@@ -245,11 +244,59 @@ public interface Js_ParserVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitIncrementsOp(Js_Parser.IncrementsOpContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link Js_Parser#memberGetter}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitMemberGetter(Js_Parser.MemberGetterContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link Js_Parser#member}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitMember(Js_Parser.MemberContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link Js_Parser#dotNotation}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitDotNotation(Js_Parser.DotNotationContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link Js_Parser#bracketNotation}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitBracketNotation(Js_Parser.BracketNotationContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link Js_Parser#indexers}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitIndexers(Js_Parser.IndexersContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link Js_Parser#objectable}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitObjectable(Js_Parser.ObjectableContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link Js_Parser#objectableWithBrackets}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitObjectableWithBrackets(Js_Parser.ObjectableWithBracketsContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link Js_Parser#assignment}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitAssignment(Js_Parser.AssignmentContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link Js_Parser#assignable}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitAssignable(Js_Parser.AssignableContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link Js_Parser#multiplicativeOp}.
 	 * @param ctx the parse tree
@@ -341,11 +388,17 @@ public interface Js_ParserVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitObject(Js_Parser.ObjectContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link Js_Parser#classFunction}.
+	 * Visit a parse tree produced by {@link Js_Parser#objPropDefine}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitClassFunction(Js_Parser.ClassFunctionContext ctx);
+	T visitObjPropDefine(Js_Parser.ObjPropDefineContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link Js_Parser#method}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitMethod(Js_Parser.MethodContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link Js_Parser#array}.
 	 * @param ctx the parse tree
@@ -405,6 +458,24 @@ public interface Js_ParserVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitVariable(Js_Parser.VariableContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link Js_Parser#primeType}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitPrimeType(Js_Parser.PrimeTypeContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link Js_Parser#num}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitNum(Js_Parser.NumContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link Js_Parser#ids}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitIds(Js_Parser.IdsContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link Js_Parser#noUseStatement}.
 	 * @param ctx the parse tree

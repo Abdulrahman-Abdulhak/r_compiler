@@ -5,19 +5,21 @@ lexer grammar Js_Lexer;
 }
 
 // general tokens
-SEMICOLON: ';';
-COMMA: ',';
 COLON: ':';
+COMMA: ',';
+DOT: '.';
+SEMICOLON: ';';
+// brackets
 OPEN_BRACKET: '(';
 CLOSE_BRACKET: ')';
 OPEN_SQUARE_BRACKET: '[';
 CLOSE_SQUARE_BRACKET: ']';
 OPEN_CURLY_BRACES: '{';
 CLOSE_CURLY_BRACES: '}';
-DOT: '.';
 
 // keywords tokens
 CONTINUE: 'continue';
+DECLARERS: 'var' | 'let' | 'const';
 DO: 'do';
 FOR: 'for';
 FUNCTION: 'function';
@@ -26,26 +28,19 @@ IN: 'in';
 NEW: 'new';
 OF: 'of';
 RETURN: 'return';
+THIS: 'this';
 WHILE: 'while';
-DECLARERS: 'var' | 'let' | 'const';
-
-// syntax tokens
-ID: [a-zA-Z_][a-zA-Z0-9_]*;
-PRIM_TYPE: NUM | STRING | BOOL | NULL | UNDEFINED;
-MULTILINE_COMMENT: '/*' .*? '*/' -> skip;
-LINE_COMMENT: '//' ~([\n\r])* -> skip;
 
 // type tokens
+BOOL: 'true' | 'false';
 INT: '-'?[0-9]+;
 FLOAT: '-'?[0-9]*'.'[0-9]+;
-NUM: INT | FLOAT;
 fragment STRING_ALLOWED_CHARS: '\\"' | '\\\'' | '\\`';
 STRING
     : '"' (~('"' | [\n\r]) | STRING_ALLOWED_CHARS)* '"'
     | '\'' (~('\'' | [\n\r]) | STRING_ALLOWED_CHARS)* '\''
     | '`' (~('`') | STRING_ALLOWED_CHARS)* '`'
     ;
-BOOL: 'true' | 'false';
 NULL: 'null';
 UNDEFINED: 'undefined';
 
@@ -88,6 +83,11 @@ ARROW: '=>';
 REST_OP: SPREAD_OP;
 SPREAD_OP: '...';
 
+// syntax tokens
+ID: [a-zA-Z_][a-zA-Z0-9_]*;
+
 // skipabale tokens
+MULTILINE_COMMENT: '/*' .*? '*/' -> skip;
+LINE_COMMENT: '//' ~([\n\r])* -> skip;
 NEWLINE: [\r\n\u2028\u2029]+ -> skip;
 WS: [\t\u000B\u000C\u0020\u00A0]+ -> skip;

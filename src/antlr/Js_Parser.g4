@@ -34,8 +34,8 @@ args: OPEN_BRACKET ((ID COMMA)*REST_OP? ID)? CLOSE_BRACKET;
 
 // JS Statements
 statement
-    : declare           #variableDeclaration
-    | expression        #normalExpression
+    : declare           #declaration
+    | expression        #exp
     | noUseStatement    #noUse
     ;
 
@@ -44,8 +44,8 @@ assignmentRightHand: (ASSIGNMENT_OP ID)* ASSIGNMENT_OP expression;
 
 expression
     : OPEN_BRACKET expression CLOSE_BRACKET                                    #parentheses
-    | member                                                                   #memberGet
     | functionCall                                                             #funcCall
+    | memberGetter                                                             #memberGet
     | NEW functionCall                                                         #new
     | NEW ID                                                                   #newNoParam
     | expression incrementsOp                                                  #postIncre
@@ -63,25 +63,35 @@ expression
     | returnable                                                               #byVal
     ;
 functionCall
-    : ID param                                          #byName
-    | OPEN_BRACKET function CLOSE_BRACKET param         #byIIFE
+    : callables param                                   #fromMemory
+    | OPEN_BRACKET function CLOSE_BRACKET param         #asIIFE
     ;
+callables: ID | memberGetter | OPEN_BRACKET callables CLOSE_BRACKET;
+
 incrementsOp: INCREMENT_OP | DECREMENT_OP;
 
+memberGetter: member (dotNotation | bracketNotation)+;
 member
-    : (objectable | objectableWithBrackets | OPEN_BRACKET member CLOSE_BRACKET) DOT ID
-    | (objectable | objectableWithBrackets | OPEN_BRACKET member CLOSE_BRACKET) OPEN_SQUARE_BRACKET (NUM | STRING) CLOSE_SQUARE_BRACKET
+    : (objectable | objectableWithBrackets | OPEN_BRACKET member CLOSE_BRACKET)
+    | (objectable | objectableWithBrackets | OPEN_BRACKET member CLOSE_BRACKET)
+    ;
+dotNotation: DOT ID;
+bracketNotation: OPEN_SQUARE_BRACKET indexers CLOSE_SQUARE_BRACKET;
+indexers
+    : ID
+    | STRING
+    | INT
+    | expression
     ;
 objectable
-    : functionCall
-    | NEW functionCall
+    : NEW functionCall
     | NEW ID
     | incrementsOp expression
     | LOGIC_NOT_OP expression
-    | PRIM_TYPE
+    | primeType
     | object
     | array
-    | ID
+    | ids
     | OPEN_BRACKET objectable CLOSE_BRACKET
     ;
 // these represent only the operations that can have
@@ -104,7 +114,7 @@ objectableWithBrackets
     ;
 
 assignment: assignable (assinmentOp assignable)* assinmentOp expression;
-assignable: ID | member;
+assignable: ID | memberGetter;
 
 multiplicativeOp: MULT_OP | DIV_OP | REM_OP;
 additiveOp: ADD_OP | SUP_OP;
@@ -144,26 +154,31 @@ scopeBody: block | line;
 
 block: OPEN_CURLY_BRACES line* CLOSE_CURLY_BRACES;
 
-object
-    : OPEN_CURLY_BRACES ((STRING COLON expression COMMA)*STRING COLON expression COMMA?)? CLOSE_CURLY_BRACES
-    | OPEN_CURLY_BRACES ((ID COLON expression COMMA)*ID COLON expression COMMA?)? CLOSE_CURLY_BRACES
-    | OPEN_CURLY_BRACES (ID COMMA)*ID COMMA?CLOSE_CURLY_BRACES
-    | OPEN_CURLY_BRACES (classFunction COMMA)*classFunction COMMA?CLOSE_CURLY_BRACES
+object: OPEN_CURLY_BRACES ((objPropDefine COMMA)*objPropDefine COMMA?)? CLOSE_CURLY_BRACES;
+objPropDefine
+    : STRING COLON expression
+    | ID COLON expression
+    | ID
+    | method
+    | OPEN_SQUARE_BRACKET expression CLOSE_SQUARE_BRACKET COLON expression
     ;
-classFunction: ID args block;
+method: ID args block;
 
 array: OPEN_SQUARE_BRACKET ((expression COMMA)*expression COMMA?)? CLOSE_SQUARE_BRACKET;
 
 param: OPEN_BRACKET ((paramInput COMMA)*(paramInput COMMA?))? CLOSE_BRACKET;
-paramSpreadable: ID | array;
+paramSpreadable: ids | array;
 paramInput: expression | SPREAD_OP paramSpreadable;
 
 returnable
-    : PRIM_TYPE       #primitive
+    : primeType       #primitive
     | object          #objectVal
     | array           #arrayVal
     | function        #functionVal
-    | ID              #variable
+    | ids             #variable
     ;
+primeType: num | STRING | BOOL | NULL | UNDEFINED;
+num: INT | FLOAT;
+ids: ID | THIS;
 
 noUseStatement: SEMICOLON;

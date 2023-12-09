@@ -113,25 +113,25 @@ public class Js_ParserBaseListener implements Js_ParserListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterVariableDeclaration(Js_Parser.VariableDeclarationContext ctx) { }
+	@Override public void enterDeclaration(Js_Parser.DeclarationContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitVariableDeclaration(Js_Parser.VariableDeclarationContext ctx) { }
+	@Override public void exitDeclaration(Js_Parser.DeclarationContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterNormalExpression(Js_Parser.NormalExpressionContext ctx) { }
+	@Override public void enterExp(Js_Parser.ExpContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitNormalExpression(Js_Parser.NormalExpressionContext ctx) { }
+	@Override public void exitExp(Js_Parser.ExpContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -240,18 +240,6 @@ public class Js_ParserBaseListener implements Js_ParserListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitMult(Js_Parser.MultContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterMemberGetSqB(Js_Parser.MemberGetSqBContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitMemberGetSqB(Js_Parser.MemberGetSqBContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -401,25 +389,37 @@ public class Js_ParserBaseListener implements Js_ParserListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterByName(Js_Parser.ByNameContext ctx) { }
+	@Override public void enterFromMemory(Js_Parser.FromMemoryContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitByName(Js_Parser.ByNameContext ctx) { }
+	@Override public void exitFromMemory(Js_Parser.FromMemoryContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterByIIFE(Js_Parser.ByIIFEContext ctx) { }
+	@Override public void enterAsIIFE(Js_Parser.AsIIFEContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitByIIFE(Js_Parser.ByIIFEContext ctx) { }
+	@Override public void exitAsIIFE(Js_Parser.AsIIFEContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterCallables(Js_Parser.CallablesContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitCallables(Js_Parser.CallablesContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -437,6 +437,90 @@ public class Js_ParserBaseListener implements Js_ParserListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterMemberGetter(Js_Parser.MemberGetterContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitMemberGetter(Js_Parser.MemberGetterContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterMember(Js_Parser.MemberContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitMember(Js_Parser.MemberContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterDotNotation(Js_Parser.DotNotationContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitDotNotation(Js_Parser.DotNotationContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterBracketNotation(Js_Parser.BracketNotationContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitBracketNotation(Js_Parser.BracketNotationContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterIndexers(Js_Parser.IndexersContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitIndexers(Js_Parser.IndexersContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterObjectable(Js_Parser.ObjectableContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitObjectable(Js_Parser.ObjectableContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterObjectableWithBrackets(Js_Parser.ObjectableWithBracketsContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitObjectableWithBrackets(Js_Parser.ObjectableWithBracketsContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterAssignment(Js_Parser.AssignmentContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -444,6 +528,18 @@ public class Js_ParserBaseListener implements Js_ParserListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitAssignment(Js_Parser.AssignmentContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterAssignable(Js_Parser.AssignableContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitAssignable(Js_Parser.AssignableContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -629,13 +725,25 @@ public class Js_ParserBaseListener implements Js_ParserListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterClassFunction(Js_Parser.ClassFunctionContext ctx) { }
+	@Override public void enterObjPropDefine(Js_Parser.ObjPropDefineContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitClassFunction(Js_Parser.ClassFunctionContext ctx) { }
+	@Override public void exitObjPropDefine(Js_Parser.ObjPropDefineContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterMethod(Js_Parser.MethodContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitMethod(Js_Parser.MethodContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -744,6 +852,42 @@ public class Js_ParserBaseListener implements Js_ParserListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitVariable(Js_Parser.VariableContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterPrimeType(Js_Parser.PrimeTypeContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitPrimeType(Js_Parser.PrimeTypeContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterNum(Js_Parser.NumContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitNum(Js_Parser.NumContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterIds(Js_Parser.IdsContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitIds(Js_Parser.IdsContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
