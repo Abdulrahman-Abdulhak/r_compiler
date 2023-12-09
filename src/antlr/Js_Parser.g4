@@ -28,7 +28,9 @@ function: arrowFunction | normalFunction;
 arrowFunction: (args | ID) ARROW (block | expression);
 normalFunction: FUNCTION ID? args block;
 
-args: OPEN_BRACKET ((ID COMMA)*REST_OP? ID)? CLOSE_BRACKET;
+args: OPEN_BRACKET ((arg COMMA)*(arg | rest))? CLOSE_BRACKET;
+arg: ID (ASSIGNMENT_OP returnable)?;
+rest: REST_OP ID;
 // end of _functions representations_
 
 
@@ -167,8 +169,8 @@ method: ID args block;
 array: OPEN_SQUARE_BRACKET ((expression COMMA)*expression COMMA?)? CLOSE_SQUARE_BRACKET;
 
 param: OPEN_BRACKET ((paramInput COMMA)*(paramInput COMMA?))? CLOSE_BRACKET;
-paramSpreadable: ids | array;
 paramInput: expression | SPREAD_OP paramSpreadable;
+paramSpreadable: ids | array;
 
 returnable
     : primeType       #primitive
