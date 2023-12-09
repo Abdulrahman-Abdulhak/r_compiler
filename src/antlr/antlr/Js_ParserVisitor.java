@@ -59,6 +59,18 @@ public interface Js_ParserVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitArgs(Js_Parser.ArgsContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link Js_Parser#arg}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitArg(Js_Parser.ArgContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link Js_Parser#rest}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitRest(Js_Parser.RestContext ctx);
+	/**
 	 * Visit a parse tree produced by the {@code declaration}
 	 * labeled alternative in {@link Js_Parser#statement}.
 	 * @param ctx the parse tree
@@ -406,23 +418,35 @@ public interface Js_ParserVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitArray(Js_Parser.ArrayContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link Js_Parser#arrayInput}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitArrayInput(Js_Parser.ArrayInputContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link Js_Parser#arraySpread}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitArraySpread(Js_Parser.ArraySpreadContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link Js_Parser#param}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitParam(Js_Parser.ParamContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link Js_Parser#paramSpreadable}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitParamSpreadable(Js_Parser.ParamSpreadableContext ctx);
-	/**
 	 * Visit a parse tree produced by {@link Js_Parser#paramInput}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitParamInput(Js_Parser.ParamInputContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link Js_Parser#paramSpreadable}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitParamSpreadable(Js_Parser.ParamSpreadableContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code primitive}
 	 * labeled alternative in {@link Js_Parser#returnable}.

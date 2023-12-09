@@ -113,6 +113,30 @@ public class Js_ParserBaseListener implements Js_ParserListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterArg(Js_Parser.ArgContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitArg(Js_Parser.ArgContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterRest(Js_Parser.RestContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitRest(Js_Parser.RestContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterDeclaration(Js_Parser.DeclarationContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -761,6 +785,30 @@ public class Js_ParserBaseListener implements Js_ParserListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterArrayInput(Js_Parser.ArrayInputContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitArrayInput(Js_Parser.ArrayInputContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterArraySpread(Js_Parser.ArraySpreadContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitArraySpread(Js_Parser.ArraySpreadContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterParam(Js_Parser.ParamContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -773,18 +821,6 @@ public class Js_ParserBaseListener implements Js_ParserListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterParamSpreadable(Js_Parser.ParamSpreadableContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitParamSpreadable(Js_Parser.ParamSpreadableContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
 	@Override public void enterParamInput(Js_Parser.ParamInputContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -792,6 +828,18 @@ public class Js_ParserBaseListener implements Js_ParserListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitParamInput(Js_Parser.ParamInputContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterParamSpreadable(Js_Parser.ParamSpreadableContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitParamSpreadable(Js_Parser.ParamSpreadableContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

@@ -30,7 +30,7 @@ normalFunction: FUNCTION ID? args block;
 
 args: OPEN_BRACKET ((arg COMMA)*(arg | rest))? CLOSE_BRACKET;
 arg: ID (ASSIGNMENT_OP returnable)?;
-rest: REST_OP ID;
+rest: ELLIPSIS ID;
 // end of _functions representations_
 
 
@@ -53,6 +53,7 @@ expression
     | expression incrementsOp                                                  #postIncre
     | incrementsOp expression                                                  #preInc
     | LOGIC_NOT_OP expression                                                  #logicalNOT
+    | unarysOp expression                                                      #unary
     | expression POW_OP expression                                             #pow
     | expression multiplicativeOp expression                                   #mult
     | expression additiveOp expression                                         #add
@@ -71,6 +72,7 @@ functionCall
 callables: ID | memberGetter | OPEN_BRACKET callables CLOSE_BRACKET;
 
 incrementsOp: INCREMENT_OP | DECREMENT_OP;
+unarysOp: ADD_OP | SUP_OP;
 
 memberGetter: member (dotNotation | bracketNotation)+;
 member
@@ -166,11 +168,12 @@ objPropDefine
     ;
 method: ID args block;
 
-array: OPEN_SQUARE_BRACKET ((expression COMMA)*expression COMMA?)? CLOSE_SQUARE_BRACKET;
+array: OPEN_SQUARE_BRACKET ((arrayInput COMMA)*arrayInput COMMA?)? CLOSE_SQUARE_BRACKET;
+arrayInput: expression | arraySpread;
+arraySpread: ELLIPSIS (ID | array);
 
 param: OPEN_BRACKET ((paramInput COMMA)*(paramInput COMMA?))? CLOSE_BRACKET;
-paramInput: expression | SPREAD_OP paramSpreadable;
-paramSpreadable: ids | array;
+paramInput: expression | arraySpread;
 
 returnable
     : primeType       #primitive

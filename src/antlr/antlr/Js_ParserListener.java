@@ -88,6 +88,26 @@ public interface Js_ParserListener extends ParseTreeListener {
 	 */
 	void exitArgs(Js_Parser.ArgsContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link Js_Parser#arg}.
+	 * @param ctx the parse tree
+	 */
+	void enterArg(Js_Parser.ArgContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link Js_Parser#arg}.
+	 * @param ctx the parse tree
+	 */
+	void exitArg(Js_Parser.ArgContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link Js_Parser#rest}.
+	 * @param ctx the parse tree
+	 */
+	void enterRest(Js_Parser.RestContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link Js_Parser#rest}.
+	 * @param ctx the parse tree
+	 */
+	void exitRest(Js_Parser.RestContext ctx);
+	/**
 	 * Enter a parse tree produced by the {@code declaration}
 	 * labeled alternative in {@link Js_Parser#statement}.
 	 * @param ctx the parse tree
@@ -674,6 +694,26 @@ public interface Js_ParserListener extends ParseTreeListener {
 	 */
 	void exitArray(Js_Parser.ArrayContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link Js_Parser#arrayInput}.
+	 * @param ctx the parse tree
+	 */
+	void enterArrayInput(Js_Parser.ArrayInputContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link Js_Parser#arrayInput}.
+	 * @param ctx the parse tree
+	 */
+	void exitArrayInput(Js_Parser.ArrayInputContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link Js_Parser#arraySpread}.
+	 * @param ctx the parse tree
+	 */
+	void enterArraySpread(Js_Parser.ArraySpreadContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link Js_Parser#arraySpread}.
+	 * @param ctx the parse tree
+	 */
+	void exitArraySpread(Js_Parser.ArraySpreadContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link Js_Parser#param}.
 	 * @param ctx the parse tree
 	 */
@@ -684,16 +724,6 @@ public interface Js_ParserListener extends ParseTreeListener {
 	 */
 	void exitParam(Js_Parser.ParamContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link Js_Parser#paramSpreadable}.
-	 * @param ctx the parse tree
-	 */
-	void enterParamSpreadable(Js_Parser.ParamSpreadableContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link Js_Parser#paramSpreadable}.
-	 * @param ctx the parse tree
-	 */
-	void exitParamSpreadable(Js_Parser.ParamSpreadableContext ctx);
-	/**
 	 * Enter a parse tree produced by {@link Js_Parser#paramInput}.
 	 * @param ctx the parse tree
 	 */
@@ -703,6 +733,16 @@ public interface Js_ParserListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitParamInput(Js_Parser.ParamInputContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link Js_Parser#paramSpreadable}.
+	 * @param ctx the parse tree
+	 */
+	void enterParamSpreadable(Js_Parser.ParamSpreadableContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link Js_Parser#paramSpreadable}.
+	 * @param ctx the parse tree
+	 */
+	void exitParamSpreadable(Js_Parser.ParamSpreadableContext ctx);
 	/**
 	 * Enter a parse tree produced by the {@code primitive}
 	 * labeled alternative in {@link Js_Parser#returnable}.

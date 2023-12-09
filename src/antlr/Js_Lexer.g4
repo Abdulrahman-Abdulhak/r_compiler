@@ -8,6 +8,7 @@ lexer grammar Js_Lexer;
 COLON: ':';
 COMMA: ',';
 DOT: '.';
+ELLIPSIS: '...';
 SEMICOLON: ';';
 // brackets
 OPEN_BRACKET: '(';
@@ -33,8 +34,8 @@ WHILE: 'while';
 
 // type tokens
 BOOL: 'true' | 'false';
-INT: '-'?[0-9]+;
-FLOAT: '-'?[0-9]*'.'[0-9]+;
+INT: [-+]?[0-9]+;
+FLOAT: [-+]?[0-9]*'.'[0-9]+;
 fragment STRING_ALLOWED_CHARS: '\\"' | '\\\'' | '\\`';
 STRING
     : '"' (~('"' | [\n\r]) | STRING_ALLOWED_CHARS)* '"'
@@ -80,8 +81,6 @@ AND_ASSIGN_OP: AND ASSIGNMENT_OP;
 OR_ASSIGN_OP: OR ASSIGNMENT_OP;
 NULL_ASSIGN_OP: NULL_COALES_OP ASSIGNMENT_OP;
 ARROW: '=>';
-REST_OP: SPREAD_OP;
-SPREAD_OP: '...';
 
 // syntax tokens
 ID: [a-zA-Z_][a-zA-Z0-9_]*;
