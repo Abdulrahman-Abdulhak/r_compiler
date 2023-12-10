@@ -416,6 +416,18 @@ public interface Js_ParserListener extends ParseTreeListener {
 	 */
 	void exitAsIIFE(Js_Parser.AsIIFEContext ctx);
 	/**
+	 * Enter a parse tree produced by the {@code taggedTemplate}
+	 * labeled alternative in {@link Js_Parser#functionCall}.
+	 * @param ctx the parse tree
+	 */
+	void enterTaggedTemplate(Js_Parser.TaggedTemplateContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code taggedTemplate}
+	 * labeled alternative in {@link Js_Parser#functionCall}.
+	 * @param ctx the parse tree
+	 */
+	void exitTaggedTemplate(Js_Parser.TaggedTemplateContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link Js_Parser#callables}.
 	 * @param ctx the parse tree
 	 */

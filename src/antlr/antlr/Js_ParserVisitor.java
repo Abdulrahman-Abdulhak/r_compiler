@@ -251,6 +251,13 @@ public interface Js_ParserVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitAsIIFE(Js_Parser.AsIIFEContext ctx);
 	/**
+	 * Visit a parse tree produced by the {@code taggedTemplate}
+	 * labeled alternative in {@link Js_Parser#functionCall}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitTaggedTemplate(Js_Parser.TaggedTemplateContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link Js_Parser#callables}.
 	 * @param ctx the parse tree
 	 * @return the visitor result

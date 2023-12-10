@@ -449,6 +449,18 @@ public class Js_ParserBaseListener implements Js_ParserListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterTaggedTemplate(Js_Parser.TaggedTemplateContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitTaggedTemplate(Js_Parser.TaggedTemplateContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterCallables(Js_Parser.CallablesContext ctx) { }
 	/**
 	 * {@inheritDoc}

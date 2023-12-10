@@ -68,6 +68,7 @@ expression
 functionCall
     : callables param                                   #fromMemory
     | OPEN_BRACKET function CLOSE_BRACKET param         #asIIFE
+    | callables templateLiteral                         #taggedTemplate
     ;
 callables: validName | memberGetter | OPEN_BRACKET callables CLOSE_BRACKET;
 

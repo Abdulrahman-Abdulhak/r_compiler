@@ -270,6 +270,13 @@ public class Js_ParserBaseVisitor<T> extends AbstractParseTreeVisitor<T> impleme
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
+	@Override public T visitTaggedTemplate(Js_Parser.TaggedTemplateContext ctx) { return visitChildren(ctx); }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
 	@Override public T visitCallables(Js_Parser.CallablesContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
