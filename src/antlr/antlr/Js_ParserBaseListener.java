@@ -281,6 +281,18 @@ public class Js_ParserBaseListener implements Js_ParserListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterUnary(Js_Parser.UnaryContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitUnary(Js_Parser.UnaryContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterLogicalOR_logicalNull(Js_Parser.LogicalOR_logicalNullContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -456,6 +468,18 @@ public class Js_ParserBaseListener implements Js_ParserListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitIncrementsOp(Js_Parser.IncrementsOpContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterUnarysOp(Js_Parser.UnarysOpContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitUnarysOp(Js_Parser.UnarysOpContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -833,18 +857,6 @@ public class Js_ParserBaseListener implements Js_ParserListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterParamSpreadable(Js_Parser.ParamSpreadableContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitParamSpreadable(Js_Parser.ParamSpreadableContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
 	@Override public void enterPrimitive(Js_Parser.PrimitiveContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -929,6 +941,42 @@ public class Js_ParserBaseListener implements Js_ParserListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterStrings(Js_Parser.StringsContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitStrings(Js_Parser.StringsContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterTemplateLiteral(Js_Parser.TemplateLiteralContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitTemplateLiteral(Js_Parser.TemplateLiteralContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterTemplateLiteralContent(Js_Parser.TemplateLiteralContentContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitTemplateLiteralContent(Js_Parser.TemplateLiteralContentContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterIds(Js_Parser.IdsContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -936,6 +984,30 @@ public class Js_ParserBaseListener implements Js_ParserListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitIds(Js_Parser.IdsContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterSetableKeywords(Js_Parser.SetableKeywordsContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitSetableKeywords(Js_Parser.SetableKeywordsContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterValidName(Js_Parser.ValidNameContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitValidName(Js_Parser.ValidNameContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

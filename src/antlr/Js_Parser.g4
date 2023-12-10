@@ -25,12 +25,12 @@ return: RETURN expression?;
 
 // function representaions
 function: arrowFunction | normalFunction;
-arrowFunction: (args | ID) ARROW (block | expression);
-normalFunction: FUNCTION ID? args block;
+arrowFunction: (args | validName) ARROW (block | expression);
+normalFunction: FUNCTION validName? args block;
 
 args: OPEN_BRACKET ((arg COMMA)*(arg | rest))? CLOSE_BRACKET;
-arg: ID (ASSIGNMENT_OP returnable)?;
-rest: ELLIPSIS ID;
+arg: validName (ASSIGNMENT_OP returnable)?;
+rest: ELLIPSIS validName;
 // end of _functions representations_
 
 
@@ -41,15 +41,15 @@ statement
     | noUseStatement    #noUse
     ;
 
-declare: DECLARERS ID assignmentRightHand? (COMMA ID assignmentRightHand)*;
-assignmentRightHand: (ASSIGNMENT_OP ID)* ASSIGNMENT_OP expression;
+declare: DECLARERS validName assignmentRightHand? (COMMA validName assignmentRightHand)*;
+assignmentRightHand: (ASSIGNMENT_OP validName)* ASSIGNMENT_OP expression;
 
 expression
     : OPEN_BRACKET expression CLOSE_BRACKET                                    #parentheses
     | functionCall                                                             #funcCall
     | memberGetter                                                             #memberGet
     | NEW functionCall                                                         #new
-    | NEW ID                                                                   #newNoParam
+    | NEW validName                                                            #newNoParam
     | expression incrementsOp                                                  #postIncre
     | incrementsOp expression                                                  #preInc
     | LOGIC_NOT_OP expression                                                  #logicalNOT
@@ -69,7 +69,7 @@ functionCall
     : callables param                                   #fromMemory
     | OPEN_BRACKET function CLOSE_BRACKET param         #asIIFE
     ;
-callables: ID | memberGetter | OPEN_BRACKET callables CLOSE_BRACKET;
+callables: validName | memberGetter | OPEN_BRACKET callables CLOSE_BRACKET;
 
 incrementsOp: INCREMENT_OP | DECREMENT_OP;
 unarysOp: ADD_OP | SUP_OP;
@@ -79,17 +79,17 @@ member
     : (objectable | objectableWithBrackets | OPEN_BRACKET member CLOSE_BRACKET)
     | (objectable | objectableWithBrackets | OPEN_BRACKET member CLOSE_BRACKET)
     ;
-dotNotation: DOT ID;
-bracketNotation: OPEN_SQUARE_BRACKET indexers CLOSE_SQUARE_BRACKET;
+dotNotation: (DOT | OPTIONAL_CHAINING_OP) validName;
+bracketNotation: OPTIONAL_CHAINING_OP? OPEN_SQUARE_BRACKET indexers CLOSE_SQUARE_BRACKET;
 indexers
-    : ID
+    : validName
     | STRING
     | INT
     | expression
     ;
 objectable
     : NEW functionCall
-    | NEW ID
+    | NEW validName
     | incrementsOp expression
     | LOGIC_NOT_OP expression
     | primeType
@@ -118,7 +118,7 @@ objectableWithBrackets
     ;
 
 assignment: assignable (assinmentOp assignable)* assinmentOp expression;
-assignable: ID | memberGetter;
+assignable: validName | memberGetter;
 
 multiplicativeOp: MULT_OP | DIV_OP | REM_OP;
 additiveOp: ADD_OP | SUP_OP;
@@ -148,8 +148,8 @@ for: FOR OPEN_BRACKET forExpression1? SEMICOLON expressionList? SEMICOLON expres
 forExpression1: declare | expressionList;
 expressionList: (expression COMMA)* expression;
 
-forin: FOR OPEN_BRACKET DECLARERS? ID IN expression CLOSE_BRACKET scopeBody;
-forof: FOR OPEN_BRACKET DECLARERS? ID OF expression CLOSE_BRACKET scopeBody;
+forin: FOR OPEN_BRACKET DECLARERS? validName IN expression CLOSE_BRACKET scopeBody;
+forof: FOR OPEN_BRACKET DECLARERS? validName OF expression CLOSE_BRACKET scopeBody;
 
 scopeHead: OPEN_BRACKET expression CLOSE_BRACKET;
 scopeBody: block | line;
@@ -161,14 +161,14 @@ block: OPEN_CURLY_BRACES line* CLOSE_CURLY_BRACES;
 object: OPEN_CURLY_BRACES ((objPropDefine COMMA)*objPropDefine COMMA?)? CLOSE_CURLY_BRACES;
 objPropDefine
     : STRING COLON expression
-    | ID COLON expression
-    | ID
+    | validName COLON expression
+    | validName
     | method
     | OPEN_SQUARE_BRACKET expression CLOSE_SQUARE_BRACKET COLON expression
     ;
-method: ID args block;
+method: validName args block;
 
-array: OPEN_SQUARE_BRACKET ((arrayInput COMMA)*arrayInput COMMA?)? CLOSE_SQUARE_BRACKET;
+array: OPEN_SQUARE_BRACKET ((arrayInput COMMA+)*arrayInput COMMA*)? CLOSE_SQUARE_BRACKET;
 arrayInput: expression | arraySpread;
 arraySpread: ELLIPSIS (ID | array);
 
@@ -182,8 +182,16 @@ returnable
     | function        #functionVal
     | ids             #variable
     ;
-primeType: num | STRING | BOOL | NULL | UNDEFINED;
+primeType: num | strings | BOOL | NULL | UNDEFINED;
 num: INT | FLOAT;
-ids: ID | THIS;
+strings: STRING | templateLiteral;
+templateLiteral: OPEN_TEMPLATE_LITERAL templateLiteralContent* CLOSE_TEMPLATE_LITERAL;
+templateLiteralContent
+    : TEMPLATE_LITERAL_ALLOWED_CHAR
+    | TEMPLATE_LITERAL_START_VAR expression TEMPLATE_LITERAL_VAR_CLOSE
+    ;
+ids: ID | THIS | setableKeywords;
+setableKeywords: AS | ASYNC | FROM | GET | OF | SET | YIELD;
+validName: ID | setableKeywords;
 
 noUseStatement: SEMICOLON;

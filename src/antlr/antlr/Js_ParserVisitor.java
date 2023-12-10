@@ -153,6 +153,13 @@ public interface Js_ParserVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitLogicalAND(Js_Parser.LogicalANDContext ctx);
 	/**
+	 * Visit a parse tree produced by the {@code unary}
+	 * labeled alternative in {@link Js_Parser#expression}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitUnary(Js_Parser.UnaryContext ctx);
+	/**
 	 * Visit a parse tree produced by the {@code logicalOR_logicalNull}
 	 * labeled alternative in {@link Js_Parser#expression}.
 	 * @param ctx the parse tree
@@ -255,6 +262,12 @@ public interface Js_ParserVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitIncrementsOp(Js_Parser.IncrementsOpContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link Js_Parser#unarysOp}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitUnarysOp(Js_Parser.UnarysOpContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link Js_Parser#memberGetter}.
 	 * @param ctx the parse tree
@@ -442,12 +455,6 @@ public interface Js_ParserVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitParamInput(Js_Parser.ParamInputContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link Js_Parser#paramSpreadable}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitParamSpreadable(Js_Parser.ParamSpreadableContext ctx);
-	/**
 	 * Visit a parse tree produced by the {@code primitive}
 	 * labeled alternative in {@link Js_Parser#returnable}.
 	 * @param ctx the parse tree
@@ -495,11 +502,41 @@ public interface Js_ParserVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitNum(Js_Parser.NumContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link Js_Parser#strings}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitStrings(Js_Parser.StringsContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link Js_Parser#templateLiteral}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitTemplateLiteral(Js_Parser.TemplateLiteralContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link Js_Parser#templateLiteralContent}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitTemplateLiteralContent(Js_Parser.TemplateLiteralContentContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link Js_Parser#ids}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitIds(Js_Parser.IdsContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link Js_Parser#setableKeywords}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitSetableKeywords(Js_Parser.SetableKeywordsContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link Js_Parser#validName}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitValidName(Js_Parser.ValidNameContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link Js_Parser#noUseStatement}.
 	 * @param ctx the parse tree

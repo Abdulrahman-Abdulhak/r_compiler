@@ -15,37 +15,45 @@ OPEN_BRACKET: '(';
 CLOSE_BRACKET: ')';
 OPEN_SQUARE_BRACKET: '[';
 CLOSE_SQUARE_BRACKET: ']';
-OPEN_CURLY_BRACES: '{';
-CLOSE_CURLY_BRACES: '}';
+OPEN_BLOCK: '{' -> pushMode(BLOCK);
+TEMPLATE_LITERAL_VAR_CLOSE: '}' -> popMode;
+// for strings
+OPEN_TEMPLATE_LITERAL: '`' -> pushMode(TEMPLATE_LITERAL);
 
 // keywords tokens
+AS: 'as';
+ASYNC: 'async';
 CONTINUE: 'continue';
 DECLARERS: 'var' | 'let' | 'const';
 DO: 'do';
 FOR: 'for';
+FROM: 'from';
 FUNCTION: 'function';
+GET: 'get';
 IF: 'if';
 IN: 'in';
 NEW: 'new';
 OF: 'of';
 RETURN: 'return';
+SET: 'set';
 THIS: 'this';
 WHILE: 'while';
+YIELD: 'yield';
 
 // type tokens
 BOOL: 'true' | 'false';
 INT: [-+]?[0-9]+;
 FLOAT: [-+]?[0-9]*'.'[0-9]+;
-fragment STRING_ALLOWED_CHARS: '\\"' | '\\\'' | '\\`';
+fragment STRING_ALLOWED_CHARS: '\\\n' | '\\\r' | '\\"' | '\\\'' | '\\`';
 STRING
     : '"' (~('"' | [\n\r]) | STRING_ALLOWED_CHARS)* '"'
     | '\'' (~('\'' | [\n\r]) | STRING_ALLOWED_CHARS)* '\''
-    | '`' (~('`') | STRING_ALLOWED_CHARS)* '`'
     ;
 NULL: 'null';
 UNDEFINED: 'undefined';
 
 // operator tokens, and their priority valu. (the heigher the more priority it has).
+OPTIONAL_CHAINING_OP: '?' DOT;
 // Increment Operators
 INCREMENT_OP: ADD_OP ADD_OP; // post: 15, pre: 14
 DECREMENT_OP: SUP_OP SUP_OP; // post: 15, pre: 14
@@ -83,10 +91,18 @@ NULL_ASSIGN_OP: NULL_COALES_OP ASSIGNMENT_OP;
 ARROW: '=>';
 
 // syntax tokens
-ID: [a-zA-Z_][a-zA-Z0-9_]*;
+ID: [a-zA-Z_$][a-zA-Z0-9_$]*;
 
 // skipabale tokens
 MULTILINE_COMMENT: '/*' .*? '*/' -> skip;
 LINE_COMMENT: '//' ~([\n\r])* -> skip;
 NEWLINE: [\r\n\u2028\u2029]+ -> skip;
 WS: [\t\u000B\u000C\u0020\u00A0]+ -> skip;
+
+mode BLOCK;
+CLOSE_BLOCK: '}' -> popMode;
+
+mode TEMPLATE_LITERAL;
+CLOSE_TEMPLATE_LITERAL: '`' -> popMode;
+TEMPLATE_LITERAL_START_VAR: '${' -> pushMode(DEFAULT_MODE);
+TEMPLATE_LITERAL_ALLOWED_CHAR: (~[`] | STRING_ALLOWED_CHARS)*;

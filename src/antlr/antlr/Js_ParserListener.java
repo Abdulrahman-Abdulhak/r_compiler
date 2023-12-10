@@ -248,6 +248,18 @@ public interface Js_ParserListener extends ParseTreeListener {
 	 */
 	void exitLogicalAND(Js_Parser.LogicalANDContext ctx);
 	/**
+	 * Enter a parse tree produced by the {@code unary}
+	 * labeled alternative in {@link Js_Parser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void enterUnary(Js_Parser.UnaryContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code unary}
+	 * labeled alternative in {@link Js_Parser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void exitUnary(Js_Parser.UnaryContext ctx);
+	/**
 	 * Enter a parse tree produced by the {@code logicalOR_logicalNull}
 	 * labeled alternative in {@link Js_Parser#expression}.
 	 * @param ctx the parse tree
@@ -423,6 +435,16 @@ public interface Js_ParserListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitIncrementsOp(Js_Parser.IncrementsOpContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link Js_Parser#unarysOp}.
+	 * @param ctx the parse tree
+	 */
+	void enterUnarysOp(Js_Parser.UnarysOpContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link Js_Parser#unarysOp}.
+	 * @param ctx the parse tree
+	 */
+	void exitUnarysOp(Js_Parser.UnarysOpContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link Js_Parser#memberGetter}.
 	 * @param ctx the parse tree
@@ -734,16 +756,6 @@ public interface Js_ParserListener extends ParseTreeListener {
 	 */
 	void exitParamInput(Js_Parser.ParamInputContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link Js_Parser#paramSpreadable}.
-	 * @param ctx the parse tree
-	 */
-	void enterParamSpreadable(Js_Parser.ParamSpreadableContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link Js_Parser#paramSpreadable}.
-	 * @param ctx the parse tree
-	 */
-	void exitParamSpreadable(Js_Parser.ParamSpreadableContext ctx);
-	/**
 	 * Enter a parse tree produced by the {@code primitive}
 	 * labeled alternative in {@link Js_Parser#returnable}.
 	 * @param ctx the parse tree
@@ -824,6 +836,36 @@ public interface Js_ParserListener extends ParseTreeListener {
 	 */
 	void exitNum(Js_Parser.NumContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link Js_Parser#strings}.
+	 * @param ctx the parse tree
+	 */
+	void enterStrings(Js_Parser.StringsContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link Js_Parser#strings}.
+	 * @param ctx the parse tree
+	 */
+	void exitStrings(Js_Parser.StringsContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link Js_Parser#templateLiteral}.
+	 * @param ctx the parse tree
+	 */
+	void enterTemplateLiteral(Js_Parser.TemplateLiteralContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link Js_Parser#templateLiteral}.
+	 * @param ctx the parse tree
+	 */
+	void exitTemplateLiteral(Js_Parser.TemplateLiteralContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link Js_Parser#templateLiteralContent}.
+	 * @param ctx the parse tree
+	 */
+	void enterTemplateLiteralContent(Js_Parser.TemplateLiteralContentContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link Js_Parser#templateLiteralContent}.
+	 * @param ctx the parse tree
+	 */
+	void exitTemplateLiteralContent(Js_Parser.TemplateLiteralContentContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link Js_Parser#ids}.
 	 * @param ctx the parse tree
 	 */
@@ -833,6 +875,26 @@ public interface Js_ParserListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitIds(Js_Parser.IdsContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link Js_Parser#setableKeywords}.
+	 * @param ctx the parse tree
+	 */
+	void enterSetableKeywords(Js_Parser.SetableKeywordsContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link Js_Parser#setableKeywords}.
+	 * @param ctx the parse tree
+	 */
+	void exitSetableKeywords(Js_Parser.SetableKeywordsContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link Js_Parser#validName}.
+	 * @param ctx the parse tree
+	 */
+	void enterValidName(Js_Parser.ValidNameContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link Js_Parser#validName}.
+	 * @param ctx the parse tree
+	 */
+	void exitValidName(Js_Parser.ValidNameContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link Js_Parser#noUseStatement}.
 	 * @param ctx the parse tree
