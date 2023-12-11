@@ -1,5 +1,9 @@
 parser grammar Js_Parser;
 
+@header {
+package antlr;
+}
+
 options {
     tokenVocab = Js_Lexer;
 }

@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ANTLRGenerationPreferences">
     <option name="perGrammarGenerationSettings">
@@ -5,8 +6,28 @@
         <PerGrammarGenerationSettings>
           <option name="fileName" value="$PROJECT_DIR$/src/antlr/Js_Parser.g4" />
           <option name="autoGen" value="true" />
+          <option name="outputDir" value="C:\Files\Java\r_compiler\src\js" />
+          <option name="libDir" value="" />
+          <option name="encoding" value="" />
+          <option name="pkg" value="" />
+          <option name="language" value="" />
+          <option name="generateVisitor" value="true" />
+        </PerGrammarGenerationSettings>
+        <PerGrammarGenerationSettings>
+          <option name="fileName" value="$PROJECT_DIR$/src/antlr/Js_Lexer.g4" />
+          <option name="autoGen" value="true" />
+          <option name="outputDir" value="" />
+          <option name="libDir" value="" />
+          <option name="encoding" value="" />
+          <option name="pkg" value="" />
+          <option name="language" value="" />
+          <option name="generateVisitor" value="true" />
+        </PerGrammarGenerationSettings>
+        <PerGrammarGenerationSettings>
+          <option name="fileName" value="$PROJECT_DIR$/src/Js_Parser.g4" />
+          <option name="autoGen" value="true" />
           <option name="outputDir" value="C:\Files\Java\r_compiler\src\antlr" />
-          <option name="libDir" value="C:\Files\Java\r_compiler\src\antlr" />
+          <option name="libDir" value="" />
           <option name="encoding" value="" />
           <option name="pkg" value="" />
           <option name="language" value="" />

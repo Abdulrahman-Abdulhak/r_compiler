@@ -1,7 +1,11 @@
 lexer grammar Js_Lexer;
 
 @header {
-    package antlr;
+package antlr;
+}
+
+options {
+superClass = js.JsLexerBase;
 }
 
 // general tokens
@@ -15,8 +19,10 @@ OPEN_BRACKET: '(';
 CLOSE_BRACKET: ')';
 OPEN_SQUARE_BRACKET: '[';
 CLOSE_SQUARE_BRACKET: ']';
-OPEN_BLOCK: '{' -> pushMode(BLOCK);
-TEMPLATE_LITERAL_VAR_CLOSE: '}' -> popMode;
+OPEN_CURLY_BRACES: '{';
+// keep this comment until we solve the problem of how to how to use {action} in antlr
+//TEMPLATE_LITERAL_VAR_CLOSE: {this.falser()}? '}' -> popMode;
+CLOSE_CURLY_BRACES: '}';
 // for strings
 OPEN_TEMPLATE_LITERAL: '`' -> pushMode(TEMPLATE_LITERAL);
 
@@ -99,10 +105,8 @@ LINE_COMMENT: '//' ~([\n\r])* -> skip;
 NEWLINE: [\r\n\u2028\u2029]+ -> skip;
 WS: [\t\u000B\u000C\u0020\u00A0]+ -> skip;
 
-mode BLOCK;
-CLOSE_BLOCK: '}' -> popMode;
-
+// this came up to me after seeing [this]{https://stackoverflow.com/a/68687324/19117184} answer on stackoverflow
 mode TEMPLATE_LITERAL;
 CLOSE_TEMPLATE_LITERAL: '`' -> popMode;
-TEMPLATE_LITERAL_START_VAR: '${' -> pushMode(DEFAULT_MODE);
-TEMPLATE_LITERAL_ALLOWED_CHAR: (~[`] | STRING_ALLOWED_CHARS)*;
+//TEMPLATE_LITERAL_START_VAR: '${' -> pushMode(DEFAULT_MODE);
+TEMPLATE_LITERAL_ALLOWED_CHAR: ~[`] | STRING_ALLOWED_CHARS;
