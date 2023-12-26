@@ -910,6 +910,16 @@ public interface Js_ParserListener extends ParseTreeListener {
 	 */
 	void exitValidName(Js_Parser.ValidNameContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link Js_Parser#declarers}.
+	 * @param ctx the parse tree
+	 */
+	void enterDeclarers(Js_Parser.DeclarersContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link Js_Parser#declarers}.
+	 * @param ctx the parse tree
+	 */
+	void exitDeclarers(Js_Parser.DeclarersContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link Js_Parser#noUseStatement}.
 	 * @param ctx the parse tree
 	 */

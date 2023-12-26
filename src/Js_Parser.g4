@@ -28,25 +28,64 @@ return: RETURN expression?;
 
 
 // function representaions
-function: arrowFunction | normalFunction;
+function: arrowFunction | normalFunction | anonymousFunction;
 arrowFunction: (args | validName) ARROW (block | expression);
-normalFunction: FUNCTION validName? args block;
+normalFunction: FUNCTION validName args block;
+anonymousFunction: FUNCTION args block;
 
 args: OPEN_BRACKET ((arg COMMA)*(arg | rest))? CLOSE_BRACKET;
-arg: validName (ASSIGNMENT_OP returnable)?;
+arg
+    : validName (ASSIGNMENT_OP expression)?
+    | objectDestructuring
+    | arrayDestructuring
+    ;
 rest: ELLIPSIS validName;
 // end of _functions representations_
 
 
 // JS Statements
 statement
-    : declare           #declaration
+    : importStatement   #importing
+    | export            #exporting
+    | declare           #declaration
     | expression        #exp
     | noUseStatement    #noUse
     ;
 
-declare: DECLARERS validName assignmentRightHand? (COMMA validName assignmentRightHand)*;
-assignmentRightHand: (ASSIGNMENT_OP validName)* ASSIGNMENT_OP expression;
+importStatement: IMPORT from? STRING;
+from: importForm FROM;
+importForm
+    : defaultImport
+    | namedImport
+    | fullImport
+    | defaultImport COMMA namedImport
+    | defaultImport COMMA fullImport
+    ;
+defaultImport: validName;
+namedImport: OPEN_CURLY_BRACES (validName | aliasImporting | DEFAULT AS validName) (COMMA (validName | aliasImporting))* CLOSE_CURLY_BRACES;
+aliasImporting: (validName | STRING) AS validName;
+fullImport: MULT_OP AS validName;
+
+export
+    : EXPORT
+    ( exportModule
+    | exportDeclaration
+    | exportList
+    | exportDefault
+    );
+exportDeclaration: declare | normalFunction;
+exportList: OPEN_CURLY_BRACES (validName | aliasExporting | validName AS DEFAULT) (COMMA (validName | aliasExporting))* CLOSE_CURLY_BRACES;
+aliasExporting: validName AS (validName | STRING);
+exportDefault: DEFAULT expression;
+exportModule: (
+        MULT_OP |
+        fullImport |
+        OPEN_CURLY_BRACES (validName | aliasImporting | DEFAULT | DEFAULT AS validName) (COMMA (validName | aliasImporting))* CLOSE_CURLY_BRACES
+    ) FROM STRING;
+
+declare: declarers declarable assignmentRightHand? (COMMA declarable assignmentRightHand)*;
+assignmentRightHand: (ASSIGNMENT_OP declarable)* ASSIGNMENT_OP expression;
+declarable: validName | objectDestructuring | arrayDestructuring;
 
 expression
     : OPEN_BRACKET expression CLOSE_BRACKET                                    #parentheses
@@ -153,8 +192,8 @@ for: FOR OPEN_BRACKET forExpression1? SEMICOLON expressionList? SEMICOLON expres
 forExpression1: declare | expressionList;
 expressionList: (expression COMMA)* expression;
 
-forin: FOR OPEN_BRACKET DECLARERS? validName IN expression CLOSE_BRACKET scopeBody;
-forof: FOR OPEN_BRACKET DECLARERS? validName OF expression CLOSE_BRACKET scopeBody;
+forin: FOR OPEN_BRACKET declarers? validName IN expression CLOSE_BRACKET scopeBody;
+forof: FOR OPEN_BRACKET declarers? validName OF expression CLOSE_BRACKET scopeBody;
 
 scopeHead: OPEN_BRACKET expression CLOSE_BRACKET;
 scopeBody: block | line;
@@ -165,17 +204,23 @@ block: OPEN_CURLY_BRACES line* CLOSE_CURLY_BRACES;
 
 object: OPEN_CURLY_BRACES ((objPropDefine COMMA)*objPropDefine COMMA?)? CLOSE_CURLY_BRACES;
 objPropDefine
-    : STRING COLON expression
-    | validName COLON expression
+    : objPropName COLON expression
     | validName
     | method
     | OPEN_SQUARE_BRACKET expression CLOSE_SQUARE_BRACKET COLON expression
+    | ELLIPSIS (ID | object)
     ;
+objPropName: STRING | validName | num;
 method: validName args block;
 
 array: OPEN_SQUARE_BRACKET ((arrayInput COMMA+)*arrayInput COMMA*)? CLOSE_SQUARE_BRACKET;
 arrayInput: expression | arraySpread;
 arraySpread: ELLIPSIS (ID | array);
+
+objectDestructuring: OPEN_CURLY_BRACES (destructuredObjVar COMMA)* destructuredObjVar COMMA? CLOSE_CURLY_BRACES;
+destructuredObjVar: (objPropName COLON)? validName (ASSIGNMENT_OP expression)?;
+arrayDestructuring: OPEN_SQUARE_BRACKET (destructuredArrVar COMMA)* destructuredArrVar COMMA? CLOSE_SQUARE_BRACKET;
+destructuredArrVar: validName (ASSIGNMENT_OP expression)?;
 
 param: OPEN_BRACKET ((paramInput COMMA)*(paramInput COMMA?))? CLOSE_BRACKET;
 paramInput: expression | arraySpread;
@@ -198,5 +243,7 @@ templateLiteralContent
 ids: ID | THIS | setableKeywords;
 setableKeywords: AS | ASYNC | FROM | GET | OF | SET | YIELD;
 validName: ID | setableKeywords;
+
+declarers: VAR | LET | CONST;
 
 noUseStatement: SEMICOLON;

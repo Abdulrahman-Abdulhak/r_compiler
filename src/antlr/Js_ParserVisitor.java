@@ -547,6 +547,12 @@ public interface Js_ParserVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitValidName(Js_Parser.ValidNameContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link Js_Parser#declarers}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitDeclarers(Js_Parser.DeclarersContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link Js_Parser#noUseStatement}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
