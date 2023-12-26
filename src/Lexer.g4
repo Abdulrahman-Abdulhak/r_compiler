@@ -1,12 +1,12 @@
-lexer grammar Js_Lexer;
+lexer grammar Lexer;
 
 @header {
 package antlr;
 }
 
-options {
-superClass = js.JsLexerBase;
-}
+//options {
+//superClass = js.JsLexerBase;
+//}
 
 // general tokens
 COLON: ':';

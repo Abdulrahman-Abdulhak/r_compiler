@@ -1,11 +1,11 @@
-parser grammar Js_Parser;
+parser grammar Parser;
 
 @header {
 package antlr;
 }
 
 options {
-    tokenVocab = Js_Lexer;
+    tokenVocab = Lexer;
 }
 
 program: line* EOF;

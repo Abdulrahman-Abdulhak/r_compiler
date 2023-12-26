@@ -1,4 +1,4 @@
-// Generated from C:/Files/Java/r_compiler/src/Js_Lexer.g4 by ANTLR 4.13.1
+// Generated from C:/Files/Java/r_compiler/src/Lexer.g4 by ANTLR 4.13.1
 
 package antlr;
 
@@ -12,7 +12,7 @@ import org.antlr.v4.runtime.dfa.DFA;
 import org.antlr.v4.runtime.misc.*;
 
 @SuppressWarnings({"all", "warnings", "unchecked", "unused", "cast", "CheckReturnValue", "this-escape"})
-public class Js_Lexer extends js.JsLexerBase {
+public class Lexer extends Lexer {
 	static { RuntimeMetaData.checkVersion("4.13.1", RuntimeMetaData.VERSION); }
 
 	protected static final DFA[] _decisionToDFA;
@@ -127,13 +127,13 @@ public class Js_Lexer extends js.JsLexerBase {
 	}
 
 
-	public Js_Lexer(CharStream input) {
+	public Lexer(CharStream input) {
 		super(input);
 		_interp = new LexerATNSimulator(this,_ATN,_decisionToDFA,_sharedContextCache);
 	}
 
 	@Override
-	public String getGrammarFileName() { return "Js_Lexer.g4"; }
+	public String getGrammarFileName() { return "Lexer.g4"; }
 
 	@Override
 	public String[] getRuleNames() { return ruleNames; }
