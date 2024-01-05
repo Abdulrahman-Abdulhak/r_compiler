@@ -77,11 +77,17 @@ exportDeclaration: declare | normalFunction;
 exportList: OPEN_CURLY_BRACES (validName | aliasExporting | validName AS DEFAULT) (COMMA (validName | aliasExporting))* CLOSE_CURLY_BRACES;
 aliasExporting: validName AS (validName | STRING);
 exportDefault: DEFAULT expression;
-exportModule: (
-        MULT_OP |
-        fullImport |
-        OPEN_CURLY_BRACES (validName | aliasImporting | DEFAULT | DEFAULT AS validName) (COMMA (validName | aliasImporting))* CLOSE_CURLY_BRACES
-    ) FROM STRING;
+exportModule: leftSideExportModule FROM STRING;
+leftSideExportModule
+    : MULT_OP                                                                                               #allFileModule
+    | fullImport                                                                                            #allFileModuleAlias
+    | OPEN_CURLY_BRACES moduleExportFirstItem (COMMA (validName | aliasImporting))* CLOSE_CURLY_BRACES      #selctiveModule
+    ;
+moduleExportFirstItem
+    : validName (AS validName)?         #moduleItemValid
+    | STRING AS validName               #moduleItemString
+    | DEFAULT (AS validName)?           #moduleItemDefault
+    ;
 
 declare: declarers declarable assignmentRightHand? (COMMA declarable assignmentRightHand)*;
 assignmentRightHand: (ASSIGNMENT_OP declarable)* ASSIGNMENT_OP expression;
@@ -89,10 +95,9 @@ declarable: validName | objectDestructuring | arrayDestructuring;
 
 expression
     : OPEN_BRACKET expression CLOSE_BRACKET                                    #parentheses
-    | functionCall                                                             #funcCall
-    | memberGetter                                                             #memberGet
-    | NEW functionCall                                                         #new
-    | NEW validName                                                            #newNoParam
+    | expression (param | templateLiteral)                                     #functionCall
+    | expression notation                                                      #memberGet
+    | NEW expression param?                                                    #new
     | expression incrementsOp                                                  #postIncre
     | incrementsOp expression                                                  #preInc
     | LOGIC_NOT_OP expression                                                  #logicalNOT
@@ -103,63 +108,53 @@ expression
     | expression compareOP expression                                          #compare
     | expression equalCompareOP expression                                     #compareWithEqual
     | expression AND expression                                                #logicalAND
-    | expression (OR | NULL_COALES_OP) expression                              #logicalOR_logicalNull
+    | expression OR expression                                                 #logicalOR
+    | expression NULL_COALES_OP expression                                     #logicalNull
     | expression TERNARY_OP1 expression COLON expression                       #ternary
-    | assignment                                                               #assign
+    | expression assinmentOp expression                                        #assignment
+    | ELLIPSIS expression                                                      #arraySpread
     | returnable                                                               #byVal
     ;
-functionCall
-    : callables param                                   #fromMemory
-    | OPEN_BRACKET function CLOSE_BRACKET param         #asIIFE
-    | callables templateLiteral                         #taggedTemplate
-    ;
-callables: validName | memberGetter | OPEN_BRACKET callables CLOSE_BRACKET;
+param: OPEN_BRACKET ((expression COMMA)*(expression COMMA?))? CLOSE_BRACKET;
 
 incrementsOp: INCREMENT_OP | DECREMENT_OP;
 unarysOp: ADD_OP | SUP_OP;
 
-memberGetter: member (dotNotation | bracketNotation)+;
-member: (objectable | objectableWithBrackets | OPEN_BRACKET member CLOSE_BRACKET);
-dotNotation: (DOT | OPTIONAL_CHAINING_OP) validName;
-bracketNotation: OPTIONAL_CHAINING_OP? OPEN_SQUARE_BRACKET indexers CLOSE_SQUARE_BRACKET;
-indexers
-    : validName
-    | STRING
-    | INT
-    | expression
+notation
+    : (DOT | OPTIONAL_CHAINING_OP) validName                                        #dotNotation
+    | OPTIONAL_CHAINING_OP? OPEN_SQUARE_BRACKET expression CLOSE_SQUARE_BRACKET     #bracketNotation
     ;
-objectable
-    : NEW functionCall
-    | NEW validName
-    | incrementsOp expression
-    | LOGIC_NOT_OP expression
-    | primeType
-    | object
-    | array
-    | ids
-    | OPEN_BRACKET objectable CLOSE_BRACKET
-    ;
+//objectable
+//    : NEW expression param
+//    | NEW validName
+//    | incrementsOp expression
+//    | LOGIC_NOT_OP expression
+//    | primeType
+//    | object
+//    | array
+//    | ids
+//    | OPEN_BRACKET objectable CLOSE_BRACKET
+//    ;
 // these represent only the operations that can have
 // the member get operations after putting them inside of brackets
-objectableWithBrackets
-    : OPEN_BRACKET
-    ( expression incrementsOp
-    | expression POW_OP expression
-    | expression multiplicativeOp expression
-    | expression additiveOp expression
-    | expression compareOP expression
-    | expression equalCompareOP expression
-    | expression AND expression
-    | expression (OR | NULL_COALES_OP) expression
-    | expression TERNARY_OP1 expression TERNARY_OP2 expression
-    | assignment
-    | function
-    ) CLOSE_BRACKET
-    | OPEN_BRACKET objectableWithBrackets CLOSE_BRACKET
-    ;
+//objectableWithBrackets
+//    : OPEN_BRACKET
+//    ( expression incrementsOp
+//    | expression POW_OP expression
+//    | expression multiplicativeOp expression
+//    | expression additiveOp expression
+//    | expression compareOP expression
+//    | expression equalCompareOP expression
+//    | expression AND expression
+//    | expression (OR | NULL_COALES_OP) expression
+//    | expression TERNARY_OP1 expression TERNARY_OP2 expression
+//    | assignable assinmentOp expression
+//    | function
+//    ) CLOSE_BRACKET
+//    | OPEN_BRACKET objectableWithBrackets CLOSE_BRACKET
+//    ;
 
-assignment: assignable (assinmentOp assignable)* assinmentOp expression;
-assignable: validName | memberGetter;
+//assignable: validName | memberGetter;
 
 multiplicativeOp: MULT_OP | DIV_OP | REM_OP;
 additiveOp: ADD_OP | SUP_OP;
@@ -212,17 +207,12 @@ objPropDefine
 objPropName: STRING | validName | num;
 method: validName args block;
 
-array: OPEN_SQUARE_BRACKET ((arrayInput COMMA+)*arrayInput COMMA*)? CLOSE_SQUARE_BRACKET;
-arrayInput: expression | arraySpread;
-arraySpread: ELLIPSIS (validName | array);
+array: OPEN_SQUARE_BRACKET ((expression COMMA+)*expression COMMA*)? CLOSE_SQUARE_BRACKET;
 
 objectDestructuring: OPEN_CURLY_BRACES (destructuredObjVar COMMA)* destructuredObjVar COMMA? CLOSE_CURLY_BRACES;
 destructuredObjVar: (objPropName COLON)? validName (ASSIGNMENT_OP expression)?;
 arrayDestructuring: OPEN_SQUARE_BRACKET (destructuredArrVar COMMA)* destructuredArrVar COMMA? CLOSE_SQUARE_BRACKET;
 destructuredArrVar: validName (ASSIGNMENT_OP expression)?;
-
-param: OPEN_BRACKET ((paramInput COMMA)*(paramInput COMMA?))? CLOSE_BRACKET;
-paramInput: expression | arraySpread;
 
 returnable
     : primeType       #primitive
@@ -246,7 +236,7 @@ setableKeywords: AS | ASYNC | FROM | GET | OF | SET | YIELD;
 
 declarers: VAR | LET | CONST;
 
-noUseStatement: SEMICOLON;
+noUseStatement: NEWLINE? SEMICOLON NEWLINE? | NEWLINE;
 
 // from here is the start of the JSX parser
 jsx
