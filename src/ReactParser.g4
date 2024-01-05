@@ -117,7 +117,8 @@ expression
     | expression TERNARY_OP1 expression COLON expression                       #ternary
     | expression assinmentOp expression                                        #assignment
     | ELLIPSIS expression                                                      #arraySpread
-    | returnable                                                               #byVal
+    | validName                                                                #variable
+    | returnable                                                               #value
     ;
 param: OPEN_BRACKET ((expression COMMA)*(expression COMMA?))? CLOSE_BRACKET;
 
@@ -218,12 +219,15 @@ destructuredObjVar: (objPropName COLON)? validName (ASSIGNMENT_OP expression)?;
 arrayDestructuring: OPEN_SQUARE_BRACKET (destructuredArrVar COMMA)* destructuredArrVar COMMA? CLOSE_SQUARE_BRACKET;
 destructuredArrVar: validName (ASSIGNMENT_OP expression)?;
 
+validName: ID | setableKeywords | htmlElement | voidElement | attributeOriginalName;
+setableKeywords: AS | ASYNC | FROM | GET | OF | SET | YIELD;
+
 returnable
     : primeType       #primitive
     | object          #objectVal
     | array           #arrayVal
     | function        #functionVal
-    | ids             #variable
+    | THIS            #thisKeyword
     | jsx             #jsxTags
     ;
 primeType: num | strings | BOOL | NULL | UNDEFINED;
@@ -234,9 +238,6 @@ templateLiteralContent
     : TEMPLATE_LITERAL_ALLOWED_CHAR
     | TEMPLATE_LITERAL_START_VAR expression TEMPLATE_LITERAL_VAR_CLOSE
     ;
-ids: THIS | validName;
-validName: ID | setableKeywords | htmlElement | voidElement | attributeOriginalName;
-setableKeywords: AS | ASYNC | FROM | GET | OF | SET | YIELD;
 
 declarers: VAR | LET | CONST;
 
