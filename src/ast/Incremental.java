@@ -6,6 +6,10 @@ public class Incremental extends Expression {
 
     public Incremental(Expression exp) { expression = exp; }
 
+    public void setIncrease(boolean increase) { this.increase = increase; }
+
+    public void setPost(boolean post) { this.post = post; }
+
     private String subType() {
         var str = "";
 
