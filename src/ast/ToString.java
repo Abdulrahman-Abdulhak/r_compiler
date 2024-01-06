@@ -8,7 +8,7 @@ import java.util.Objects;
 public class ToString {
 
     static String self(String name, String inside) {
-        var start = '\n' + name + " {" + "}";
+        var start = '\n' + name + " {";
         var end = inside.isEmpty() ? "}" : "\n}";
 
         return start + inside + end;
@@ -48,9 +48,12 @@ public class ToString {
             var member = arr[i+1];
 
             str.append(var(name.toString(), member));
-            str.append(",");
+            str.append(",\n");
         }
-        if (arr.length > 0) str.deleteCharAt(str.length() - 1);
+        if (arr.length > 0) {
+            str.deleteCharAt(str.length() - 1);
+            str.deleteCharAt(str.length() - 1);
+        }
 
         return str.toString();
     }

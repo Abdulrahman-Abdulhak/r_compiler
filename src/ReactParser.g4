@@ -11,8 +11,7 @@ options {
 program: line* EOF;
 
 line
-    : function
-    | statement
+    : statement
     | if
     | while
     | for
@@ -207,7 +206,7 @@ objPropDefine
     | validName
     | method
     | OPEN_SQUARE_BRACKET expression CLOSE_SQUARE_BRACKET COLON expression
-    | ELLIPSIS (validName | object)
+    | ELLIPSIS expression
     ;
 objPropName: STRING | validName | num;
 method: validName args block;

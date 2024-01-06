@@ -16,10 +16,13 @@ class TemplateLiteralContent {
     }
 }
 
-public class TemplateLiteral {
+public class TemplateLiteral extends JsString {
     List<TemplateLiteralContent> contents;
 
-    public TemplateLiteral() { contents = new ArrayList<>(); }
+    public TemplateLiteral() {
+        super("");
+        contents = new ArrayList<>();
+    }
 
     public void addContent(String content) {
         contents.add(new TemplateLiteralContent(content));
