@@ -74,6 +74,31 @@ public class ToString {
         return all(noNulls.toArray());
     }
 
+    static <T, H> String namesAliases(List<T> names, List<H> aliases) {
+        var namesArr = names.toArray();
+        var aliasesArr = aliases.toArray();
+
+        StringBuilder str = new StringBuilder("{");
+        if(!names.isEmpty()) str.append('\n');
+
+        for (int i = 0; i < namesArr.length; i++) {
+            str.append(nameAlias(namesArr[i], aliasesArr[i]));
+            str.append(",\n");
+        }
+
+        if(!names.isEmpty()) {
+            str.deleteCharAt(str.length() - 1);
+            str.deleteCharAt(str.length() - 1);
+            str.append("\n}");
+        } else str.append('}');
+
+        return str.toString();
+    }
+    static String nameAlias(Object name, Object alias) {
+        if(alias == null) return name.toString();
+        return name + " -> " + alias;
+    }
+
     static String var(String name, Object value) {
         String end = "";
 

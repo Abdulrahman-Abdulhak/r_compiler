@@ -51,8 +51,8 @@ statement
     | noUseStatement    #noUse
     ;
 
-importStatement: IMPORT from? STRING;
-from: importForm FROM;
+importStatement: IMPORT form? STRING;
+form: importForm FROM;
 importForm
     : validName                         #defaultImport
     | namedImport                       #namedImportStatement
@@ -60,13 +60,12 @@ importForm
     | validName COMMA namedImport       #defaultAndNamedImport
     | validName COMMA fullImport        #defaultAndFullImport
     ;
-namedImport: OPEN_CURLY_BRACES namedImportFirstItem (COMMA (validName | aliasImporting))* CLOSE_CURLY_BRACES;
-namedImportFirstItem
+namedImport: OPEN_CURLY_BRACES namedImportItem (COMMA namedImportItem)* CLOSE_CURLY_BRACES;
+namedImportItem
     : validName                 #namedImportValid
     | aliasImporting            #namedImporAlias
-    | DEFAULT AS validName      #namedImportDefault
     ;
-aliasImporting: (validName | STRING) AS validName;
+aliasImporting: (validName | STRING | DEFAULT) AS validName;
 fullImport: MULT_OP AS validName;
 
 export
@@ -82,11 +81,11 @@ aliasExporting: validName AS (validName | STRING);
 exportDefault: DEFAULT expression;
 exportModule: leftSideExportModule FROM STRING;
 leftSideExportModule
-    : MULT_OP                                                                                               #allFileModule
-    | fullImport                                                                                            #allFileModuleAlias
-    | OPEN_CURLY_BRACES moduleExportFirstItem (COMMA (validName | aliasImporting))* CLOSE_CURLY_BRACES      #selctiveModule
+    : MULT_OP                                                                              #allFileModule
+    | fullImport                                                                           #allFileModuleAlias
+    | OPEN_CURLY_BRACES moduleExportItem (COMMA moduleExportItem)* CLOSE_CURLY_BRACES      #selctiveModule
     ;
-moduleExportFirstItem
+moduleExportItem
     : validName (AS validName)?         #moduleItemValid
     | STRING AS validName               #moduleItemString
     | DEFAULT (AS validName)?           #moduleItemDefault

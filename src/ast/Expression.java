@@ -1,11 +1,11 @@
 package ast;
 
-public abstract class Expression {
+public abstract class Expression extends Statement {
     abstract String type();
     abstract Object[] members();
 
     @Override
-    public String toString() {
+    String lineContent() {
         var strPart1 = ToString.var("type", type());
         var strPart2 = ToString.allNotNull(members());
 
