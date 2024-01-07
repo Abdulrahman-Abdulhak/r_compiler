@@ -123,6 +123,6 @@ public class ToString {
             end = map((Map<Object, Object>) value);
         } else end = value.toString();
 
-        return '\n' + name + ": " + end;
+        return '\n' + name + (end.isEmpty() ? "" : ":") + end;
     }
 }

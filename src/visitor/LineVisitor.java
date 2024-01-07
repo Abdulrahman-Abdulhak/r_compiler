@@ -2,12 +2,13 @@ package visitor;
 
 import antlr.ReactParser;
 import antlr.ReactParserBaseVisitor;
+import ast.Block;
 import ast.Line;
 
 public class LineVisitor extends ReactParserBaseVisitor<Line> {
     @Override
     public Line visitStatementLine(ReactParser.StatementLineContext ctx) {
-        return super.visitStatementLine(ctx);
+        return new StatementVisitor().visit(ctx.statement());
     }
 
     @Override
@@ -41,12 +42,12 @@ public class LineVisitor extends ReactParserBaseVisitor<Line> {
     }
 
     @Override
-    public Line visitBlockLine(ReactParser.BlockLineContext ctx) {
-        return super.visitBlockLine(ctx);
+    public Block visitBlockLine(ReactParser.BlockLineContext ctx) {
+        return Util.fromBlock(ctx.block());
     }
 
     @Override
     public Line visitSpecialLineLine(ReactParser.SpecialLineLineContext ctx) {
-        return super.visitSpecialLineLine(ctx);
+        return new SpecialLineVisitor().visit(ctx.specialLine());
     }
 }

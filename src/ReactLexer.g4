@@ -30,6 +30,7 @@ OPEN_TEMPLATE_LITERAL: '`' -> pushMode(TEMPLATE_LITERAL);
 // keywords tokens
 AS: 'as';
 ASYNC: 'async';
+BREAK: 'break';
 CONTINUE: 'continue';
 CONST: 'const';
 DEFAULT: 'default';

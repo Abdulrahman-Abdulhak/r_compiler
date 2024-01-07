@@ -22,8 +22,10 @@ line
     | specialLine       #specialLineLine
     ;
 
-specialLine: CONTINUE | return;
+specialLine: break | continue | return;
 return: RETURN expression?;
+continue: CONTINUE STRING?;
+break: BREAK STRING?;
 
 
 // function representaions
