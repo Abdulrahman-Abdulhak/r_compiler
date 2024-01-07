@@ -4,6 +4,7 @@ import antlr.ReactParser;
 import ast.*;
 
 import java.util.List;
+import java.util.Map;
 
 public class Util {
     static Args fromArgList(List<ReactParser.ArgContext> argList) {
@@ -71,5 +72,16 @@ public class Util {
         }
 
         return block;
+    }
+
+    static Map<String, Object> fromAttrList(JSX jsx, List<ReactParser.AttibuteValueContext> attrs) {
+        for (var attrCtx : attrs) {
+            var name = attrCtx.tagAttribute().getText();
+            var js = attrCtx.jsInJsx();
+
+            if(js != null) jsx.addProp(name, new ExpressionVisitor().visit(js.expression()));
+            else if (attrCtx.STRING() != null) jsx.addProp(name, attrCtx.STRING().getText());
+            else jsx.addProp(name);
+        }
     }
 }

@@ -6,7 +6,7 @@ import ast.*;
 
 public class ReturnableVisitor extends ReactParserBaseVisitor<Returnable> {
     @Override
-    public Returnable visitPrimitive(ReactParser.PrimitiveContext ctx) {
+    public PrimeType visitPrimitive(ReactParser.PrimitiveContext ctx) {
         var num = ctx.primeType().num();
         if(num != null) return new PrimeType(Double.parseDouble(num.getText()));
 
@@ -30,7 +30,7 @@ public class ReturnableVisitor extends ReactParserBaseVisitor<Returnable> {
     }
 
     @Override
-    public Returnable visitObject(ReactParser.ObjectContext ctx) {
+    public JsObject visitObject(ReactParser.ObjectContext ctx) {
         var obj = new JsObject();
         var props = ctx.objPropDefine();
 
@@ -43,7 +43,7 @@ public class ReturnableVisitor extends ReactParserBaseVisitor<Returnable> {
     }
 
     @Override
-    public Returnable visitArray(ReactParser.ArrayContext ctx) {
+    public JsArray visitArray(ReactParser.ArrayContext ctx) {
         var arr = new JsArray();
         var expVisitor = new ExpressionVisitor();
 
@@ -55,17 +55,49 @@ public class ReturnableVisitor extends ReactParserBaseVisitor<Returnable> {
     }
 
     @Override
-    public Returnable visitFunction(ReactParser.FunctionContext ctx) {
+    public Function visitFunction(ReactParser.FunctionContext ctx) {
         return new FunctionVisitor().visit(ctx);
     }
 
     @Override
-    public Returnable visitThisKeyword(ReactParser.ThisKeywordContext ctx) {
+    public ThisKeyword visitThisKeyword(ReactParser.ThisKeywordContext ctx) {
         return new ThisKeyword();
     }
 
     @Override
-    public Returnable visitJsx(ReactParser.JsxContext ctx) {
-        return super.visitJsx(ctx);
+    public JSX visitJsx(ReactParser.JsxContext ctx) {
+        var voidTagCtx = ctx.voidTag();
+        if(voidTagCtx != null) {
+            var exp = voidTagCtx.jsxName().expression();
+            JSX jsx;
+            if(exp != null) jsx = new JSX(new ExpressionVisitor().visit(exp));
+            else jsx = new JSX(voidTagCtx.jsxName().getText());
+
+            var attrsCtx = voidTagCtx.attibuteValue();
+            Util.fromAttrList(jsx, attrsCtx);
+
+            return jsx;
+        }
+        var fullTagCtx = ctx.fullTag();
+        JSX jsx;
+
+        var exp = fullTagCtx.jsxName(0).expression();
+        if(exp != null) jsx = new JSX(new ExpressionVisitor().visit(exp));
+        else jsx = new JSX(fullTagCtx.jsxName(0).getText());
+
+        var attrsCtx = fullTagCtx.attibuteValue();
+        Util.fromAttrList(jsx, attrsCtx);
+
+        var childrenCtx = fullTagCtx.jsxChildren();
+        for (var childCtx : childrenCtx) {
+            if(childCtx.jsInJsx() != null) {
+                var js = new ExpressionVisitor().visit(childCtx.jsInJsx().expression());
+                jsx.addChild(new JSinJSX(js));
+            } else {
+                jsx.addChild(visitJsx(childCtx.jsx()));
+            }
+        }
+
+        return jsx;
     }
 }

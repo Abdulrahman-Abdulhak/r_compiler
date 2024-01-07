@@ -18,7 +18,13 @@ public class JSX extends Returnable {
         props = new HashMap<>();
     }
 
+    public void addProp(String name) {
+        props.put(name, null);
+    }
     public void addProp(String name, String value) {
+        props.put(name, value);
+    }
+    public void addProp(String name, Expression value) {
         props.put(name, value);
     }
 
