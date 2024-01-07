@@ -13,9 +13,9 @@ public class ReturnableVisitor extends ReactParserBaseVisitor<Returnable> {
         var strings = ctx.primeType().strings();
         if(strings != null) {
             JsString str;
-            if(strings.getChild(1).getChildCount() > 0) {
-                str = new TemplateLiteralVisitor().visit(strings.getChild(1));
-            } else str = new JsString(strings.getChild(1).getText());
+            if(strings.getChild(0).getChildCount() > 0) {
+                str = new TemplateLiteralVisitor().visit(strings.getChild(0));
+            } else str = new JsString(strings.getChild(0).getText());
 
             return new PrimeType(str);
         }

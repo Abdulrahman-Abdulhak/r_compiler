@@ -1,5 +1,6 @@
 package ast;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,10 +13,12 @@ public class JSX extends Returnable {
     public JSX(String name) {
         this.identifier = name;
         props = new HashMap<>();
+        children = new ArrayList<>();
     }
     public JSX(Expression identifier) {
         this.identifier = identifier;
         props = new HashMap<>();
+        children = new ArrayList<>();
     }
 
     public void addProp(String name) {
