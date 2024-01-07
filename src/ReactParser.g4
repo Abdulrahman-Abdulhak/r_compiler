@@ -11,15 +11,15 @@ options {
 program: line* EOF;
 
 line
-    : statement
-    | if
-    | while
-    | for
-    | forin
-    | forof
-    | doWhile
-    | block
-    | specialLine
+    : statement         #statementLine
+    | if                #ifLine
+    | while             #whileLine
+    | for               #forLine
+    | forin             #forInLine
+    | forof             #forOfLine
+    | doWhile           #doWhileLine
+    | block             #blockLine
+    | specialLine       #specialLineLine
     ;
 
 specialLine: CONTINUE | return;
@@ -201,11 +201,11 @@ block: OPEN_CURLY_BRACES line* CLOSE_CURLY_BRACES;
 
 object: OPEN_CURLY_BRACES ((objPropDefine COMMA)*objPropDefine COMMA?)? CLOSE_CURLY_BRACES;
 objPropDefine
-    : objPropName COLON expression
-    | validName
-    | method
-    | OPEN_SQUARE_BRACKET expression CLOSE_SQUARE_BRACKET COLON expression
-    | ELLIPSIS expression
+    : objPropName COLON expression                                              #normalPropDefine
+    | validName                                                                 #varPropDefine
+    | method                                                                    #methodPropDefine
+    | OPEN_SQUARE_BRACKET expression CLOSE_SQUARE_BRACKET COLON expression      #computedPropDefine
+    | ELLIPSIS expression                                                       #objecPropsPropDefine
     ;
 objPropName: STRING | validName | num;
 method: validName args block;

@@ -1,9 +1,6 @@
 package ast;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 public class ToString {
 
@@ -74,6 +71,21 @@ public class ToString {
         return all(noNulls.toArray());
     }
 
+    static String map(Map<Object, Object> entries) {
+        StringBuilder str = new StringBuilder("{");
+        for (var entry : entries.entrySet()) {
+            str.append(nameAlias(entry.getKey(), entry.getValue()));
+            str.append(",\n");
+        }
+        if(!entries.isEmpty()) {
+            str.deleteCharAt(str.length() - 1);
+            str.deleteCharAt(str.length() - 1);
+            str.append("\n}");
+        } else str.append('}');
+
+        return str.toString();
+    }
+
     static <T, H> String namesAliases(List<T> names, List<H> aliases) {
         var namesArr = names.toArray();
         var aliasesArr = aliases.toArray();
@@ -102,13 +114,14 @@ public class ToString {
     static String var(String name, Object value) {
         String end = "";
 
-        if (value instanceof List) {
+        if (value instanceof List<?>) {
             end = '[' +
                     list((List<?>) value) +
                     (((List<?>) value).isEmpty() ? ']' : "\n]")
             ;
-        }
-        else end = value.toString();
+        } else if (value instanceof Map<?, ?>) {
+            end = map((Map<Object, Object>) value);
+        } else end = value.toString();
 
         return '\n' + name + ": " + end;
     }

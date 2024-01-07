@@ -15,6 +15,12 @@ public class ExpressionVisitor extends ReactParserBaseVisitor<Expression> {
     @Override
     public Expression visitFunctionCall(ReactParser.FunctionCallContext ctx) {
         Expression nameSpace = visit(ctx.expression());
+
+        if(ctx.templateLiteral() != null) {
+            var template = new TemplateLiteralVisitor().visit(ctx.templateLiteral());
+            return new FunctionCall(nameSpace, template);
+        }
+
         Param param = new ParamVisitor().visit(ctx.param());
 
         return new FunctionCall(nameSpace, param);
