@@ -74,7 +74,7 @@ public class Util {
         return block;
     }
 
-    static Map<String, Object> fromAttrList(JSX jsx, List<ReactParser.AttibuteValueContext> attrs) {
+    static void fromAttrList(JSX jsx, List<ReactParser.AttibuteValueContext> attrs) {
         for (var attrCtx : attrs) {
             var name = attrCtx.tagAttribute().getText();
             var js = attrCtx.jsInJsx();
