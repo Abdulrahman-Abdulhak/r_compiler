@@ -4,6 +4,9 @@ public class ImportStatement extends Statement {
     String from;
     ImportForm form;
 
+    public ImportStatement(String from) {
+        this.from = from;
+    }
     public ImportStatement(ImportForm form, String from) {
         this.from = from;
         this.form = form;
@@ -11,10 +14,7 @@ public class ImportStatement extends Statement {
 
     @Override
     String lineContent() {
-        var inside = ToString.all(
-                "From", from,
-                "Form", form
-        );
+        var inside = ToString.allNotNull("From", from, "Form", form);
 
         return ToString.self(
                 "Import",

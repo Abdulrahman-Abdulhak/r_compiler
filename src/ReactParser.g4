@@ -55,15 +55,15 @@ importStatement: IMPORT form? STRING;
 form: importForm FROM;
 importForm
     : validName                         #defaultImport
-    | namedImport                       #namedImportStatement
-    | fullImport                        #fullImportStatement
+    | namedImport                       #namedImportForm
+    | fullImport                        #fullImportForm
     | validName COMMA namedImport       #defaultAndNamedImport
     | validName COMMA fullImport        #defaultAndFullImport
     ;
 namedImport: OPEN_CURLY_BRACES namedImportItem (COMMA namedImportItem)* CLOSE_CURLY_BRACES;
 namedImportItem
-    : validName                 #namedImportValid
-    | aliasImporting            #namedImporAlias
+    : validName
+    | aliasImporting
     ;
 aliasImporting: (validName | STRING | DEFAULT) AS validName;
 fullImport: MULT_OP AS validName;

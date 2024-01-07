@@ -4,7 +4,6 @@ import antlr.ReactParser;
 import ast.*;
 
 import java.util.List;
-import java.util.Map;
 
 public class Util {
     static Args fromArgList(List<ReactParser.ArgContext> argList) {
@@ -82,6 +81,22 @@ public class Util {
             if(js != null) jsx.addProp(name, new ExpressionVisitor().visit(js.expression()));
             else if (attrCtx.STRING() != null) jsx.addProp(name, attrCtx.STRING().getText());
             else jsx.addProp(name);
+        }
+    }
+
+    static void forNamedImport(NamedImport named, List<ReactParser.NamedImportItemContext> namedItemsCtx) {
+        for(var itemCtx : namedItemsCtx) {
+            if(itemCtx.validName() != null) named.addOriginalName(itemCtx.validName().getText());
+            var aliasCtx = itemCtx.aliasImporting();
+            if(aliasCtx != null) {
+                var alias = aliasCtx.getChild(2).getText();
+                String item = aliasCtx.getChild(0).getText();
+                if(aliasCtx.DEFAULT() != null) {
+                    // for more than one default in one import
+                }
+
+                named.addNameWithConverted(item, new ValidName(alias));
+            }
         }
     }
 }

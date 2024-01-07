@@ -13,7 +13,7 @@ public class ExpressionVisitor extends ReactParserBaseVisitor<Expression> {
     }
 
     @Override
-    public Expression visitFunctionCall(ReactParser.FunctionCallContext ctx) {
+    public FunctionCall visitFunctionCall(ReactParser.FunctionCallContext ctx) {
         Expression nameSpace = visit(ctx.expression());
 
         if(ctx.templateLiteral() != null) {
@@ -21,13 +21,16 @@ public class ExpressionVisitor extends ReactParserBaseVisitor<Expression> {
             return new FunctionCall(nameSpace, template);
         }
 
-        Param param = new ParamVisitor().visit(ctx.param());
+        Param param = new Param();
+        for (var exp : ctx.param().expression()) {
+            param.addNewParameter(visit(exp));
+        }
 
         return new FunctionCall(nameSpace, param);
     }
 
     @Override
-    public Expression visitMemberGet(ReactParser.MemberGetContext ctx) {
+    public MemberGet visitMemberGet(ReactParser.MemberGetContext ctx) {
         Expression parent = visit(ctx.expression());
         Notation notation = new NotationVisitor().visit(ctx.notation());
 
@@ -35,15 +38,22 @@ public class ExpressionVisitor extends ReactParserBaseVisitor<Expression> {
     }
 
     @Override
-    public Expression visitNew(ReactParser.NewContext ctx) {
+    public New visitNew(ReactParser.NewContext ctx) {
         Expression expression = visit(ctx.expression());
-        Param param = new ParamVisitor().visit(ctx.param());
 
-        return new New(expression, param);
+        if(ctx.param() != null) {
+            Param param = new Param();
+            for (var exp : ctx.param().expression()) {
+                param.addNewParameter(visit(exp));
+            }
+            return new New(expression, param);
+        }
+
+        return new New(expression);
     }
 
     @Override
-    public Expression visitPostIncre(ReactParser.PostIncreContext ctx) {
+    public Incremental visitPostIncre(ReactParser.PostIncreContext ctx) {
         Expression exp = visit(ctx.expression());
         var incremental = new Incremental(exp);
 
@@ -56,7 +66,7 @@ public class ExpressionVisitor extends ReactParserBaseVisitor<Expression> {
     }
 
     @Override
-    public Expression visitPreInc(ReactParser.PreIncContext ctx) {
+    public Incremental visitPreInc(ReactParser.PreIncContext ctx) {
         Expression exp = visit(ctx.expression());
         var incremental = new Incremental(exp);
 
@@ -69,13 +79,13 @@ public class ExpressionVisitor extends ReactParserBaseVisitor<Expression> {
     }
 
     @Override
-    public Expression visitLogicalNOT(ReactParser.LogicalNOTContext ctx) {
+    public LogicalNot visitLogicalNOT(ReactParser.LogicalNOTContext ctx) {
         var exp = visit(ctx.expression());
         return new LogicalNot(exp);
     }
 
     @Override
-    public Expression visitUnary(ReactParser.UnaryContext ctx) {
+    public Unary visitUnary(ReactParser.UnaryContext ctx) {
         var exp = visit(ctx.expression());
         var sign = ctx.unarysOp().getText();
 
@@ -83,7 +93,7 @@ public class ExpressionVisitor extends ReactParserBaseVisitor<Expression> {
     }
 
     @Override
-    public Expression visitPow(ReactParser.PowContext ctx) {
+    public Pow visitPow(ReactParser.PowContext ctx) {
         Expression left = visit(ctx.expression(0));
         Expression right = visit(ctx.expression(1));
 
@@ -91,7 +101,7 @@ public class ExpressionVisitor extends ReactParserBaseVisitor<Expression> {
     }
 
     @Override
-    public Expression visitMult(ReactParser.MultContext ctx) {
+    public Multiplication visitMult(ReactParser.MultContext ctx) {
         Expression left = visit(ctx.expression(0));
         String sign = ctx.multiplicativeOp().getText();
         Expression right = visit(ctx.expression(1));
@@ -100,7 +110,7 @@ public class ExpressionVisitor extends ReactParserBaseVisitor<Expression> {
     }
 
     @Override
-    public Expression visitAdd(ReactParser.AddContext ctx) {
+    public Addition visitAdd(ReactParser.AddContext ctx) {
         Expression left = visit(ctx.expression(0));
         String sign = ctx.additiveOp().getText();
         Expression right = visit(ctx.expression(1));
@@ -109,7 +119,7 @@ public class ExpressionVisitor extends ReactParserBaseVisitor<Expression> {
     }
 
     @Override
-    public Expression visitCompare(ReactParser.CompareContext ctx) {
+    public Compare visitCompare(ReactParser.CompareContext ctx) {
         Expression left = visit(ctx.expression(0));
         String sign = ctx.compareOP().getText();
         Expression right = visit(ctx.expression(1));
@@ -118,7 +128,7 @@ public class ExpressionVisitor extends ReactParserBaseVisitor<Expression> {
     }
 
     @Override
-    public Expression visitCompareWithEqual(ReactParser.CompareWithEqualContext ctx) {
+    public CompareWithEqual visitCompareWithEqual(ReactParser.CompareWithEqualContext ctx) {
         Expression left = visit(ctx.expression(0));
         String sign = ctx.equalCompareOP().getText();
         Expression right = visit(ctx.expression(1));
@@ -127,7 +137,7 @@ public class ExpressionVisitor extends ReactParserBaseVisitor<Expression> {
     }
 
     @Override
-    public Expression visitLogicalAND(ReactParser.LogicalANDContext ctx) {
+    public LogicalAnd visitLogicalAND(ReactParser.LogicalANDContext ctx) {
         Expression left = visit(ctx.expression(0));
         Expression right = visit(ctx.expression(1));
 
@@ -135,7 +145,7 @@ public class ExpressionVisitor extends ReactParserBaseVisitor<Expression> {
     }
 
     @Override
-    public Expression visitLogicalOR(ReactParser.LogicalORContext ctx) {
+    public LogicalOr visitLogicalOR(ReactParser.LogicalORContext ctx) {
         Expression left = visit(ctx.expression(0));
         Expression right = visit(ctx.expression(1));
 
@@ -143,7 +153,7 @@ public class ExpressionVisitor extends ReactParserBaseVisitor<Expression> {
     }
 
     @Override
-    public Expression visitLogicalNull(ReactParser.LogicalNullContext ctx) {
+    public LogicalNull visitLogicalNull(ReactParser.LogicalNullContext ctx) {
         Expression left = visit(ctx.expression(0));
         Expression right = visit(ctx.expression(1));
 
@@ -151,7 +161,7 @@ public class ExpressionVisitor extends ReactParserBaseVisitor<Expression> {
     }
 
     @Override
-    public Expression visitTernary(ReactParser.TernaryContext ctx) {
+    public TernaryOperator visitTernary(ReactParser.TernaryContext ctx) {
         Expression condition = visit(ctx.expression(0));
         Expression onTruth = visit(ctx.expression(1));
         Expression onFalse = visit(ctx.expression(2));
@@ -160,7 +170,7 @@ public class ExpressionVisitor extends ReactParserBaseVisitor<Expression> {
     }
 
     @Override
-    public Expression visitAssignment(ReactParser.AssignmentContext ctx) {
+    public Assignment visitAssignment(ReactParser.AssignmentContext ctx) {
         Expression left = visit(ctx.expression(0));
         String sign = ctx.assinmentOp().getText();
         Expression right = visit(ctx.expression(1));
@@ -169,19 +179,19 @@ public class ExpressionVisitor extends ReactParserBaseVisitor<Expression> {
     }
 
     @Override
-    public Expression visitArraySpread(ReactParser.ArraySpreadContext ctx) {
+    public ArraySpread visitArraySpread(ReactParser.ArraySpreadContext ctx) {
         Expression exp = visit(ctx.expression());
         return new ArraySpread(exp);
     }
 
     @Override
-    public Expression visitVariable(ReactParser.VariableContext ctx) {
+    public ValidName visitVariable(ReactParser.VariableContext ctx) {
         var name = ctx.validName().getText();
         return new ValidName(name);
     }
 
     @Override
-    public Expression visitValue(ReactParser.ValueContext ctx) {
+    public Returnable visitValue(ReactParser.ValueContext ctx) {
         return new ReturnableVisitor().visit(ctx.returnable());
     }
 }

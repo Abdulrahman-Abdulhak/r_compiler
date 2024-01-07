@@ -1,9 +1,22 @@
 package ast;
 
-public abstract class ImportForm extends Statement {
+public class ImportForm {
     ValidName theDefault, fullImportAlias;
     NamedImport namedImport;
 
+    public ImportForm(ValidName theDefault) { this.theDefault = theDefault; }
+    public ImportForm(NamedImport namedImport) { this.namedImport = namedImport; }
+    public ImportForm(ValidName fullImportAlias, boolean isFullImport) {
+        this.fullImportAlias = fullImportAlias;
+    }
+    public ImportForm(ValidName theDefault, NamedImport namedImport) {
+        this.theDefault = theDefault;
+        this.namedImport = namedImport;
+    }
+    public ImportForm(ValidName theDefault, ValidName fullImportAlias) {
+        this.theDefault = theDefault;
+        this.fullImportAlias = fullImportAlias;
+    }
     public ImportForm(ValidName theDefault, ValidName fullImportAlias, NamedImport namedImport) {
         this.theDefault = theDefault;
         this.fullImportAlias = fullImportAlias;
