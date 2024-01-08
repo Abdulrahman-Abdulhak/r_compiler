@@ -10,6 +10,10 @@ public class ObjectDestructuring {
 
     public void addVar(DestructuredObjVar var) { vars.add(var); }
 
+    public List<DestructuredObjVar> getVars() {
+        return vars;
+    }
+
     @Override
     public String toString() {
         return ToString.self(

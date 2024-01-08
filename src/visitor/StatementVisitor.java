@@ -2,10 +2,7 @@ package visitor;
 
 import antlr.ReactParser;
 import antlr.ReactParserBaseVisitor;
-import ast.Expression;
-import ast.ImportStatement;
-import ast.NoUse;
-import ast.Statement;
+import ast.*;
 
 public class StatementVisitor extends ReactParserBaseVisitor<Statement> {
     @Override
@@ -27,8 +24,8 @@ public class StatementVisitor extends ReactParserBaseVisitor<Statement> {
     }
 
     @Override
-    public Statement visitDeclaration(ReactParser.DeclarationContext ctx) {
-        return super.visitDeclaration(ctx);
+    public Declare visitDeclaration(ReactParser.DeclarationContext ctx) {
+        return new DeclareVisitor().visit(ctx.declare());
     }
 
     @Override

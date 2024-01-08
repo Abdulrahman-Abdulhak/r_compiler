@@ -5,11 +5,15 @@ import antlr.ReactParserBaseVisitor;
 import ast.ImportForm;
 import ast.NamedImport;
 import ast.ValidName;
+import symbolTable.Row;
+import symbolTable.SymbolTable;
 
 public class ImportFormVisitor extends ReactParserBaseVisitor<ImportForm> {
     @Override
     public ImportForm visitDefaultImport(ReactParser.DefaultImportContext ctx) {
-        return new ImportForm(new ValidName(ctx.validName().getText()));
+        var form = new ImportForm(new ValidName(ctx.validName().getText()));
+        SymbolTable.main.addRow(new Row("Import", form.getTheDefault().getIdentifier()));
+        return form;
     }
 
     @Override
@@ -19,12 +23,20 @@ public class ImportFormVisitor extends ReactParserBaseVisitor<ImportForm> {
         var namedItemsCtx = ctx.namedImport().namedImportItem();
         Util.forNamedImport(named, namedItemsCtx);
 
-        return new ImportForm(named);
+        var form = new ImportForm(named);
+
+        for(var name : named.finalNames()) {
+            SymbolTable.main.addRow(new Row("Import", name));
+        }
+
+        return form;
     }
 
     @Override
     public ImportForm visitFullImportForm(ReactParser.FullImportFormContext ctx) {
-        return new ImportForm(new ValidName(ctx.fullImport().validName().getText()), true);
+        var form = new ImportForm(new ValidName(ctx.fullImport().validName().getText()), true);
+        SymbolTable.main.addRow(new Row("Import", form.getFullImportAlias().getIdentifier()));
+        return form;
     }
 
     @Override
@@ -34,14 +46,25 @@ public class ImportFormVisitor extends ReactParserBaseVisitor<ImportForm> {
         var namedItemsCtx = ctx.namedImport().namedImportItem();
         Util.forNamedImport(named, namedItemsCtx);
 
-        return new ImportForm(new ValidName(ctx.validName().getText()), named);
+        var form = new ImportForm(new ValidName(ctx.validName().getText()), named);
+        SymbolTable.main.addRow(new Row("Import", form.getTheDefault().getIdentifier()));
+        for(var name : named.finalNames()) {
+            SymbolTable.main.addRow(new Row("Import", name));
+        }
+
+        return form;
     }
 
     @Override
     public ImportForm visitDefaultAndFullImport(ReactParser.DefaultAndFullImportContext ctx) {
-        return new ImportForm(
+        var form = new ImportForm(
                 new ValidName(ctx.validName().getText()),
                 new ValidName(ctx.fullImport().validName().getText())
         );
+
+        SymbolTable.main.addRow(new Row("Import", form.getTheDefault().getIdentifier()));
+        SymbolTable.main.addRow(new Row("Import", form.getFullImportAlias().getIdentifier()));
+
+        return form;
     }
 }

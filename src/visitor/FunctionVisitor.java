@@ -3,6 +3,8 @@ package visitor;
 import antlr.ReactParser;
 import antlr.ReactParserBaseVisitor;
 import ast.*;
+import symbolTable.Row;
+import symbolTable.SymbolTable;
 
 public class FunctionVisitor extends ReactParserBaseVisitor<Function> {
     @Override
@@ -51,7 +53,9 @@ public class FunctionVisitor extends ReactParserBaseVisitor<Function> {
         var blockCtx = ctx.block();
         var block = Util.fromBlock(blockCtx);
 
-        return new NormalFunction(name, args, block);
+        var func = new NormalFunction(name, args, block);
+        SymbolTable.main.addRow(new Row("function", name.getIdentifier()));
+        return func;
     }
 
     @Override

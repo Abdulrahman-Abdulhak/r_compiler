@@ -5,7 +5,7 @@ import java.util.*;
 public class ToString {
 
     static String self(String name, String inside) {
-        var start = '\n' + name + " {";
+        var start = name + " {";
         var end = inside.isEmpty() ? "}" : "\n}";
 
         return start + inside + end;

@@ -23,6 +23,18 @@ public class ImportForm {
         this.namedImport = namedImport;
     }
 
+    public ValidName getTheDefault() {
+        return theDefault;
+    }
+
+    public ValidName getFullImportAlias() {
+        return fullImportAlias;
+    }
+
+    public NamedImport getNamedImport() {
+        return namedImport;
+    }
+
     @Override
     public String toString() {
         var inside = ToString.allNotNull(

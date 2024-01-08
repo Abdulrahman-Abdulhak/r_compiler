@@ -25,6 +25,23 @@ public class NamedImport {
         convertedNames.add(newName);
     }
 
+    public List<String> finalNames() {
+        var names = new ArrayList<String>();
+
+        var originalNAmes = this.names.toArray();
+        var aliasNames = this.convertedNames.toArray();
+        for (int i = 0; i < originalNAmes.length; i++) {
+            if(aliasNames[i] == null) {
+                names.add(originalNAmes[i].toString());
+                continue;
+            }
+
+            names.add(((ValidName) aliasNames[i]).identifier);
+        }
+
+        return names;
+    }
+
     @Override
     public String toString() {
         return ToString.namesAliases(names, convertedNames);

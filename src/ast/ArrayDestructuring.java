@@ -17,6 +17,10 @@ public class ArrayDestructuring {
         varWithDefault.put(var.identifier, exp);
     }
 
+    public Map<Object, Object> getVarWithDefault() {
+        return varWithDefault;
+    }
+
     @Override
     public String toString() {
         return  "array destructuring: " + "var : defaultValue" + "\n" + ToString.map(varWithDefault);

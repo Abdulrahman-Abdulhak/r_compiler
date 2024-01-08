@@ -3,6 +3,7 @@ import antlr.ReactParser;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
+import symbolTable.SymbolTable;
 import visitor.ProgramVisitor;
 
 import java.io.IOException;
@@ -25,5 +26,11 @@ public class Main {
         var tree = reactVisitor.visit(ast);
 
         System.out.println(tree);
+        System.out.println();
+        System.out.println();
+        System.out.println();
+        System.out.println();
+        System.out.println();
+        SymbolTable.main.print();
     }
 }

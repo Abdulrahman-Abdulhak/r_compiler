@@ -20,6 +20,10 @@ public class DestructuredObjVar {
         this.defaultValue = defaultValue;
     }
 
+    public ValidName getVar() {
+        return var;
+    }
+
     @Override
     public String toString() {
         return ToString.self(

@@ -93,9 +93,12 @@ moduleExportItem
     | DEFAULT (AS validName)?           #moduleItemDefault
     ;
 
-declare: declarers declarable assignmentRightHand? (COMMA declarable assignmentRightHand)*;
-assignmentRightHand: (ASSIGNMENT_OP declarable)* ASSIGNMENT_OP expression;
+declare: declarers declareSyntax (COMMA declareSyntax)*;
+declareSyntax: declarable assignmentRightHand?;
+assignmentRightHand: (assignmentDeclarable)* ASSIGNMENT_OP expression;
+assignmentDeclarable: ASSIGNMENT_OP declarable;
 declarable: validName | objectDestructuring | arrayDestructuring;
+declarers: VAR | LET | CONST;
 
 expression
     : OPEN_BRACKET expression CLOSE_BRACKET                                    #parentheses
@@ -238,8 +241,6 @@ templateLiteralContent
     : TEMPLATE_LITERAL_ALLOWED_CHAR
     | TEMPLATE_LITERAL_START_VAR expression TEMPLATE_LITERAL_VAR_CLOSE
     ;
-
-declarers: VAR | LET | CONST;
 
 noUseStatement: NEWLINE? SEMICOLON NEWLINE? | NEWLINE;
 

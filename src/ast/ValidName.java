@@ -5,6 +5,10 @@ public class ValidName extends Expression {
 
     public ValidName(String id) { identifier = id; }
 
+    public String getIdentifier() {
+        return identifier;
+    }
+
     @Override
     String type() { return "ValidName"; }
 
