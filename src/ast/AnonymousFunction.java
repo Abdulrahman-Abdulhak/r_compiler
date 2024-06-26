@@ -4,5 +4,5 @@ public class AnonymousFunction extends Function {
     public AnonymousFunction(Args args, Block block) { super(args, block); }
 
     @Override
-    String subType() { return "anonymous"; }
+    String subType() { return "Anonymous"; }
 }

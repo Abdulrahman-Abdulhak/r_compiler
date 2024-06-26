@@ -1,5 +1,7 @@
 package visitor;
 
+import Util.VisitorUtil;
+
 import antlr.ReactParser;
 import antlr.ReactParserBaseVisitor;
 import ast.Block;
@@ -43,7 +45,7 @@ public class LineVisitor extends ReactParserBaseVisitor<Line> {
 
     @Override
     public Block visitBlockLine(ReactParser.BlockLineContext ctx) {
-        return Util.fromBlock(ctx.block());
+        return VisitorUtil.fromBlock(ctx.block());
     }
 
     @Override

@@ -1,5 +1,7 @@
 package ast;
 
+import Util.ToString;
+
 public class Continue extends SpecialLine {
     String label;
     public Continue() {}

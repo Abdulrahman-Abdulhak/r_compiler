@@ -1,40 +1,42 @@
 package ast;
 
+import symbolTable.VariableType;
+
 public class PrimeType extends Returnable {
-    String type;
+    VariableType variableType;
     Object value;
 
     public PrimeType(int value) {
         this.value = value;
-        type = "num";
+        variableType = VariableType.num;
     }
     public PrimeType(float value) {
         this.value = value;
-        type = "num";
+        variableType = VariableType.num;
     }
     public PrimeType(double value) {
         this.value = value;
-        type = "num";
+        variableType = VariableType.num;
     }
     public PrimeType(JsString str) {
         value = str;
-        type = "string";
+        variableType = VariableType.string;
     }
     public PrimeType(String str) {
         value = str;
-        type = "string";
+        variableType = VariableType.string;
     }
     public PrimeType(boolean bool) {
         value = bool;
-        type = "bool";
+        variableType = VariableType.bool;
     }
     public PrimeType(JsNull nullVal) {
         value = nullVal;
-        type = "null";
+        variableType = VariableType.jsNull;
     }
     public PrimeType() {
         value = null;
-        type = "undefined";
+        variableType = VariableType.undefined;
     }
 
     @Override
@@ -42,6 +44,6 @@ public class PrimeType extends Returnable {
 
     @Override
     Object[] members() {
-        return new Object[]{"type", type, "value", value};
+        return new Object[]{"variableType", variableType.name(), "value", value};
     }
 }

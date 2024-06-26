@@ -1,7 +1,5 @@
 package ast;
 
-import java.util.Objects;
-
 public class Unary extends Expression {
     String sign;
     Expression expression;

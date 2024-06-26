@@ -6,5 +6,5 @@ public class Method extends Function {
     }
 
     @Override
-    String subType() { return "method"; }
+    String subType() { return "Method"; }
 }

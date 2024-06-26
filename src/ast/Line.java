@@ -1,11 +1,13 @@
 package ast;
 
+import Util.ToString;
+
 public abstract class Line {
 
     abstract String lineContent();
 
     @Override
     public String toString() {
-        return ToString.var("line", lineContent());
+        return ToString.subType("line", lineContent());
     }
 }

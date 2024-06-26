@@ -3,7 +3,6 @@ package visitor;
 import antlr.ReactParser;
 import antlr.ReactParserBaseVisitor;
 import ast.Program;
-import symbolTable.SymbolTable;
 
 public class ProgramVisitor extends ReactParserBaseVisitor<Program> {
 

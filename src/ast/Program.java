@@ -1,5 +1,7 @@
 package ast;
 
+import Util.ToString;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,8 +15,10 @@ public class Program {
     @Override
     public String toString() {
         return ToString.self(
-                "Program",
-                ToString.list(lines)
+                "The Program",
+                ToString.list(lines),
+                "[",
+                "]"
         );
     }
 }

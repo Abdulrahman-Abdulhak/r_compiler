@@ -1,5 +1,7 @@
 package ast;
 
+import Util.ToString;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,7 +37,9 @@ public class TemplateLiteral extends JsString {
     public String toString() {
         return ToString.self(
                 "TemplateLiteral",
-                ToString.var("contents", contents)
+                ToString.list(contents),
+                "[",
+                "]"
         );
     }
 }

@@ -1,5 +1,7 @@
 package ast;
 
+import Util.ToString;
+
 public class DestructuredObjVar {
     Object key;
     ValidName var;

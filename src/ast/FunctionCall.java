@@ -1,5 +1,7 @@
 package ast;
 
+import Util.ToString;
+
 public class FunctionCall extends Expression {
     Param param;
     TemplateLiteral templateLiteral;
@@ -14,21 +16,17 @@ public class FunctionCall extends Expression {
         templateLiteral = param;
     }
 
-    private String subType() {
-        if(templateLiteral != null) return ":TaggedTemplateLiteral";
-
-        return "";
-    }
+    private String subType() { return templateLiteral == null ? "" : "TaggedTemplateLiteral"; }
 
     @Override
-    String type() { return "FunctionCall" + subType(); }
+    String type() { return ToString.subType("FunctionCall", subType()); }
 
     @Override
     Object[] members() {
         return new Object[]{
             "nameSpace", nameSpace,
-            "param", param,
-            "param", templateLiteral
+            "parameters", param,
+            "parameters", templateLiteral
         };
     }
 }

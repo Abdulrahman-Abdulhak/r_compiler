@@ -7,5 +7,5 @@ public class ArrowFunction extends Function {
     public ArrowFunction(ValidName arg, Expression exp) { super(new Args(arg), exp); }
 
     @Override
-    String subType() { return "arrowFunction"; }
+    String subType() { return "ArrowFunction"; }
 }

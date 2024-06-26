@@ -1,5 +1,7 @@
 package visitor;
 
+import Util.VisitorUtil;
+
 import antlr.ReactParser;
 import antlr.ReactParserBaseVisitor;
 import ast.*;
@@ -33,10 +35,10 @@ public class ObjectPropVisitor extends ReactParserBaseVisitor<ObjectPropDefine> 
 
         var argCtx = methodCtx.args();
         var argList = argCtx.arg();
-        var args = Util.fromArgList(argList);
+        var args = VisitorUtil.fromArgList(argList);
 
         var blockCtx = methodCtx.block();
-        var block = Util.fromBlock(blockCtx);
+        var block = VisitorUtil.fromBlock(blockCtx);
 
         var method = new Method(
                 new ValidName(methodCtx.validName().getText()),

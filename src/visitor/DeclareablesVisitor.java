@@ -1,5 +1,7 @@
 package visitor;
 
+import Util.VisitorUtil;
+
 import antlr.ReactParser;
 import antlr.ReactParserBaseVisitor;
 import ast.Declarable;
@@ -19,11 +21,11 @@ public class DeclareablesVisitor extends ReactParserBaseVisitor<Declarable> {
 
     @Override
     public Declarable visitObjectDestructuring(ReactParser.ObjectDestructuringContext ctx) {
-        return new Declarable(Util.fromObjDestructuringCtx(ctx));
+        return new Declarable(VisitorUtil.fromObjDestructuringCtx(ctx));
     }
 
     @Override
     public Declarable visitArrayDestructuring(ReactParser.ArrayDestructuringContext ctx) {
-        return new Declarable(Util.fromArrayDestructCtx(ctx));
+        return new Declarable(VisitorUtil.fromArrayDestructCtx(ctx));
     }
 }

@@ -1,5 +1,7 @@
 package visitor;
 
+import Util.VisitorUtil;
+
 import antlr.ReactParser;
 import antlr.ReactParserBaseVisitor;
 import ast.*;
@@ -26,7 +28,7 @@ public class FunctionVisitor extends ReactParserBaseVisitor<Function> {
         if(nameCtx != null) {
             name = new ValidName(nameCtx.getText());
         }
-        var args = nameCtx == null ? Util.fromArgList(ctx.args().arg()) : null;
+        var args = nameCtx == null ? VisitorUtil.fromArgList(ctx.args().arg()) : null;
 
         var expCtx = ctx.expression();
         Expression exp;
@@ -37,7 +39,7 @@ public class FunctionVisitor extends ReactParserBaseVisitor<Function> {
             return new ArrowFunction(args, exp);
         }
         var blockCtx = ctx.block();
-        var block = Util.fromBlock(blockCtx);
+        var block = VisitorUtil.fromBlock(blockCtx);
 
         if(nameCtx != null) return new ArrowFunction(name, block);
         return new ArrowFunction(args, block);
@@ -48,10 +50,10 @@ public class FunctionVisitor extends ReactParserBaseVisitor<Function> {
         var nameCtx = ctx.validName();
         ValidName name = new ValidName(nameCtx.getText());
 
-        var args = Util.fromArgList(ctx.args().arg());
+        var args = VisitorUtil.fromArgList(ctx.args().arg());
 
         var blockCtx = ctx.block();
-        var block = Util.fromBlock(blockCtx);
+        var block = VisitorUtil.fromBlock(blockCtx);
 
         var func = new NormalFunction(name, args, block);
         SymbolTable.main.addRow(new Row("function", name.getIdentifier()));
@@ -60,10 +62,10 @@ public class FunctionVisitor extends ReactParserBaseVisitor<Function> {
 
     @Override
     public Function visitAnonymousFunction(ReactParser.AnonymousFunctionContext ctx) {
-        var args = Util.fromArgList(ctx.args().arg());
+        var args = VisitorUtil.fromArgList(ctx.args().arg());
 
         var blockCtx = ctx.block();
-        var block = Util.fromBlock(blockCtx);
+        var block = VisitorUtil.fromBlock(blockCtx);
 
         return new AnonymousFunction(args, block);
     }

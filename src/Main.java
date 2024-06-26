@@ -7,12 +7,12 @@ import symbolTable.SymbolTable;
 import visitor.ProgramVisitor;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 import static org.antlr.v4.runtime.CharStreams.fromFileName;
 
 public class Main {
-    public static void main(String []args) throws IOException {
-
+    public static void main(String[] args) throws IOException {
         String source = "C:\\Files\\Java\\r_compiler\\src\\testFiles\\test0.txt";
         CharStream charStream = fromFileName(source);
 

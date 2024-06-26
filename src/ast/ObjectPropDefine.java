@@ -1,5 +1,7 @@
 package ast;
 
+import Util.ToString;
+
 public class ObjectPropDefine {
     Object key;
     Expression value, destructuredObject;
@@ -43,7 +45,7 @@ public class ObjectPropDefine {
     @Override
     public String toString() {
         if (value instanceof Method) return value.toString();
-        if(destructuredObject != null) {
+        if (destructuredObject != null) {
             return ToString.self(
                     "ObjectProperty",
                     ToString.var("destructured-object", destructuredObject)

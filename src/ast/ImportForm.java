@@ -1,5 +1,7 @@
 package ast;
 
+import Util.ToString;
+
 public class ImportForm {
     ValidName theDefault, fullImportAlias;
     NamedImport namedImport;
@@ -43,9 +45,6 @@ public class ImportForm {
                 "Full Import", ToString.nameAlias("*", fullImportAlias)
         );
 
-        return ToString.self(
-                "Import",
-                inside
-        );
+        return ToString.self("", inside );
     }
 }

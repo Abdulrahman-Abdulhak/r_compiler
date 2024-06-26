@@ -1,7 +1,5 @@
 package ast;
 
-import java.util.ArrayList;
-
 public class MemberGet extends Expression {
     Notation notation;
     Expression parent;

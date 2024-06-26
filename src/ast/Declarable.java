@@ -1,5 +1,7 @@
 package ast;
 
+import Util.ToString;
+
 public class Declarable {
     String varName;
     ArrayDestructuring arr;

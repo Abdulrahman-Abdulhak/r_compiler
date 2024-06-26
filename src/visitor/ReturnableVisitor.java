@@ -1,8 +1,12 @@
 package visitor;
 
+import Util.VisitorUtil;
+
 import antlr.ReactParser;
 import antlr.ReactParserBaseVisitor;
 import ast.*;
+
+import java.util.Objects;
 
 public class ReturnableVisitor extends ReactParserBaseVisitor<Returnable> {
     @Override
@@ -22,9 +26,11 @@ public class ReturnableVisitor extends ReactParserBaseVisitor<Returnable> {
 
         var text = ctx.getText();
 
-        if(text == "true" || text == "false") return new PrimeType(Boolean.parseBoolean(text));
+        if(Objects.equals(text, "true") || Objects.equals(text, "false"))
+            return new PrimeType(Boolean.parseBoolean(text));
 
-        if(text == "null") return new PrimeType(new JsNull());
+        if(Objects.equals(text, "null"))
+            return new PrimeType(new JsNull());
 
         return new PrimeType();
     }
@@ -74,7 +80,7 @@ public class ReturnableVisitor extends ReactParserBaseVisitor<Returnable> {
             else jsx = new JSX(voidTagCtx.jsxName().getText());
 
             var attrsCtx = voidTagCtx.attibuteValue();
-            Util.fromAttrList(jsx, attrsCtx);
+            VisitorUtil.fromAttrList(jsx, attrsCtx);
 
             return jsx;
         }
@@ -86,7 +92,7 @@ public class ReturnableVisitor extends ReactParserBaseVisitor<Returnable> {
         else jsx = new JSX(fullTagCtx.jsxName(0).getText());
 
         var attrsCtx = fullTagCtx.attibuteValue();
-        Util.fromAttrList(jsx, attrsCtx);
+        VisitorUtil.fromAttrList(jsx, attrsCtx);
 
         var childrenCtx = fullTagCtx.jsxChildren();
         for (var childCtx : childrenCtx) {

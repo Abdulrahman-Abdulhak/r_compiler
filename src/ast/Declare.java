@@ -1,5 +1,7 @@
 package ast;
 
+import Util.ToString;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,7 +30,7 @@ public class Declare extends Statement {
     String lineContent() {
         return ToString.self(
                 "Declare",
-                ToString.all("declarer", declarer, "declarement list", declarements)
+                ToString.all("declarer", declarer, "declare list", declarements)
         );
     }
 }

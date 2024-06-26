@@ -1,5 +1,7 @@
 package visitor;
 
+import Util.VisitorUtil;
+
 import antlr.ReactParser;
 import antlr.ReactParserBaseVisitor;
 import ast.ImportForm;
@@ -21,7 +23,7 @@ public class ImportFormVisitor extends ReactParserBaseVisitor<ImportForm> {
         var named = new NamedImport();
 
         var namedItemsCtx = ctx.namedImport().namedImportItem();
-        Util.forNamedImport(named, namedItemsCtx);
+        VisitorUtil.forNamedImport(named, namedItemsCtx);
 
         var form = new ImportForm(named);
 
@@ -44,7 +46,7 @@ public class ImportFormVisitor extends ReactParserBaseVisitor<ImportForm> {
         var named = new NamedImport();
 
         var namedItemsCtx = ctx.namedImport().namedImportItem();
-        Util.forNamedImport(named, namedItemsCtx);
+        VisitorUtil.forNamedImport(named, namedItemsCtx);
 
         var form = new ImportForm(new ValidName(ctx.validName().getText()), named);
         SymbolTable.main.addRow(new Row("Import", form.getTheDefault().getIdentifier()));

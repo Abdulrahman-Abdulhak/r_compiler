@@ -1,5 +1,7 @@
 package ast;
 
+import Util.ToString;
+
 public class JsString {
     String value;
 
@@ -7,9 +9,6 @@ public class JsString {
 
     @Override
     public String toString() {
-        return ToString.self(
-                "String",
-                ToString.var("value", value)
-        );
+        return value;
     }
 }

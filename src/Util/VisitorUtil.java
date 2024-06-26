@@ -1,12 +1,14 @@
-package visitor;
+package Util;
 
 import antlr.ReactParser;
 import ast.*;
+import visitor.ExpressionVisitor;
+import visitor.LineVisitor;
 
 import java.util.List;
 
-public class Util {
-    static ObjectDestructuring fromObjDestructuringCtx(ReactParser.ObjectDestructuringContext obj) {
+public class VisitorUtil {
+    public static ObjectDestructuring fromObjDestructuringCtx(ReactParser.ObjectDestructuringContext obj) {
         var wholeDestruct = new ObjectDestructuring();
 
         for(var d : obj.destructuredObjVar()) {
@@ -35,7 +37,7 @@ public class Util {
         return wholeDestruct;
     }
 
-    static ArrayDestructuring fromArrayDestructCtx(ReactParser.ArrayDestructuringContext arr) {
+    public static ArrayDestructuring fromArrayDestructCtx(ReactParser.ArrayDestructuringContext arr) {
         var destructuredVars = new ArrayDestructuring();
 
         for(var d : arr.destructuredArrVar()) {
@@ -54,7 +56,7 @@ public class Util {
         return destructuredVars;
     }
 
-    static Args fromArgList(List<ReactParser.ArgContext> argList) {
+    public static Args fromArgList(List<ReactParser.ArgContext> argList) {
         var args = new Args();
 
         for (var arg : argList) {
@@ -72,7 +74,7 @@ public class Util {
         return args;
     }
 
-    static Block fromBlock(ReactParser.BlockContext blockCtx) {
+    public static Block fromBlock(ReactParser.BlockContext blockCtx) {
         var block = new Block();
         var lineVisitor = new LineVisitor();
 
@@ -83,18 +85,18 @@ public class Util {
         return block;
     }
 
-    static void fromAttrList(JSX jsx, List<ReactParser.AttibuteValueContext> attrs) {
+    public static void fromAttrList(JSX jsx, List<ReactParser.AttibuteValueContext> attrs) {
         for (var attrCtx : attrs) {
             var name = attrCtx.tagAttribute().getText();
             var js = attrCtx.jsInJsx();
 
             if(js != null) jsx.addProp(name, new ExpressionVisitor().visit(js.expression()));
             else if (attrCtx.STRING() != null) jsx.addProp(name, attrCtx.STRING().getText());
-            else jsx.addProp(name);
+            else jsx.addProp(name, "\"true\"");
         }
     }
 
-    static void forNamedImport(NamedImport named, List<ReactParser.NamedImportItemContext> namedItemsCtx) {
+    public static void forNamedImport(NamedImport named, List<ReactParser.NamedImportItemContext> namedItemsCtx) {
         for(var itemCtx : namedItemsCtx) {
             if(itemCtx.validName() != null) named.addOriginalName(itemCtx.validName().getText());
             var aliasCtx = itemCtx.aliasImporting();

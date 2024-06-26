@@ -1,5 +1,7 @@
 package ast;
 
+import Util.ToString;
+
 public abstract class Notation {
     boolean optional = false;
 
@@ -10,7 +12,7 @@ public abstract class Notation {
     public String toString() {
         return ToString.self(
                 "Notation",
-                ToString.all("type", getType(), "optional", optional, "member", getMember())
+                ToString.allNotNull("type", getType(), "optional", optional ? true : null, "member", getMember())
         );
     }
 }

@@ -1,5 +1,7 @@
 package ast;
 
+import Util.ToString;
+
 public abstract class Function extends Returnable {
     ValidName name;
     Args args;
@@ -23,9 +25,7 @@ public abstract class Function extends Returnable {
     abstract String subType();
     @Override
     String type() {
-        var sub = subType();
-        if(sub == null || sub.isEmpty()) return "function";
-        return "function:" + sub;
+        return ToString.subType("Function", subType());
     }
 
     @Override

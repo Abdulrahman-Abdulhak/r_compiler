@@ -11,7 +11,7 @@ import symbolTable.SymbolTable;
 public class DeclareVisitor extends ReactParserBaseVisitor<Declare> {
     @Override
     public Declare visitDeclare(ReactParser.DeclareContext ctx) {
-        var decalre = new Declare(ctx.declarers().getText());
+        var declare = new Declare(ctx.declarers().getText());
 
         for(var syntax : ctx.declareSyntax()){
             var newVar = new DeclareablesVisitor().visit(syntax.declarable());
@@ -33,26 +33,26 @@ public class DeclareVisitor extends ReactParserBaseVisitor<Declare> {
                 declarement.addAssignment(syntax.assignmentRightHand().ASSIGNMENT_OP().getText());
             }
 
-            decalre.addDeclarement(declarement);
+            declare.addDeclarement(declarement);
         }
 
-        for(var dMent : decalre.getDeclarements()) {
+        for(var dMent : declare.getDeclarements()) {
             for(var d : dMent.getDeclarables()) {
                 if(d.getVarName() != null) {
-                    SymbolTable.main.addRow(new Row(decalre.getDeclarer(), d.getVarName()));
+                    SymbolTable.main.addRow(new Row(declare.getDeclarer(), d.getVarName()));
                 } else if(d.getObj() != null) {
                     for (var objVar : d.getObj().getVars()) {
-                        SymbolTable.main.addRow(new Row(decalre.getDeclarer(), objVar.getVar().getIdentifier()));
+                        SymbolTable.main.addRow(new Row(declare.getDeclarer(), objVar.getVar().getIdentifier()));
                     }
                 } else {
                     for(var arrVar : d.getArr().getVarWithDefault().entrySet()) {
                         var name = (ValidName) (arrVar.getKey());
-                        SymbolTable.main.addRow(new Row(decalre.getDeclarer(), name.getIdentifier()));
+                        SymbolTable.main.addRow(new Row(declare.getDeclarer(), name.getIdentifier()));
                     }
                 }
             }
         }
 
-        return decalre;
+        return declare;
     }
 }

@@ -2,7 +2,6 @@ package visitor;
 
 import antlr.ReactParser;
 import antlr.ReactParserBaseVisitor;
-import ast.Expression;
 import ast.TemplateLiteral;
 
 public class TemplateLiteralVisitor extends ReactParserBaseVisitor<TemplateLiteral> {

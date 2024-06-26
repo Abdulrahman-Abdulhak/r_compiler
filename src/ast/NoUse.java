@@ -7,5 +7,7 @@ public class NoUse extends Statement {
     String lineContent() { return null; }
 
     @Override
-    public String toString() { return ""; }
+    public String toString() {
+        return "";
+    }
 }

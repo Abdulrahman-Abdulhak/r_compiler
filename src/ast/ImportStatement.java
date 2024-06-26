@@ -1,5 +1,7 @@
 package ast;
 
+import Util.ToString;
+
 public class ImportStatement extends Statement {
     String from;
     ImportForm form;
@@ -14,7 +16,7 @@ public class ImportStatement extends Statement {
 
     @Override
     String lineContent() {
-        var inside = ToString.allNotNull("From", from, "Form", form);
+        var inside = ToString.allNotNull("Source", from, "Form", form);
 
         return ToString.self(
                 "Import",
