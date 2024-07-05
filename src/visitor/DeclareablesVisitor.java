@@ -1,12 +1,16 @@
 package visitor;
 
-import Util.VisitorUtil;
-
 import antlr.ReactParser;
-import antlr.ReactParserBaseVisitor;
-import ast.Declarable;
 
-public class DeclareablesVisitor extends ReactParserBaseVisitor<Declarable> {
+import ast.Declarable;
+import Util.VisitorUtil;
+import symbolTable.SymbolTable;
+
+public class DeclareablesVisitor extends GeneralVisitor<Declarable> {
+    public DeclareablesVisitor(SymbolTable symbolTable) {
+        super(symbolTable);
+    }
+
     @Override
     public Declarable visitDeclarable(ReactParser.DeclarableContext ctx) {
         if(ctx.validName() != null) return visitValidName(ctx.validName());
@@ -16,16 +20,19 @@ public class DeclareablesVisitor extends ReactParserBaseVisitor<Declarable> {
 
     @Override
     public Declarable visitValidName(ReactParser.ValidNameContext ctx) {
-        return new Declarable(ctx.getText());
+        var line = VisitorUtil.getLine(ctx);
+        return new Declarable(ctx.getText(), line);
     }
 
     @Override
     public Declarable visitObjectDestructuring(ReactParser.ObjectDestructuringContext ctx) {
-        return new Declarable(VisitorUtil.fromObjDestructuringCtx(ctx));
+        var line = VisitorUtil.getLine(ctx);
+        return new Declarable(VisitorUtil.fromObjDestructuringCtx(ctx, symbolTable), line);
     }
 
     @Override
     public Declarable visitArrayDestructuring(ReactParser.ArrayDestructuringContext ctx) {
-        return new Declarable(VisitorUtil.fromArrayDestructCtx(ctx));
+        var line = VisitorUtil.getLine(ctx);
+        return new Declarable(VisitorUtil.fromArrayDestructCtx(ctx, symbolTable), line);
     }
 }

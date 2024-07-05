@@ -1,20 +1,31 @@
 package visitor;
 
-import Util.VisitorUtil;
-
 import antlr.ReactParser;
-import antlr.ReactParserBaseVisitor;
+
 import ast.ImportForm;
 import ast.NamedImport;
 import ast.ValidName;
-import symbolTable.Row;
-import symbolTable.SymbolTable;
 
-public class ImportFormVisitor extends ReactParserBaseVisitor<ImportForm> {
+import Util.VisitorUtil;
+import symbolTable.SymbolProperties;
+import symbolTable.SymbolTable;
+import symbolTable.property.SymbolDefineMethod;
+import symbolTable.property.SymbolDefinitionLine;
+
+public class ImportFormVisitor extends GeneralVisitor<ImportForm> {
+    public ImportFormVisitor(SymbolTable symbolTable) {
+        super(symbolTable);
+    }
+
     @Override
     public ImportForm visitDefaultImport(ReactParser.DefaultImportContext ctx) {
         var form = new ImportForm(new ValidName(ctx.validName().getText()));
-        SymbolTable.main.addRow(new Row("Import", form.getTheDefault().getIdentifier()));
+
+        var tableProps = new SymbolProperties();
+        tableProps.addProperty(SymbolDefineMethod.imported());
+        tableProps.addProperty(new SymbolDefinitionLine(VisitorUtil.getLine(ctx)));
+        symbolTable.insert(form.getTheDefault().getIdentifier(), tableProps);
+
         return form;
     }
 
@@ -27,9 +38,12 @@ public class ImportFormVisitor extends ReactParserBaseVisitor<ImportForm> {
 
         var form = new ImportForm(named);
 
-        for(var name : named.finalNames()) {
-            SymbolTable.main.addRow(new Row("Import", name));
-        }
+        var tableProps = new SymbolProperties();
+        tableProps.addProperty(SymbolDefineMethod.imported());
+        tableProps.addProperty(new SymbolDefinitionLine(VisitorUtil.getLine(ctx)));
+
+        for(var name : named.finalNames())
+            symbolTable.insert(name, tableProps.clone());
 
         return form;
     }
@@ -37,7 +51,12 @@ public class ImportFormVisitor extends ReactParserBaseVisitor<ImportForm> {
     @Override
     public ImportForm visitFullImportForm(ReactParser.FullImportFormContext ctx) {
         var form = new ImportForm(new ValidName(ctx.fullImport().validName().getText()), true);
-        SymbolTable.main.addRow(new Row("Import", form.getFullImportAlias().getIdentifier()));
+
+        var tableProps = new SymbolProperties();
+        tableProps.addProperty(SymbolDefineMethod.imported());
+        tableProps.addProperty(new SymbolDefinitionLine(VisitorUtil.getLine(ctx)));
+        symbolTable.insert(form.getFullImportAlias().getIdentifier(), tableProps);
+
         return form;
     }
 
@@ -49,10 +68,14 @@ public class ImportFormVisitor extends ReactParserBaseVisitor<ImportForm> {
         VisitorUtil.forNamedImport(named, namedItemsCtx);
 
         var form = new ImportForm(new ValidName(ctx.validName().getText()), named);
-        SymbolTable.main.addRow(new Row("Import", form.getTheDefault().getIdentifier()));
-        for(var name : named.finalNames()) {
-            SymbolTable.main.addRow(new Row("Import", name));
-        }
+
+        var tableProps = new SymbolProperties();
+        tableProps.addProperty(SymbolDefineMethod.imported());
+        tableProps.addProperty(new SymbolDefinitionLine(VisitorUtil.getLine(ctx)));
+
+        symbolTable.insert(form.getTheDefault().getIdentifier(), tableProps);
+        for(var name : named.finalNames())
+            symbolTable.insert(name, tableProps.clone());
 
         return form;
     }
@@ -64,8 +87,12 @@ public class ImportFormVisitor extends ReactParserBaseVisitor<ImportForm> {
                 new ValidName(ctx.fullImport().validName().getText())
         );
 
-        SymbolTable.main.addRow(new Row("Import", form.getTheDefault().getIdentifier()));
-        SymbolTable.main.addRow(new Row("Import", form.getFullImportAlias().getIdentifier()));
+        var tableProps = new SymbolProperties();
+        tableProps.addProperty(SymbolDefineMethod.imported());
+        tableProps.addProperty(new SymbolDefinitionLine(VisitorUtil.getLine(ctx)));
+
+        symbolTable.insert(form.getTheDefault().getIdentifier(), tableProps);
+        symbolTable.insert(form.getFullImportAlias().getIdentifier(), tableProps.clone());
 
         return form;
     }

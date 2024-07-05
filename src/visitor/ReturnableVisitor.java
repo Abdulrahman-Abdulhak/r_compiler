@@ -1,14 +1,18 @@
 package visitor;
 
-import Util.VisitorUtil;
-
 import antlr.ReactParser;
-import antlr.ReactParserBaseVisitor;
+
 import ast.*;
+import symbolTable.SymbolTable;
+import Util.VisitorUtil;
 
 import java.util.Objects;
 
-public class ReturnableVisitor extends ReactParserBaseVisitor<Returnable> {
+public class ReturnableVisitor extends GeneralVisitor<Returnable> {
+    public ReturnableVisitor(SymbolTable symbolTable) {
+        super(symbolTable);
+    }
+
     @Override
     public PrimeType visitPrimitive(ReactParser.PrimitiveContext ctx) {
         var num = ctx.primeType().num();
@@ -18,7 +22,7 @@ public class ReturnableVisitor extends ReactParserBaseVisitor<Returnable> {
         if(strings != null) {
             JsString str;
             if(strings.getChild(0).getChildCount() > 0) {
-                str = new TemplateLiteralVisitor().visit(strings.getChild(0));
+                str = new TemplateLiteralVisitor(symbolTable).visit(strings.getChild(0));
             } else str = new JsString(strings.getChild(0).getText());
 
             return new PrimeType(str);
@@ -40,7 +44,7 @@ public class ReturnableVisitor extends ReactParserBaseVisitor<Returnable> {
         var obj = new JsObject();
         var props = ctx.objPropDefine();
 
-        var objPropVisitor = new ObjectPropVisitor();
+        var objPropVisitor = new ObjectPropVisitor(symbolTable);
         for(var propCtx : props) {
             obj.addProperty(objPropVisitor.visit(propCtx));
         }
@@ -51,7 +55,7 @@ public class ReturnableVisitor extends ReactParserBaseVisitor<Returnable> {
     @Override
     public JsArray visitArray(ReactParser.ArrayContext ctx) {
         var arr = new JsArray();
-        var expVisitor = new ExpressionVisitor();
+        var expVisitor = new ExpressionVisitor(symbolTable);
 
         for(var item : ctx.expression()) {
             arr.addItem(expVisitor.visit(item));
@@ -62,7 +66,7 @@ public class ReturnableVisitor extends ReactParserBaseVisitor<Returnable> {
 
     @Override
     public Function visitFunction(ReactParser.FunctionContext ctx) {
-        return new FunctionVisitor().visit(ctx);
+        return new FunctionVisitor(symbolTable).visit(ctx);
     }
 
     @Override
@@ -76,11 +80,11 @@ public class ReturnableVisitor extends ReactParserBaseVisitor<Returnable> {
         if(voidTagCtx != null) {
             var exp = voidTagCtx.jsxName().expression();
             JSX jsx;
-            if(exp != null) jsx = new JSX(new ExpressionVisitor().visit(exp));
+            if(exp != null) jsx = new JSX(new ExpressionVisitor(symbolTable).visit(exp));
             else jsx = new JSX(voidTagCtx.jsxName().getText());
 
             var attrsCtx = voidTagCtx.attibuteValue();
-            VisitorUtil.fromAttrList(jsx, attrsCtx);
+            VisitorUtil.fromAttrList(jsx, attrsCtx, symbolTable);
 
             return jsx;
         }
@@ -88,16 +92,16 @@ public class ReturnableVisitor extends ReactParserBaseVisitor<Returnable> {
         JSX jsx;
 
         var exp = fullTagCtx.jsxName(0).expression();
-        if(exp != null) jsx = new JSX(new ExpressionVisitor().visit(exp));
+        if(exp != null) jsx = new JSX(new ExpressionVisitor(symbolTable).visit(exp));
         else jsx = new JSX(fullTagCtx.jsxName(0).getText());
 
         var attrsCtx = fullTagCtx.attibuteValue();
-        VisitorUtil.fromAttrList(jsx, attrsCtx);
+        VisitorUtil.fromAttrList(jsx, attrsCtx, symbolTable);
 
         var childrenCtx = fullTagCtx.jsxChildren();
         for (var childCtx : childrenCtx) {
             if(childCtx.jsInJsx() != null) {
-                var js = new ExpressionVisitor().visit(childCtx.jsInJsx().expression());
+                var js = new ExpressionVisitor(symbolTable).visit(childCtx.jsInJsx().expression());
                 jsx.addChild(new JSinJSX(js));
             } else {
                 jsx.addChild(visitJsx(childCtx.jsx()));

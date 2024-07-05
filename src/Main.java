@@ -22,7 +22,9 @@ public class Main {
         ReactParser parser = new ReactParser(tokens);
         ParseTree ast =  parser.program();
 
-        ProgramVisitor reactVisitor = new ProgramVisitor();
+        var globalSymbolTable = new SymbolTable();
+
+        ProgramVisitor reactVisitor = new ProgramVisitor(globalSymbolTable);
         var tree = reactVisitor.visit(ast);
 
         System.out.println(tree);
@@ -31,6 +33,6 @@ public class Main {
         System.out.println();
         System.out.println();
         System.out.println();
-        SymbolTable.main.print();
+        System.out.println(globalSymbolTable);;
     }
 }

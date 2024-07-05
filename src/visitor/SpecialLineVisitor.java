@@ -1,13 +1,19 @@
 package visitor;
 
 import antlr.ReactParser;
-import antlr.ReactParserBaseVisitor;
+
 import ast.Break;
 import ast.Continue;
 import ast.Return;
 import ast.SpecialLine;
 
-public class SpecialLineVisitor extends ReactParserBaseVisitor<SpecialLine> {
+import symbolTable.SymbolTable;
+
+public class SpecialLineVisitor extends GeneralVisitor<SpecialLine> {
+    public SpecialLineVisitor(SymbolTable symbolTable) {
+        super(symbolTable);
+    }
+
     @Override
     public SpecialLine visitSpecialLine(ReactParser.SpecialLineContext ctx) {
         return visit(ctx.getChild(0));
@@ -29,6 +35,6 @@ public class SpecialLineVisitor extends ReactParserBaseVisitor<SpecialLine> {
 
     @Override
     public Return visitReturn(ReactParser.ReturnContext ctx) {
-        return new Return(new ExpressionVisitor().visit(ctx.expression()));
+        return new Return(new ExpressionVisitor(symbolTable).visit(ctx.expression()));
     }
 }

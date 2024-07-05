@@ -1,24 +1,29 @@
 package ast;
 
 import Util.ToString;
+import symbolTable.VariableDefineMethod;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class Declare extends Statement {
-    String declarer;
+    VariableDefineMethod declarer;
     List<Declarement> declarements;
 
     public Declare(String declarer) {
-        this.declarer = declarer;
+        this.declarer = findDefineMethod(declarer);
         this.declarements = new ArrayList<>();
+    }
+
+    private VariableDefineMethod findDefineMethod(String str) {
+        return VariableDefineMethod.fromString(str);
     }
 
     public void addDeclarement(Declarement declarement) {
         declarements.add(declarement);
     }
 
-    public String getDeclarer() {
+    public VariableDefineMethod getDeclarer() {
         return declarer;
     }
 

@@ -1,18 +1,21 @@
 package visitor;
 
 import antlr.ReactParser;
-import antlr.ReactParserBaseVisitor;
-import ast.TemplateLiteral;
 
-public class TemplateLiteralVisitor extends ReactParserBaseVisitor<TemplateLiteral> {
+import ast.TemplateLiteral;
+import symbolTable.SymbolTable;
+
+public class TemplateLiteralVisitor extends GeneralVisitor<TemplateLiteral> {
+    public TemplateLiteralVisitor(SymbolTable symbolTable) {
+        super(symbolTable);
+    }
+
     @Override
     public TemplateLiteral visitTemplateLiteral(ReactParser.TemplateLiteralContext ctx) {
         var template = new TemplateLiteral();
-        var templateContent = ctx.templateLiteralContent();
 
-        for (var content : templateContent) {
+        for (var content : ctx.templateLiteralContent())
             template.addContent(content.getText());
-        }
 
         return template;
     }

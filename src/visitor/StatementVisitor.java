@@ -1,10 +1,15 @@
 package visitor;
 
 import antlr.ReactParser;
-import antlr.ReactParserBaseVisitor;
-import ast.*;
 
-public class StatementVisitor extends ReactParserBaseVisitor<Statement> {
+import ast.*;
+import symbolTable.SymbolTable;
+
+public class StatementVisitor extends GeneralVisitor<Statement> {
+    public StatementVisitor(SymbolTable symbolTable) {
+        super(symbolTable);
+    }
+
     @Override
     public ImportStatement visitImporting(ReactParser.ImportingContext ctx) {
         var from = ctx.importStatement().STRING().getText();
@@ -13,7 +18,7 @@ public class StatementVisitor extends ReactParserBaseVisitor<Statement> {
         if(formCtx == null) return new ImportStatement(from);
 
         return new ImportStatement(
-                new ImportFormVisitor().visit(formCtx.importForm()),
+                new ImportFormVisitor(symbolTable).visit(formCtx.importForm()),
                 from
         );
     }
@@ -25,12 +30,12 @@ public class StatementVisitor extends ReactParserBaseVisitor<Statement> {
 
     @Override
     public Declare visitDeclaration(ReactParser.DeclarationContext ctx) {
-        return new DeclareVisitor().visit(ctx.declare());
+        return new DeclareVisitor(symbolTable).visit(ctx.declare());
     }
 
     @Override
     public Expression visitExp(ReactParser.ExpContext ctx) {
-        return new ExpressionVisitor().visit(ctx.expression());
+        return new ExpressionVisitor(symbolTable).visit(ctx.expression());
     }
 
     @Override

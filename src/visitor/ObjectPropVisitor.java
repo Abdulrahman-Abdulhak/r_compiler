@@ -1,16 +1,20 @@
 package visitor;
 
-import Util.VisitorUtil;
-
 import antlr.ReactParser;
-import antlr.ReactParserBaseVisitor;
-import ast.*;
 
-public class ObjectPropVisitor extends ReactParserBaseVisitor<ObjectPropDefine> {
+import ast.*;
+import Util.VisitorUtil;
+import symbolTable.SymbolTable;
+
+public class ObjectPropVisitor extends GeneralVisitor<ObjectPropDefine> {
+    public ObjectPropVisitor(SymbolTable symbolTable) {
+        super(symbolTable);
+    }
+
     @Override
     public ObjectPropDefine visitNormalPropDefine(ReactParser.NormalPropDefineContext ctx) {
         var propName = ctx.objPropName();
-        var exp = new ExpressionVisitor().visit(propName.getChild(2));
+        var exp = new ExpressionVisitor(symbolTable).visit(propName.getChild(2));
 
         var str = propName.STRING();
         if(str != null) return new ObjectPropDefine(str.getText(), exp);
@@ -35,10 +39,10 @@ public class ObjectPropVisitor extends ReactParserBaseVisitor<ObjectPropDefine> 
 
         var argCtx = methodCtx.args();
         var argList = argCtx.arg();
-        var args = VisitorUtil.fromArgList(argList);
+        var args = VisitorUtil.fromArgList(argList, symbolTable);
 
         var blockCtx = methodCtx.block();
-        var block = VisitorUtil.fromBlock(blockCtx);
+        var block = VisitorUtil.fromBlock(blockCtx, symbolTable);
 
         var method = new Method(
                 new ValidName(methodCtx.validName().getText()),
@@ -53,7 +57,7 @@ public class ObjectPropVisitor extends ReactParserBaseVisitor<ObjectPropDefine> 
     public ObjectPropDefine visitComputedPropDefine(ReactParser.ComputedPropDefineContext ctx) {
         var exp1 = ctx.expression(0);
         var exp2 = ctx.expression(0);
-        var expVisitor = new ExpressionVisitor();
+        var expVisitor = new ExpressionVisitor(symbolTable);
 
         return new ObjectPropDefine(
                 expVisitor.visit(exp1),
@@ -64,6 +68,6 @@ public class ObjectPropVisitor extends ReactParserBaseVisitor<ObjectPropDefine> 
     @Override
     public ObjectPropDefine visitObjecPropsPropDefine(ReactParser.ObjecPropsPropDefineContext ctx) {
         var exp = ctx.expression();
-        return new ObjectPropDefine(new ExpressionVisitor().visit(exp));
+        return new ObjectPropDefine(new ExpressionVisitor(symbolTable).visit(exp));
     }
 }

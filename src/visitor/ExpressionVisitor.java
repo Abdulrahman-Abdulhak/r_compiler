@@ -1,12 +1,18 @@
 package visitor;
 
 import antlr.ReactParser;
-import antlr.ReactParserBaseVisitor;
+
+
 import ast.*;
+import symbolTable.SymbolTable;
 
 import java.util.Objects;
 
-public class ExpressionVisitor extends ReactParserBaseVisitor<Expression> {
+public class ExpressionVisitor extends GeneralVisitor<Expression> {
+    public ExpressionVisitor(SymbolTable symbolTable) {
+        super(symbolTable);
+    }
+
     @Override
     public Expression visitParentheses(ReactParser.ParenthesesContext ctx) {
         return visit(ctx.expression());
@@ -17,7 +23,7 @@ public class ExpressionVisitor extends ReactParserBaseVisitor<Expression> {
         Expression nameSpace = visit(ctx.expression());
 
         if(ctx.templateLiteral() != null) {
-            var template = new TemplateLiteralVisitor().visit(ctx.templateLiteral());
+            var template = new TemplateLiteralVisitor(symbolTable).visit(ctx.templateLiteral());
             return new FunctionCall(nameSpace, template);
         }
 
@@ -32,7 +38,7 @@ public class ExpressionVisitor extends ReactParserBaseVisitor<Expression> {
     @Override
     public MemberGet visitMemberGet(ReactParser.MemberGetContext ctx) {
         Expression parent = visit(ctx.expression());
-        Notation notation = new NotationVisitor().visit(ctx.notation());
+        Notation notation = new NotationVisitor(symbolTable).visit(ctx.notation());
 
         return new MemberGet(parent, notation);
     }
@@ -192,6 +198,6 @@ public class ExpressionVisitor extends ReactParserBaseVisitor<Expression> {
 
     @Override
     public Returnable visitValue(ReactParser.ValueContext ctx) {
-        return new ReturnableVisitor().visit(ctx.returnable());
+        return new ReturnableVisitor(symbolTable).visit(ctx.returnable());
     }
 }
