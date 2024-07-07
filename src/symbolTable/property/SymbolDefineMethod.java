@@ -7,6 +7,10 @@ public class SymbolDefineMethod extends SymbolProperty {
         return new SymbolDefineMethod(VariableDefineMethod.function);
     }
 
+    public static SymbolDefineMethod argument() {
+        return new SymbolDefineMethod(VariableDefineMethod.argument);
+    }
+
     public static SymbolDefineMethod imported() {
         return new SymbolDefineMethod(VariableDefineMethod.imported);
     }

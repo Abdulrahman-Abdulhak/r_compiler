@@ -1,6 +1,8 @@
 package symbolTable;
 
 import Util.ListUtil;
+import ast.ValidName;
+import symbolTable.property.SymbolProperty;
 
 import java.util.ArrayList;
 import java.util.Hashtable;
@@ -13,13 +15,10 @@ public class SymbolTable {
     private final List<SymbolTable> children;
     private Map<String, SymbolProperties> rows;
 
-    public SymbolTable() {
-        name = "";
-        children = new ArrayList<>();
-        rows = new Hashtable<>();
-    }
+    public SymbolTable() { this(""); }
+    public SymbolTable(ValidName name) { this(name != null ? name.getIdentifier() : ""); }
     public SymbolTable(String name) {
-        name = name;
+        this.name = name;
         children = new ArrayList<>();
         rows = new Hashtable<>();
     }
@@ -34,22 +33,44 @@ public class SymbolTable {
     public void insert(String key, SymbolProperties information) {
         rows.put(key, information);
     }
+    public void insert(String key, SymbolProperty prop) {
+        var properties = lookup(key);
+
+        if (properties != null) {
+            properties.addProperty(prop);
+            return;
+        }
+
+        properties = new SymbolProperties();
+        properties.addProperty(prop);
+        insert(key, properties);
+    }
+    public void insert(String key, String propName, Object propValue) {
+        insert(key, new SymbolProperty(propName, propValue));
+    }
 
     public SymbolProperties lookup(String key) {
         return rows.get(key);
     }
 
-    public SymbolTable addNewSymbolTable() {
-        var table = new SymbolTable();
-        return addNewSymbolTable(table);
+    public SymbolTable addTable() {
+        return addTable("");
     }
-    public SymbolTable addNewSymbolTable(SymbolTable table) {
+    public SymbolTable addTable(ValidName name) {
+        return addTable(name.getIdentifier());
+    }
+    public SymbolTable addTable(String name) {
+        var table = new SymbolTable(name);
+        return addTable(table);
+    }
+    public SymbolTable addTable(SymbolTable table) {
         children.add(table);
         table.setParent(this);
 
         return table;
     }
 
+    public void setName(String name) { this.name = name; }
     public String getName() { return name; }
 
     public void setParent(SymbolTable table) { parent = table; }
@@ -100,9 +121,9 @@ public class SymbolTable {
             }
         }
 
-        return getStringBuilder(table, sizes).toString();
+        return getStringBuilder(name, table, sizes).toString();
     }
-    private static StringBuilder getStringBuilder(ArrayList<ArrayList<String>> table, ArrayList<Integer> sizes) {
+    private static StringBuilder getStringBuilder(String name, ArrayList<ArrayList<String>> table, ArrayList<Integer> sizes) {
         var widthOfTable = sizes.stream().reduce(0, Integer::sum) + sizes.size() + 1;
         var str = new StringBuilder();
 
@@ -114,6 +135,22 @@ public class SymbolTable {
 
         str.repeat(bottomDash, widthOfTable);
         str.append('\n');
+
+        if(name != null && !name.isEmpty()) {
+            var availableSpaces = widthOfTable - name.length() - 2;
+            var spacesBeforeName = availableSpaces / 2;
+            var spacesAfterName = availableSpaces - spacesBeforeName;
+
+            str.append(bar);
+            str.repeat(" ", spacesBeforeName);
+            str.append(name);
+            str.repeat(" ", spacesAfterName);
+            str.append(bar + '\n');
+            str.append(bar);
+            str.repeat(middleDash, widthOfTable - 2);
+            str.append(bar + '\n') ;
+        }
+
         var rowIndex = 0;
         for (var row : table) {
             var i = 0;

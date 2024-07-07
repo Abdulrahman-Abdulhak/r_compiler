@@ -11,12 +11,11 @@ public class Declare extends Statement {
     List<Declarement> declarements;
 
     public Declare(String declarer) {
-        this.declarer = findDefineMethod(declarer);
-        this.declarements = new ArrayList<>();
+        this(VariableDefineMethod.fromString(declarer));
     }
-
-    private VariableDefineMethod findDefineMethod(String str) {
-        return VariableDefineMethod.fromString(str);
+    public Declare(VariableDefineMethod declarer) {
+        this.declarer = declarer;
+        this.declarements = new ArrayList<>();
     }
 
     public void addDeclarement(Declarement declarement) {

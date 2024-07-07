@@ -2,9 +2,9 @@ package visitor;
 
 import antlr.ReactParser;
 
-
 import ast.*;
 import symbolTable.SymbolTable;
+import Util.VisitorUtil;
 
 import java.util.Objects;
 
@@ -192,8 +192,7 @@ public class ExpressionVisitor extends GeneralVisitor<Expression> {
 
     @Override
     public ValidName visitVariable(ReactParser.VariableContext ctx) {
-        var name = ctx.validName().getText();
-        return new ValidName(name);
+        return VisitorUtil.create(ctx.validName());
     }
 
     @Override

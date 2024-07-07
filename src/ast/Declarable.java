@@ -3,25 +3,19 @@ package ast;
 import Util.ToString;
 
 public class Declarable {
-    Integer lineNumber;
     String varName;
     ArrayDestructuring arr;
     ObjectDestructuring obj;
 
-    public Declarable(String varName, Integer lineNumber) {
+    public Declarable(String varName) {
         this.varName = varName;
-        this.lineNumber = lineNumber;
     }
-    public Declarable(ObjectDestructuring obj, Integer lineNumber) {
+    public Declarable(ObjectDestructuring obj) {
         this.obj = obj;
-        this.lineNumber = lineNumber;
     }
-    public Declarable(ArrayDestructuring arr, Integer lineNumber) {
+    public Declarable(ArrayDestructuring arr) {
         this.arr = arr;
-        this.lineNumber = lineNumber;
     }
-
-    public Integer getLineNumber() { return lineNumber; }
 
     public String getVarName() { return varName; }
 

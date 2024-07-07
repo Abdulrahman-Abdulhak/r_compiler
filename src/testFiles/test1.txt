@@ -1,0 +1,15 @@
+import React, { useState } from "react"
+
+const {j: cucumber, b, c} = obj
+
+function main() {
+    var willItWork = maybe;
+
+    if(willWork) {
+        let itDidWork = true;
+    }
+
+    return willItWork;
+}
+
+const program = main();

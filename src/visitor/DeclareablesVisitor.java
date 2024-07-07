@@ -1,14 +1,24 @@
 package visitor;
 
+import Util.SymbolTableUtil;
 import antlr.ReactParser;
 
 import ast.Declarable;
 import Util.VisitorUtil;
+
 import symbolTable.SymbolTable;
+import symbolTable.VariableDefineMethod;
+import symbolTable.property.SymbolDefineMethod;
 
 public class DeclareablesVisitor extends GeneralVisitor<Declarable> {
-    public DeclareablesVisitor(SymbolTable symbolTable) {
+    SymbolDefineMethod defineMethod;
+
+    public DeclareablesVisitor(SymbolTable symbolTable, VariableDefineMethod varMethod) {
+        this(symbolTable, new SymbolDefineMethod(varMethod));
+    }
+    public DeclareablesVisitor(SymbolTable symbolTable, SymbolDefineMethod defineMethod) {
         super(symbolTable);
+        this.defineMethod = defineMethod;
     }
 
     @Override
@@ -20,19 +30,17 @@ public class DeclareablesVisitor extends GeneralVisitor<Declarable> {
 
     @Override
     public Declarable visitValidName(ReactParser.ValidNameContext ctx) {
-        var line = VisitorUtil.getLine(ctx);
-        return new Declarable(ctx.getText(), line);
+        SymbolTableUtil.initSymbol(symbolTable, ctx.getText(), ctx, defineMethod);
+        return new Declarable(ctx.getText());
     }
 
     @Override
     public Declarable visitObjectDestructuring(ReactParser.ObjectDestructuringContext ctx) {
-        var line = VisitorUtil.getLine(ctx);
-        return new Declarable(VisitorUtil.fromObjDestructuringCtx(ctx, symbolTable), line);
+        return new Declarable(VisitorUtil.create(ctx, symbolTable, defineMethod));
     }
 
     @Override
     public Declarable visitArrayDestructuring(ReactParser.ArrayDestructuringContext ctx) {
-        var line = VisitorUtil.getLine(ctx);
-        return new Declarable(VisitorUtil.fromArrayDestructCtx(ctx, symbolTable), line);
+        return new Declarable(VisitorUtil.create(ctx, symbolTable, defineMethod));
     }
 }

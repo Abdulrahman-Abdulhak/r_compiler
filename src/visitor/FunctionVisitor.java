@@ -1,14 +1,13 @@
 package visitor;
 
+import Util.SymbolTableUtil;
+import antlr.ReactParser;
+
+import ast.*;
 import Util.VisitorUtil;
 
-import antlr.ReactParser;
-import ast.*;
-
-import symbolTable.SymbolProperties;
 import symbolTable.SymbolTable;
 import symbolTable.property.SymbolDefineMethod;
-import symbolTable.property.SymbolDefinitionLine;
 
 public class FunctionVisitor extends GeneralVisitor<Function> {
     public FunctionVisitor(SymbolTable symbolTable) {
@@ -29,55 +28,60 @@ public class FunctionVisitor extends GeneralVisitor<Function> {
 
     @Override
     public Function visitArrowFunction(ReactParser.ArrowFunctionContext ctx) {
+        var functionScope = symbolTable.addTable();
+
         var nameCtx = ctx.validName();
         ValidName name = null;
         if(nameCtx != null) {
-            name = new ValidName(nameCtx.getText());
+            name = VisitorUtil.create(nameCtx);
+            SymbolTableUtil.initSymbol(functionScope, name.getIdentifier(), nameCtx, SymbolDefineMethod.argument());
         }
-        var args = nameCtx == null ? VisitorUtil.fromArgList(ctx.args().arg(), symbolTable) : null;
+
+        Args args = null;
+        if (name == null) args = VisitorUtil.create(ctx.args(), functionScope);
 
         var expCtx = ctx.expression();
         Expression exp;
         if (expCtx != null) {
-            exp = new ExpressionVisitor(symbolTable).visit(expCtx);
-            if(nameCtx != null) return new ArrowFunction(name, exp);
+            exp = new ExpressionVisitor(functionScope).visit(expCtx);
 
+            if(name != null) return new ArrowFunction(name, exp);
             return new ArrowFunction(args, exp);
         }
-        var blockCtx = ctx.block();
-        var block = VisitorUtil.fromBlock(blockCtx, symbolTable);
 
-        if(nameCtx != null) return new ArrowFunction(name, block);
+        var block = VisitorUtil.create(ctx.block(), functionScope);
+
+        if(name != null) return new ArrowFunction(name, block);
         return new ArrowFunction(args, block);
     }
 
     @Override
     public Function visitNormalFunction(ReactParser.NormalFunctionContext ctx) {
-        var nameCtx = ctx.validName();
-        ValidName name = new ValidName(nameCtx.getText());
+        var functionNameCtx = ctx.validName();
+        ValidName functionName = VisitorUtil.create(functionNameCtx);
+        var functionScope = symbolTable.addTable(functionName);
 
-        var args = VisitorUtil.fromArgList(ctx.args().arg(), symbolTable);
+        var args = VisitorUtil.create(ctx.args(), functionScope);
+        var block = VisitorUtil.create(ctx.block(), functionScope);
 
-        var blockCtx = ctx.block();
-        var block = VisitorUtil.fromBlock(blockCtx, symbolTable);
+        var func = new NormalFunction(functionName, args, block);
 
-        var func = new NormalFunction(name, args, block);
-
-        var tableProperties = new SymbolProperties();
-
-        tableProperties.addProperty(SymbolDefineMethod.function());
-        tableProperties.addProperty(new SymbolDefinitionLine(VisitorUtil.getLine(ctx)));
-        symbolTable.insert(name.getIdentifier(), tableProperties);
+        SymbolTableUtil.initSymbol(
+                symbolTable,
+                functionName.getIdentifier(),
+                functionNameCtx,
+                SymbolDefineMethod.function()
+        );
 
         return func;
     }
 
     @Override
     public Function visitAnonymousFunction(ReactParser.AnonymousFunctionContext ctx) {
-        var args = VisitorUtil.fromArgList(ctx.args().arg(), symbolTable);
+        var functionScope = symbolTable.addTable();
 
-        var blockCtx = ctx.block();
-        var block = VisitorUtil.fromBlock(blockCtx, symbolTable);
+        var args = VisitorUtil.create(ctx.args(), functionScope);
+        var block = VisitorUtil.create(ctx.block(), functionScope);
 
         return new AnonymousFunction(args, block);
     }

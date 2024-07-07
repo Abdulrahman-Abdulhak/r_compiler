@@ -3,14 +3,12 @@ package visitor;
 import antlr.ReactParser;
 
 import ast.ImportForm;
-import ast.NamedImport;
-import ast.ValidName;
 
 import Util.VisitorUtil;
-import symbolTable.SymbolProperties;
+import Util.SymbolTableUtil;
+
 import symbolTable.SymbolTable;
 import symbolTable.property.SymbolDefineMethod;
-import symbolTable.property.SymbolDefinitionLine;
 
 public class ImportFormVisitor extends GeneralVisitor<ImportForm> {
     public ImportFormVisitor(SymbolTable symbolTable) {
@@ -19,81 +17,57 @@ public class ImportFormVisitor extends GeneralVisitor<ImportForm> {
 
     @Override
     public ImportForm visitDefaultImport(ReactParser.DefaultImportContext ctx) {
-        var form = new ImportForm(new ValidName(ctx.validName().getText()));
+        var name = VisitorUtil.create(ctx.validName());
 
-        var tableProps = new SymbolProperties();
-        tableProps.addProperty(SymbolDefineMethod.imported());
-        tableProps.addProperty(new SymbolDefinitionLine(VisitorUtil.getLine(ctx)));
-        symbolTable.insert(form.getTheDefault().getIdentifier(), tableProps);
+        SymbolTableUtil.initSymbol(symbolTable, name.getIdentifier(), ctx.validName(), SymbolDefineMethod.imported());
 
-        return form;
+        return new ImportForm(name);
     }
 
     @Override
     public ImportForm visitNamedImportForm(ReactParser.NamedImportFormContext ctx) {
-        var named = new NamedImport();
-
-        var namedItemsCtx = ctx.namedImport().namedImportItem();
-        VisitorUtil.forNamedImport(named, namedItemsCtx);
-
-        var form = new ImportForm(named);
-
-        var tableProps = new SymbolProperties();
-        tableProps.addProperty(SymbolDefineMethod.imported());
-        tableProps.addProperty(new SymbolDefinitionLine(VisitorUtil.getLine(ctx)));
-
-        for(var name : named.finalNames())
-            symbolTable.insert(name, tableProps.clone());
-
-        return form;
+        var named = VisitorUtil.create(ctx.namedImport(), symbolTable);
+        return new ImportForm(named);
     }
 
     @Override
     public ImportForm visitFullImportForm(ReactParser.FullImportFormContext ctx) {
-        var form = new ImportForm(new ValidName(ctx.fullImport().validName().getText()), true);
+        var fullCtx = ctx.fullImport().validName();
+        var fullName = VisitorUtil.create(fullCtx);
 
-        var tableProps = new SymbolProperties();
-        tableProps.addProperty(SymbolDefineMethod.imported());
-        tableProps.addProperty(new SymbolDefinitionLine(VisitorUtil.getLine(ctx)));
-        symbolTable.insert(form.getFullImportAlias().getIdentifier(), tableProps);
+        SymbolTableUtil.initSymbol(symbolTable, fullName.getIdentifier(), fullCtx, SymbolDefineMethod.imported());
 
-        return form;
+        return new ImportForm(fullName, true);
     }
 
     @Override
     public ImportForm visitDefaultAndNamedImport(ReactParser.DefaultAndNamedImportContext ctx) {
-        var named = new NamedImport();
+        var namedItemsCtx = ctx.namedImport();
+        var named = VisitorUtil.create(namedItemsCtx, symbolTable);
 
-        var namedItemsCtx = ctx.namedImport().namedImportItem();
-        VisitorUtil.forNamedImport(named, namedItemsCtx);
-
-        var form = new ImportForm(new ValidName(ctx.validName().getText()), named);
-
-        var tableProps = new SymbolProperties();
-        tableProps.addProperty(SymbolDefineMethod.imported());
-        tableProps.addProperty(new SymbolDefinitionLine(VisitorUtil.getLine(ctx)));
-
-        symbolTable.insert(form.getTheDefault().getIdentifier(), tableProps);
-        for(var name : named.finalNames())
-            symbolTable.insert(name, tableProps.clone());
+        var defaultImport = VisitorUtil.create(ctx.validName());
+        var form = new ImportForm(defaultImport, named);
+        SymbolTableUtil.initSymbol(
+                symbolTable,
+                defaultImport.getIdentifier(),
+                ctx.validName(),
+                SymbolDefineMethod.imported()
+        );
 
         return form;
     }
 
     @Override
     public ImportForm visitDefaultAndFullImport(ReactParser.DefaultAndFullImportContext ctx) {
-        var form = new ImportForm(
-                new ValidName(ctx.validName().getText()),
-                new ValidName(ctx.fullImport().validName().getText())
-        );
+        var defaultCtx = ctx.validName();
+        var defaultName = VisitorUtil.create(defaultCtx);
 
-        var tableProps = new SymbolProperties();
-        tableProps.addProperty(SymbolDefineMethod.imported());
-        tableProps.addProperty(new SymbolDefinitionLine(VisitorUtil.getLine(ctx)));
+        var fullCtx = ctx.fullImport().validName();
+        var fullName = VisitorUtil.create(fullCtx);
 
-        symbolTable.insert(form.getTheDefault().getIdentifier(), tableProps);
-        symbolTable.insert(form.getFullImportAlias().getIdentifier(), tableProps.clone());
+        SymbolTableUtil.initSymbol(symbolTable, defaultName.getIdentifier(), defaultCtx, SymbolDefineMethod.imported());
+        SymbolTableUtil.initSymbol(symbolTable, fullName.getIdentifier(), fullCtx, SymbolDefineMethod.imported());
 
-        return form;
+        return new ImportForm(defaultName, fullName);
     }
 }

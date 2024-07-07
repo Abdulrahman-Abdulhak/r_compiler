@@ -50,7 +50,7 @@ public class LineVisitor extends GeneralVisitor<Line> {
 
     @Override
     public Block visitBlockLine(ReactParser.BlockLineContext ctx) {
-        return VisitorUtil.fromBlock(ctx.block(), symbolTable);
+        return VisitorUtil.create(ctx.block(), symbolTable);
     }
 
     @Override

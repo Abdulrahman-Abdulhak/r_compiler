@@ -6,10 +6,10 @@ import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.TerminalNode;
 
 import ast.*;
-import symbolTable.SymbolTable;
+import visitor.*;
 
-import visitor.ExpressionVisitor;
-import visitor.LineVisitor;
+import symbolTable.SymbolTable;
+import symbolTable.property.SymbolDefineMethod;
 
 import java.util.List;
 
@@ -25,86 +25,34 @@ public class VisitorUtil {
         return ((TerminalNode) tree).getSymbol();
     }
 
-    public static Integer getLine(ParserRuleContext ctx) {
-        var symbol = VisitorUtil.getFirstToken(ctx);
-        return symbol == null ? null : symbol.getLine();
+    public static ValidName create(ReactParser.ValidNameContext ctx) {
+        return new ValidName(ctx.getText());
     }
 
-    public static ObjectDestructuring fromObjDestructuringCtx(ReactParser.ObjectDestructuringContext obj, SymbolTable symbolTable) {
-        var wholeDestruct = new ObjectDestructuring();
-
-        for(var d : obj.destructuredObjVar()) {
-            DestructuredObjVar destructuredVar;
-            boolean haveOriginalName = d.objPropName() != null;
-            boolean haveDefaultVal = d.expression() != null;
-
-            var name = new ValidName(d.validName().getText());
-
-            if(haveDefaultVal) {
-                var exp = new ExpressionVisitor(symbolTable).visit(d.expression());
-                if(haveOriginalName) {
-                    destructuredVar = new DestructuredObjVar(d.objPropName().getText(), name, exp);
-                } else {
-                    destructuredVar = new DestructuredObjVar(name, exp);
-                }
-            } else if (haveOriginalName) {
-                destructuredVar = new DestructuredObjVar(d.objPropName().getText(), name);
-            } else {
-                destructuredVar = new DestructuredObjVar(name);
-            }
-
-            wholeDestruct.addVar(destructuredVar);
-        }
-
-        return wholeDestruct;
+    public static ObjectDestructuring create(
+            ReactParser.ObjectDestructuringContext ctx,
+            SymbolTable symbolTable,
+            SymbolDefineMethod defineMethod
+    ) {
+        var visitor = new ObjectDestructuringVisitor(symbolTable, defineMethod);
+        return visitor.visitObjectDestructuring(ctx);
     }
 
-    public static ArrayDestructuring fromArrayDestructCtx(ReactParser.ArrayDestructuringContext arr, SymbolTable symbolTable) {
-        var destructuredVars = new ArrayDestructuring();
-
-        for(var d : arr.destructuredArrVar()) {
-            boolean haveDefaultVal = d.expression() != null;
-
-            var name = new ValidName(d.validName().getText());
-
-            if(haveDefaultVal) {
-                var exp = new ExpressionVisitor(symbolTable).visit(d.expression());
-                destructuredVars.addVar(name, exp);
-            } else {
-                destructuredVars.addVar(name);
-            }
-        }
-
-        return destructuredVars;
+    public static ArrayDestructuring create(
+            ReactParser.ArrayDestructuringContext ctx,
+            SymbolTable symbolTable,
+            SymbolDefineMethod defineMethod
+    ) {
+        var visitor = new ArrayDestructuringVisitor(symbolTable, defineMethod);
+        return visitor.visitArrayDestructuring(ctx);
     }
 
-    public static Args fromArgList(List<ReactParser.ArgContext> argList, SymbolTable symbolTable) {
-        var args = new Args();
-
-        for (var arg : argList) {
-            if(arg.validName() != null) args.addArgument(new ValidName(arg.validName().getText()));
-            if(arg.objectDestructuring() != null) {
-                var wholeDestruct = fromObjDestructuringCtx(arg.objectDestructuring(), symbolTable);
-                args.addArgument(new Arg(wholeDestruct));
-            }
-            if(arg.arrayDestructuring() != null) {
-                var destructuredVars = fromArrayDestructCtx(arg.arrayDestructuring(), symbolTable);
-                args.addArgument(new Arg(destructuredVars));
-            }
-        }
-
-        return args;
+    public static Args create(ReactParser.ArgsContext ctx, SymbolTable symbolTable) {
+        return new ArgsVisitor(symbolTable).visitArgs(ctx);
     }
 
-    public static Block fromBlock(ReactParser.BlockContext blockCtx, SymbolTable symbolTable) {
-        var block = new Block();
-        var lineVisitor = new LineVisitor(symbolTable);
-
-        for (var line : blockCtx.line()) {
-            block.addLine(lineVisitor.visit(line));
-        }
-
-        return block;
+    public static Block create(ReactParser.BlockContext ctx, SymbolTable symbolTable) {
+        return new BlockVisitor(symbolTable).visitBlock(ctx);
     }
 
     public static void fromAttrList(JSX jsx, List<ReactParser.AttibuteValueContext> attrs, SymbolTable symbolTable) {
@@ -118,19 +66,32 @@ public class VisitorUtil {
         }
     }
 
-    public static void forNamedImport(NamedImport named, List<ReactParser.NamedImportItemContext> namedItemsCtx) {
-        for(var itemCtx : namedItemsCtx) {
-            if(itemCtx.validName() != null) named.addOriginalName(itemCtx.validName().getText());
-            var aliasCtx = itemCtx.aliasImporting();
-            if(aliasCtx != null) {
-                var alias = aliasCtx.getChild(2).getText();
-                String item = aliasCtx.getChild(0).getText();
-                if(aliasCtx.DEFAULT() != null) {
-                    // for more than one default in one import
-                }
+    public static NamedImport create(ReactParser.NamedImportContext ctx, SymbolTable symbolTable) {
+        final var named = new NamedImport();
+        for(var itemCtx : ctx.namedImportItem())
+            forNamedImport(named, itemCtx, symbolTable);
 
-                named.addNameWithConverted(item, new ValidName(alias));
+        return named;
+    }
+    private static void forNamedImport(NamedImport named, ReactParser.NamedImportItemContext ctx, SymbolTable symbolTable) {
+        var defineMethod = SymbolDefineMethod.imported();
+
+        var aliasCtx = ctx.aliasImporting();
+        if(aliasCtx != null) {
+            var alias = aliasCtx.validName().getLast();
+            var item = aliasCtx.getChild(0);
+            if(aliasCtx.DEFAULT() != null) {
+                // for more than one default in one import
             }
+
+            var name = create(alias);
+            named.addNameWithConverted(item.getText(), name);
+            SymbolTableUtil.initSymbol(symbolTable, name.getIdentifier(), alias, defineMethod);
+            return;
         }
+
+        var validName = create(ctx.validName());
+        named.addOriginalName(ctx.validName().getText());
+        SymbolTableUtil.initSymbol(symbolTable, validName.getIdentifier(), ctx.validName(), defineMethod);
     }
 }
