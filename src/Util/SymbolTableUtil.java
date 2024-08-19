@@ -2,6 +2,7 @@ package Util;
 
 import org.antlr.v4.runtime.ParserRuleContext;
 
+import org.antlr.v4.runtime.tree.TerminalNode;
 import symbolTable.SymbolProperties;
 import symbolTable.SymbolTable;
 import symbolTable.property.SymbolDefinitionLine;
@@ -11,9 +12,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SymbolTableUtil {
-    public static Integer getLine(ParserRuleContext ctx) {
+    public static int getLine(ParserRuleContext ctx) {
         var symbol = VisitorUtil.getFirstToken(ctx);
-        return symbol == null ? null : symbol.getLine();
+        return symbol == null ? 0 : symbol.getLine();
+    }
+    public static int getLine(TerminalNode node) {
+        var symbol = node.getSymbol();
+        return symbol == null ? 0 : symbol.getLine();
     }
 
     public static void initSymbol(

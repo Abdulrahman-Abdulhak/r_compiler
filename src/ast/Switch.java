@@ -9,10 +9,11 @@ public class Switch extends Line {
     Expression test;
     List<Case> cases;
 
-    public Switch(Expression test) {
-        this(test, new ArrayList<>());
+    public Switch(Expression test, int lineDefined) {
+        this(test, new ArrayList<>(), lineDefined);
     }
-    public Switch(Expression test, List<Case> cases) {
+    public Switch(Expression test, List<Case> cases, int lineDefined) {
+        super(lineDefined);
         this.test = test;
         this.cases = cases;
     }

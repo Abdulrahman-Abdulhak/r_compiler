@@ -7,8 +7,12 @@ public class New extends Expression {
     Expression expression;
     Param param;
 
-    public New(Expression expression) { this.expression = expression; }
-    public New(Expression expression, Param param) {
+    public New(Expression expression, int lineDefined) {
+        super(lineDefined);
+        this.expression = expression;
+    }
+    public New(Expression expression, Param param, int lineDefined) {
+        super(lineDefined);
         this.expression = expression;
         this.param = param;
     }

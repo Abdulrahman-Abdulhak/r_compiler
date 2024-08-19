@@ -6,7 +6,10 @@ import java.util.stream.Stream;
 public class LogicalNot extends Expression {
     Expression expression;
 
-    public LogicalNot(Expression exp) { expression = exp; }
+    public LogicalNot(Expression exp, int lineDefined) {
+        super(lineDefined);
+        expression = exp;
+    }
 
     @Override
     String type() { return "LogicalNot"; }

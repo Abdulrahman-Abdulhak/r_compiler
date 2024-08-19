@@ -6,7 +6,10 @@ import java.util.List;
 public class JsObject extends Returnable {
     List<ObjectPropDefine> props;
 
-    public JsObject() { props = new ArrayList<>(); }
+    public JsObject(int lineDefined) {
+        super(lineDefined);
+        props = new ArrayList<>();
+    }
 
     public void addProperty(ObjectPropDefine prop) { props.add(prop); }
 

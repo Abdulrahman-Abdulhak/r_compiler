@@ -8,11 +8,13 @@ public class Declarement extends Node {
     List<Declarable> declarables;
     Expression value;
 
-    public Declarement() {
+    public Declarement(int lineDefined) {
+        super(lineDefined);
         this.signs = new ArrayList<>();
         this.declarables = new ArrayList<>();
     }
-    public Declarement(Expression value) {
+    public Declarement(Expression value, int lineDefined) {
+        super(lineDefined);
         this.value = value;
         this.signs = new ArrayList<>();
         this.declarables = new ArrayList<>();

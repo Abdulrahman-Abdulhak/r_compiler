@@ -8,7 +8,10 @@ import java.util.List;
 public class Param extends Node {
     List<Expression> parameters;
 
-    public Param() { parameters = new ArrayList<>(); }
+    public Param(int lineDefined) {
+        super(lineDefined);
+        parameters = new ArrayList<>();
+    }
 
     public void addNewParameter(Expression exp) { parameters.add(exp); }
 

@@ -7,7 +7,10 @@ import java.util.List;
 
 public class Block extends Line {
     List<Line> lines;
-    public Block() { lines = new ArrayList<>(); }
+    public Block(int lineDefined) {
+        super(lineDefined);
+        lines = new ArrayList<>();
+    }
 
     public void addLine(Line line) { lines.add(line); }
 

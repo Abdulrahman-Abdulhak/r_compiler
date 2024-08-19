@@ -21,13 +21,13 @@ public class ImportFormVisitor extends GeneralVisitor<ImportForm> {
 
         SymbolTableUtil.initSymbol(symbolTable, name.getIdentifier(), ctx.validName(), SymbolDefineMethod.imported());
 
-        return new ImportForm(name);
+        return new ImportForm(name, SymbolTableUtil.getLine(ctx));
     }
 
     @Override
     public ImportForm visitNamedImportForm(ReactParser.NamedImportFormContext ctx) {
         var named = VisitorUtil.create(ctx.namedImport(), symbolTable);
-        return new ImportForm(named);
+        return new ImportForm(named, SymbolTableUtil.getLine(ctx));
     }
 
     @Override
@@ -37,7 +37,7 @@ public class ImportFormVisitor extends GeneralVisitor<ImportForm> {
 
         SymbolTableUtil.initSymbol(symbolTable, fullName.getIdentifier(), fullCtx, SymbolDefineMethod.imported());
 
-        return new ImportForm(fullName, true);
+        return new ImportForm(fullName, true, SymbolTableUtil.getLine(ctx));
     }
 
     @Override
@@ -46,7 +46,7 @@ public class ImportFormVisitor extends GeneralVisitor<ImportForm> {
         var named = VisitorUtil.create(namedItemsCtx, symbolTable);
 
         var defaultImport = VisitorUtil.create(ctx.validName());
-        var form = new ImportForm(defaultImport, named);
+        var form = new ImportForm(defaultImport, named, SymbolTableUtil.getLine(ctx));
         SymbolTableUtil.initSymbol(
                 symbolTable,
                 defaultImport.getIdentifier(),
@@ -68,6 +68,6 @@ public class ImportFormVisitor extends GeneralVisitor<ImportForm> {
         SymbolTableUtil.initSymbol(symbolTable, defaultName.getIdentifier(), defaultCtx, SymbolDefineMethod.imported());
         SymbolTableUtil.initSymbol(symbolTable, fullName.getIdentifier(), fullCtx, SymbolDefineMethod.imported());
 
-        return new ImportForm(defaultName, fullName);
+        return new ImportForm(defaultName, fullName, SymbolTableUtil.getLine(ctx));
     }
 }

@@ -3,7 +3,9 @@ package ast;
 import java.util.List;
 
 public class NoUse extends Statement {
-    public NoUse(){}
+    public NoUse(int lineDefined){
+        super(lineDefined);
+    }
 
     @Override
     String lineContent() { return null; }

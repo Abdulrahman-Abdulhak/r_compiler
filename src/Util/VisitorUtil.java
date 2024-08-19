@@ -26,7 +26,7 @@ public class VisitorUtil {
     }
 
     public static ValidName create(ReactParser.ValidNameContext ctx) {
-        return new ValidName(ctx.getText());
+        return new ValidName(ctx.getText(), SymbolTableUtil.getLine(ctx));
     }
 
     public static ObjectDestructuring create(
@@ -67,7 +67,7 @@ public class VisitorUtil {
     }
 
     public static NamedImport create(ReactParser.NamedImportContext ctx, SymbolTable symbolTable) {
-        final var named = new NamedImport();
+        final var named = new NamedImport(SymbolTableUtil.getLine(ctx));
         for(var itemCtx : ctx.namedImportItem())
             forNamedImport(named, itemCtx, symbolTable);
 

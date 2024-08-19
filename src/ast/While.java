@@ -10,11 +10,13 @@ public class While extends Line {
     Line line;
     Block body;
 
-    public While(Expression condition, Block body) {
+    public While(Expression condition, Block body, int lineDefined) {
+        super(lineDefined);
         this.condition = condition;
         this.body = body;
     }
-    public While(Expression condition, Line line) {
+    public While(Expression condition, Line line, int lineDefined) {
+        super(lineDefined);
         this.condition = condition;
         this.line = line;
     }

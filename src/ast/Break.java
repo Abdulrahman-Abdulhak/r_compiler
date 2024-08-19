@@ -6,8 +6,13 @@ import java.util.List;
 
 public class Break extends SpecialLine {
     String label;
-    public Break() {}
-    public Break(String label) { this.label = label; }
+    public Break(int lineDefined) {
+        super(lineDefined);
+    }
+    public Break(String label, int lineDefined) {
+        super(lineDefined);
+        this.label = label;
+    }
 
     @Override
     String lineContent() {

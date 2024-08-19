@@ -3,7 +3,9 @@ package ast;
 import java.util.List;
 
 public class JsNull extends Node {
-    public JsNull() {}
+    public JsNull(int lineDefined) {
+        super(lineDefined);
+    }
 
     @Override
     public String toString() {

@@ -24,12 +24,12 @@ public class ArrayDestructuringVisitor extends GeneralVisitor<ArrayDestructuring
 
     @Override
     public ArrayDestructuring visitArrayDestructuring(ReactParser.ArrayDestructuringContext ctx) {
-        var destructuredVars = new ArrayDestructuring();
+        var destructuredVars = new ArrayDestructuring(SymbolTableUtil.getLine(ctx));
 
         for(var arrVarCtx : ctx.destructuredArrVar()) {
             boolean haveDefaultVal = arrVarCtx.expression() != null;
 
-            var validName = new ValidName(arrVarCtx.validName().getText());
+            var validName = new ValidName(arrVarCtx.validName().getText(), SymbolTableUtil.getLine(arrVarCtx));
 
             if(haveDefaultVal) {
                 var exp = new ExpressionVisitor(symbolTable).visit(arrVarCtx.expression());

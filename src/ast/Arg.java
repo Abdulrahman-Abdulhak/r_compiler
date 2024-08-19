@@ -10,9 +10,18 @@ public class Arg extends Node {
     ObjectDestructuring obj;
     ArrayDestructuring arr;
 
-    public Arg(ValidName name) { this.name = name; }
-    public Arg(ObjectDestructuring obj) { this.obj = obj; }
-    public Arg(ArrayDestructuring arr) { this.arr = arr; }
+    public Arg(ValidName name, int lineDefined) {
+        super(lineDefined);
+        this.name = name;
+    }
+    public Arg(ObjectDestructuring obj, int lineDefined) {
+        super(lineDefined);
+        this.obj = obj;
+    }
+    public Arg(ArrayDestructuring arr, int lineDefined) {
+        super(lineDefined);
+        this.arr = arr;
+    }
 
     @Override
     public String toString() {

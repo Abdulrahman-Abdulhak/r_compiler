@@ -11,28 +11,29 @@ public class Case extends Node {
     List<Line> body;
     boolean haveDefault;
 
-    public Case(Expression value) {
-        this(Collections.singletonList(value));
+    public Case(Expression value, int lineDefined) {
+        this(Collections.singletonList(value), lineDefined);
     }
-    public Case(List<Expression> values) {
-        this(values, new ArrayList<>());
+    public Case(List<Expression> values, int lineDefined) {
+        this(values, new ArrayList<>(), lineDefined);
     }
-    public Case(Expression value, boolean haveDefault) {
-        this(Collections.singletonList(value), haveDefault);
+    public Case(Expression value, boolean haveDefault, int lineDefined) {
+        this(Collections.singletonList(value), haveDefault, lineDefined);
     }
-    public Case(List<Expression> values, boolean haveDefault) {
-        this(values, new ArrayList<>(), haveDefault);
+    public Case(List<Expression> values, boolean haveDefault, int lineDefined) {
+        this(values, new ArrayList<>(), haveDefault, lineDefined);
     }
-    public Case(Expression value, List<Line> body) {
-        this(Collections.singletonList(value), body);
+    public Case(Expression value, List<Line> body, int lineDefined) {
+        this(Collections.singletonList(value), body, lineDefined);
     }
-    public Case(List<Expression> values, List<Line> body) {
-        this(values, body, false);
+    public Case(List<Expression> values, List<Line> body, int lineDefined) {
+        this(values, body, false, lineDefined);
     }
-    public Case(Expression value, List<Line> body, boolean haveDefault) {
-        this(Collections.singletonList(value), body, haveDefault);
+    public Case(Expression value, List<Line> body, boolean haveDefault, int lineDefined) {
+        this(Collections.singletonList(value), body, haveDefault, lineDefined);
     }
-    public Case(List<Expression> values, List<Line> body, boolean haveDefault) {
+    public Case(List<Expression> values, List<Line> body, boolean haveDefault, int lineDefined) {
+        super(lineDefined);
         this.values = values;
         this.body = body;
         this.haveDefault = haveDefault;

@@ -8,16 +8,16 @@ import java.util.List;
 public class TemplateLiteral extends JsString {
     List<TemplateLiteralContent> contents;
 
-    public TemplateLiteral() {
-        super("");
+    public TemplateLiteral(int lineDefined) {
+        super("", lineDefined);
         contents = new ArrayList<>();
     }
 
-    public void addContent(String content) {
-        contents.add(new TemplateLiteralContent(content));
+    public void addContent(String content, int lineDefined) {
+        contents.add(new TemplateLiteralContent(content, lineDefined));
     }
-    public void addContent(Expression exp) {
-        contents.add(new TemplateLiteralContent(exp));
+    public void addContent(Expression exp, int lineDefined) {
+        contents.add(new TemplateLiteralContent(exp, lineDefined));
     }
 
     @Override

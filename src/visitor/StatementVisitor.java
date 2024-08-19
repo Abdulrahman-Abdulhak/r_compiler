@@ -1,5 +1,6 @@
 package visitor;
 
+import Util.SymbolTableUtil;
 import antlr.ReactParser;
 
 import ast.*;
@@ -15,11 +16,12 @@ public class StatementVisitor extends GeneralVisitor<Statement> {
         var from = ctx.importStatement().STRING().getText();
 
         var formCtx = ctx.importStatement().form();
-        if(formCtx == null) return new ImportStatement(from);
+        if(formCtx == null) return new ImportStatement(from, SymbolTableUtil.getLine(ctx));
 
         return new ImportStatement(
-                new ImportFormVisitor(symbolTable).visit(formCtx.importForm()),
-                from
+            new ImportFormVisitor(symbolTable).visit(formCtx.importForm()),
+            from,
+            SymbolTableUtil.getLine(ctx)
         );
     }
 
@@ -40,6 +42,6 @@ public class StatementVisitor extends GeneralVisitor<Statement> {
 
     @Override
     public NoUse visitNoUseStatement(ReactParser.NoUseStatementContext ctx) {
-        return new NoUse();
+        return new NoUse(SymbolTableUtil.getLine(ctx));
     }
 }

@@ -3,6 +3,10 @@ package ast;
 import Util.ToString;
 
 public abstract class Expression extends Statement {
+    public Expression(int lineDefined) {
+        super(lineDefined);
+    }
+
     abstract String type();
     abstract Object[] members();
 

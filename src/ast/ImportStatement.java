@@ -9,10 +9,12 @@ public class ImportStatement extends Statement {
     String from;
     ImportForm form;
 
-    public ImportStatement(String from) {
+    public ImportStatement(String from, int lineDefined) {
+        super(lineDefined);
         this.from = from;
     }
-    public ImportStatement(ImportForm form, String from) {
+    public ImportStatement(ImportForm form, String from, int lineDefined) {
+        super(lineDefined);
         this.from = from;
         this.form = form;
     }

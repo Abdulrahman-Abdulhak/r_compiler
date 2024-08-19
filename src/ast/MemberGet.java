@@ -7,7 +7,8 @@ public class MemberGet extends Expression {
     Notation notation;
     Expression parent;
 
-    public MemberGet(Expression parent, Notation notation) {
+    public MemberGet(Expression parent, Notation notation, int lineDefined) {
+        super(lineDefined);
         this.parent = parent;
         this.notation = notation;
     }

@@ -7,7 +7,10 @@ import java.util.List;
 public class JsString extends Node {
     String value;
 
-    public JsString(String value) { this.value = value; }
+    public JsString(String value, int lineDefined) {
+        super(lineDefined);
+        this.value = value;
+    }
 
     @Override
     public String toString() {

@@ -1,5 +1,6 @@
 package visitor;
 
+import Util.SymbolTableUtil;
 import antlr.ReactParser;
 
 import ast.BracketNotation;
@@ -17,8 +18,9 @@ public class NotationVisitor extends GeneralVisitor<Notation> {
     @Override
     public DotNotation visitDotNotation(ReactParser.DotNotationContext ctx) {
         return new DotNotation(
-                new ValidName(ctx.validName().getText()),
-                ctx.OPTIONAL_CHAINING_OP() != null
+                new ValidName(ctx.validName().getText(), SymbolTableUtil.getLine(ctx.validName())),
+                ctx.OPTIONAL_CHAINING_OP() != null,
+                SymbolTableUtil.getLine(ctx)
         );
     }
     
@@ -26,7 +28,8 @@ public class NotationVisitor extends GeneralVisitor<Notation> {
     public Notation visitBracketNotation(ReactParser.BracketNotationContext ctx) {
         return new BracketNotation(
                 new ExpressionVisitor(symbolTable).visit(ctx.expression()),
-                ctx.OPTIONAL_CHAINING_OP() != null
+                ctx.OPTIONAL_CHAINING_OP() != null,
+                SymbolTableUtil.getLine(ctx)
         );
     }
 }

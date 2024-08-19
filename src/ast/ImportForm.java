@@ -9,20 +9,30 @@ public class ImportForm extends Node {
     ValidName theDefault, fullImportAlias;
     NamedImport namedImport;
 
-    public ImportForm(ValidName theDefault) { this.theDefault = theDefault; }
-    public ImportForm(NamedImport namedImport) { this.namedImport = namedImport; }
-    public ImportForm(ValidName fullImportAlias, boolean isFullImport) {
+    public ImportForm(ValidName theDefault, int lineDefined) {
+        super(lineDefined);
+        this.theDefault = theDefault;
+    }
+    public ImportForm(NamedImport namedImport, int lineDefined) {
+        super(lineDefined);
+        this.namedImport = namedImport;
+    }
+    public ImportForm(ValidName fullImportAlias, boolean isFullImport, int lineDefined) {
+        super(lineDefined);
         this.fullImportAlias = fullImportAlias;
     }
-    public ImportForm(ValidName theDefault, NamedImport namedImport) {
+    public ImportForm(ValidName theDefault, NamedImport namedImport, int lineDefined) {
+        super(lineDefined);
         this.theDefault = theDefault;
         this.namedImport = namedImport;
     }
-    public ImportForm(ValidName theDefault, ValidName fullImportAlias) {
+    public ImportForm(ValidName theDefault, ValidName fullImportAlias, int lineDefined) {
+        super(lineDefined);
         this.theDefault = theDefault;
         this.fullImportAlias = fullImportAlias;
     }
-    public ImportForm(ValidName theDefault, ValidName fullImportAlias, NamedImport namedImport) {
+    public ImportForm(ValidName theDefault, ValidName fullImportAlias, NamedImport namedImport, int lineDefined) {
+        super(lineDefined);
         this.theDefault = theDefault;
         this.fullImportAlias = fullImportAlias;
         this.namedImport = namedImport;

@@ -4,8 +4,8 @@ import java.util.List;
 import java.util.stream.Stream;
 
 public class LogicalAnd extends LeftRightOperation {
-    public LogicalAnd(Expression left, Expression right) {
-        super(left, right);
+    public LogicalAnd(Expression left, Expression right, int lineDefined) {
+        super(left, right, lineDefined);
     }
 
     @Override

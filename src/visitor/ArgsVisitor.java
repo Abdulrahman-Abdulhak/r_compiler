@@ -18,25 +18,25 @@ public class ArgsVisitor extends GeneralVisitor<Args> {
 
     @Override
     public Args visitArgs(ReactParser.ArgsContext ctx) {
-        var args = new Args();
+        var args = new Args(SymbolTableUtil.getLine(ctx));
 
         var defineMethod = SymbolDefineMethod.argument();
         for (var arg : ctx.arg()) {
             if(arg.validName() != null) {
                 var nameCtx = arg.validName();
                 var argName = VisitorUtil.create(nameCtx);
-                args.addArgument(argName);
+                args.addArgument(argName, SymbolTableUtil.getLine(nameCtx));
 
                 var name = argName.getIdentifier();
                 SymbolTableUtil.initSymbol(symbolTable, name, nameCtx, defineMethod);
             }
             if(arg.objectDestructuring() != null) {
                 var wholeDestruct = VisitorUtil.create(arg.objectDestructuring(), symbolTable, defineMethod);
-                args.addArgument(new Arg(wholeDestruct));
+                args.addArgument(new Arg(wholeDestruct, SymbolTableUtil.getLine(arg.objectDestructuring())));
             }
             if(arg.arrayDestructuring() != null) {
                 var destructuredVars = VisitorUtil.create(arg.arrayDestructuring(), symbolTable, defineMethod);
-                args.addArgument(new Arg(destructuredVars));
+                args.addArgument(new Arg(destructuredVars, SymbolTableUtil.getLine(arg.arrayDestructuring())));
             }
         }
 

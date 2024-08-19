@@ -8,7 +8,10 @@ import java.util.List;
 public class Program extends Node {
     List<Line> lines;
 
-    public Program() { lines = new ArrayList<>(); }
+    public Program() {
+        super(0);
+        lines = new ArrayList<>();
+    }
 
     public void addLine(Line line) { lines.add(line); }
 

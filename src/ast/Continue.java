@@ -6,8 +6,13 @@ import java.util.List;
 
 public class Continue extends SpecialLine {
     String label;
-    public Continue() {}
-    public Continue(String label) { this.label = label; }
+    public Continue(int lineDefined) {
+        super(lineDefined);
+    }
+    public Continue(String label, int lineDefined) {
+        super(lineDefined);
+        this.label = label;
+    }
 
     @Override
     String lineContent() {

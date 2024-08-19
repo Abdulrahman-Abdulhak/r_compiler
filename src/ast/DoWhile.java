@@ -10,11 +10,13 @@ public class DoWhile extends Line {
     Line line;
     Block body;
 
-    public DoWhile(Expression condition, Block body) {
+    public DoWhile(Expression condition, Block body, int lineDefined) {
+        super(lineDefined);
         this.condition = condition;
         this.body = body;
     }
-    public DoWhile(Expression condition, Line line) {
+    public DoWhile(Expression condition, Line line, int lineDefined) {
+        super(lineDefined);
         this.condition = condition;
         this.line = line;
     }

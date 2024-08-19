@@ -5,6 +5,10 @@ import Util.ToString;
 public abstract class Notation extends Node {
     boolean optional = false;
 
+    public Notation(int lineDefined) {
+        super(lineDefined);
+    }
+
     abstract String getType();
     abstract Object getMember();
 

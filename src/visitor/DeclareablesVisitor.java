@@ -31,7 +31,7 @@ public class DeclareablesVisitor extends GeneralVisitor<Declarable> {
     @Override
     public Declarable visitValidName(ReactParser.ValidNameContext ctx) {
         SymbolTableUtil.initSymbol(symbolTable, ctx.getText(), ctx, defineMethod);
-        return new Declarable(ctx.getText());
+        return new Declarable(ctx.getText(), SymbolTableUtil.getLine(ctx));
     }
 
     @Override

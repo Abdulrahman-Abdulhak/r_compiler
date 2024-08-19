@@ -6,7 +6,10 @@ import java.util.List;
 public class JsArray extends Returnable {
     List<Expression> items;
 
-    public JsArray() { items = new ArrayList<>(); }
+    public JsArray(int lineDefined) {
+        super(lineDefined);
+        items = new ArrayList<>();
+    }
 
     public void addItem(Expression exp) { items.add(exp); }
 

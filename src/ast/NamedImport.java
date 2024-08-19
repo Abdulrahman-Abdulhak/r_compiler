@@ -10,11 +10,13 @@ public class NamedImport extends Node {
     List<String> names;
     List<ValidName> convertedNames;
 
-    public NamedImport() {
+    public NamedImport(int lineDefined) {
+        super(lineDefined);
         this.names = new ArrayList<>();
         this.convertedNames = new ArrayList<>();
     }
-    public NamedImport(List<String> names, List<ValidName> convertedNames) {
+    public NamedImport(List<String> names, List<ValidName> convertedNames, int lineDefined) {
+        super(lineDefined);
         this.names = names;
         this.convertedNames = convertedNames;
     }

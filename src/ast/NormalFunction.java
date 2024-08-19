@@ -1,8 +1,8 @@
 package ast;
 
 public class NormalFunction extends Function {
-    public NormalFunction(ValidName name, Args args, FunctionBody body) {
-        super(name, args, body);
+    public NormalFunction(ValidName name, Args args, FunctionBody body, int lineDefined) {
+        super(name, args, body, lineDefined);
     }
 
     @Override

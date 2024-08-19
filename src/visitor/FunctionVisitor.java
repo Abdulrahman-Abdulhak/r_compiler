@@ -45,14 +45,14 @@ public class FunctionVisitor extends GeneralVisitor<Function> {
         if (expCtx != null) {
             exp = new ExpressionVisitor(functionScope).visit(expCtx);
 
-            if(name != null) return new ArrowFunction(name, exp);
-            return new ArrowFunction(args, exp);
+            if(name != null) return new ArrowFunction(name, exp, SymbolTableUtil.getLine(ctx));
+            return new ArrowFunction(args, exp, SymbolTableUtil.getLine(ctx));
         }
 
         var body = new BlockVisitor(functionScope).visitFunctionBody(ctx.functionBody());
 
-        if(name != null) return new ArrowFunction(name, body);
-        return new ArrowFunction(args, body);
+        if(name != null) return new ArrowFunction(name, body, SymbolTableUtil.getLine(ctx));
+        return new ArrowFunction(args, body, SymbolTableUtil.getLine(ctx));
     }
 
     @Override
@@ -64,7 +64,7 @@ public class FunctionVisitor extends GeneralVisitor<Function> {
         var args = new ArgsVisitor(functionScope).visitArgs(ctx.args());
         var block = new BlockVisitor(functionScope).visitFunctionBody(ctx.functionBody());
 
-        var func = new NormalFunction(functionName, args, block);
+        var func = new NormalFunction(functionName, args, block, SymbolTableUtil.getLine(ctx));
 
         SymbolTableUtil.initSymbol(
             symbolTable,
@@ -83,6 +83,6 @@ public class FunctionVisitor extends GeneralVisitor<Function> {
         var args = new ArgsVisitor(functionScope).visitArgs(ctx.args());
         var block = new BlockVisitor(functionScope).visitFunctionBody(ctx.functionBody());
 
-        return new AnonymousFunction(args, block);
+        return new AnonymousFunction(args, block, SymbolTableUtil.getLine(ctx));
     }
 }

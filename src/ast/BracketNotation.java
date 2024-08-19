@@ -6,9 +6,13 @@ import java.util.stream.Stream;
 public class BracketNotation extends Notation {
     Expression member;
 
-    public BracketNotation(Expression member) { this.member = member; }
+    public BracketNotation(Expression member, int lineDefined) {
+        super(lineDefined);
+        this.member = member;
+    }
 
-    public BracketNotation(Expression member, boolean optional) {
+    public BracketNotation(Expression member, boolean optional, int lineDefined) {
+        super(lineDefined);
         this.member = member;
         this.optional = optional;
     }

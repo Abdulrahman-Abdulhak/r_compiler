@@ -10,11 +10,13 @@ public class If extends Line {
     Block body;
     Line line;
 
-    public If(Expression test, Block body) {
+    public If(Expression test, Block body, int lineDefined) {
+        super(lineDefined);
         this.test = test;
         this.body = body;
     }
-    public If(Expression test, Line line) {
+    public If(Expression test, Line line, int lineDefined) {
+        super(lineDefined);
         this.test = test;
         this.line = line;
     }

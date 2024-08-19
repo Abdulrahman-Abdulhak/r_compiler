@@ -10,13 +10,16 @@ public class Declarable extends Node {
     ArrayDestructuring arr;
     ObjectDestructuring obj;
 
-    public Declarable(String varName) {
+    public Declarable(String varName, int lineDefined) {
+        super(lineDefined);
         this.varName = varName;
     }
-    public Declarable(ObjectDestructuring obj) {
+    public Declarable(ObjectDestructuring obj, int lineDefined) {
+        super(lineDefined);
         this.obj = obj;
     }
-    public Declarable(ArrayDestructuring arr) {
+    public Declarable(ArrayDestructuring arr, int lineDefined) {
+        super(lineDefined);
         this.arr = arr;
     }
 

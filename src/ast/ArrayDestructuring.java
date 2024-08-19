@@ -9,7 +9,8 @@ import java.util.Map;
 public class ArrayDestructuring extends Node {
     Map<Object, Object> varWithDefault;
 
-    public ArrayDestructuring() {
+    public ArrayDestructuring(int lineDefined) {
+        super(lineDefined);
         varWithDefault = new HashMap<>();
     }
 
@@ -37,6 +38,6 @@ public class ArrayDestructuring extends Node {
     @Override
     public List<Node> childNodes() {
         var vars = varWithDefault.keySet();
-        return vars.stream().map(key -> (Node) new ValidName(key + "")).toList();
+        return vars.stream().map(key -> (Node) new ValidName(key + "", lineDefined)).toList();
     }
 }

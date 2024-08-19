@@ -1,5 +1,6 @@
 package visitor;
 
+import Util.SymbolTableUtil;
 import antlr.ReactParser;
 import ast.Block;
 import ast.FunctionBody;
@@ -13,7 +14,7 @@ public class BlockVisitor extends GeneralVisitor<Block> {
 
     @Override
     public Block visitBlock(ReactParser.BlockContext ctx) {
-        var block = new Block();
+        var block = new Block(SymbolTableUtil.getLine(ctx));
 
         var lineVisitor = new LineVisitor(symbolTable);
 
@@ -25,7 +26,7 @@ public class BlockVisitor extends GeneralVisitor<Block> {
 
     @Override
     public FunctionBody visitFunctionBody(ReactParser.FunctionBodyContext ctx) {
-        var body = new FunctionBody();
+        var body = new FunctionBody(SymbolTableUtil.getLine(ctx));
 
         var lineVisitor = new LineVisitor(symbolTable);
 

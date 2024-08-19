@@ -11,16 +11,17 @@ public class ForIn extends Line {
     Line line;
     Block body;
 
-    public ForIn(ValidName variable, Expression iterable) {
+    public ForIn(ValidName variable, Expression iterable, int lineDefined) {
+        super(lineDefined);
         this.variable = variable;
         this.iterable = iterable;
     }
-    public ForIn(ValidName variable, Expression iterable, Line line) {
-        this(variable, iterable);
+    public ForIn(ValidName variable, Expression iterable, Line line, int lineDefined) {
+        this(variable, iterable, lineDefined);
         this.line = line;
     }
-    public ForIn(ValidName variable, Expression iterable, Block body) {
-        this(variable, iterable);
+    public ForIn(ValidName variable, Expression iterable, Block body, int lineDefined) {
+        this(variable, iterable, lineDefined);
         this.body = body;
     }
 

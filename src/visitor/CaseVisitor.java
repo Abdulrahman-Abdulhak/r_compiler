@@ -1,5 +1,6 @@
 package visitor;
 
+import Util.SymbolTableUtil;
 import antlr.ReactParser;
 import ast.Case;
 import ast.Expression;
@@ -29,6 +30,6 @@ public class CaseVisitor extends GeneralVisitor<Case> {
             lines.add(lineVisitor.visit(line));
         }
 
-        return new Case(values, lines, haveDefault);
+        return new Case(values, lines, haveDefault, SymbolTableUtil.getLine(ctx));
     }
 }

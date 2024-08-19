@@ -1,10 +1,18 @@
 package ast;
 
 public class ArrowFunction extends Function {
-    public ArrowFunction(Args args, FunctionBody body) { super(args, body); }
-    public ArrowFunction(Args args, Expression exp) { super(args, exp); }
-    public ArrowFunction(ValidName arg, FunctionBody body) { super(new Args(arg), body); }
-    public ArrowFunction(ValidName arg, Expression exp) { super(new Args(arg), exp); }
+    public ArrowFunction(Args args, FunctionBody body, int lineDefined) {
+        super(args, body, lineDefined);
+    }
+    public ArrowFunction(Args args, Expression exp, int lineDefined) {
+        super(args, exp, lineDefined);
+    }
+    public ArrowFunction(ValidName arg, FunctionBody body, int lineDefined) {
+        super(new Args(arg, lineDefined), body, lineDefined);
+    }
+    public ArrowFunction(ValidName arg, Expression exp, int lineDefined) {
+        super(new Args(arg, lineDefined), exp, lineDefined);
+    }
 
     @Override
     String subType() { return "ArrowFunction"; }

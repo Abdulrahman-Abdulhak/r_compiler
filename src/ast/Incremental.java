@@ -7,7 +7,10 @@ public class Incremental extends Expression {
     boolean increase, post;
     Expression expression;
 
-    public Incremental(Expression exp) { expression = exp; }
+    public Incremental(Expression exp, int lineDefined) {
+        super(lineDefined);
+        expression = exp;
+    }
 
     public void setIncrease(boolean increase) { this.increase = increase; }
 

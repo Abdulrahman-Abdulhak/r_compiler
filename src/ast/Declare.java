@@ -10,10 +10,11 @@ public class Declare extends Statement {
     VariableDefineMethod declarer;
     List<Declarement> declarements;
 
-    public Declare(String declarer) {
-        this(VariableDefineMethod.fromString(declarer));
+    public Declare(String declarer, int lineDefined) {
+        this(VariableDefineMethod.fromString(declarer), lineDefined);
     }
-    public Declare(VariableDefineMethod declarer) {
+    public Declare(VariableDefineMethod declarer, int lineDefined) {
+        super(lineDefined);
         this.declarer = declarer;
         this.declarements = new ArrayList<>();
     }

@@ -11,16 +11,17 @@ public class ForOf extends Line {
     Line line;
     Block body;
 
-    public ForOf(ValidName variable, Expression iterable) {
+    public ForOf(ValidName variable, Expression iterable, int lineDefined) {
+        super(lineDefined);
         this.variable = variable;
         this.iterable = iterable;
     }
-    public ForOf(ValidName variable, Expression iterable, Line line) {
-        this(variable, iterable);
+    public ForOf(ValidName variable, Expression iterable, Line line, int lineDefined) {
+        this(variable, iterable, lineDefined);
         this.line = line;
     }
-    public ForOf(ValidName variable, Expression iterable, Block body) {
-        this(variable, iterable);
+    public ForOf(ValidName variable, Expression iterable, Block body, int lineDefined) {
+        this(variable, iterable, lineDefined);
         this.body = body;
     }
 

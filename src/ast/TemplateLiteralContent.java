@@ -7,8 +7,14 @@ public class TemplateLiteralContent extends Node {
     String content;
     Expression variable;
 
-    TemplateLiteralContent(String content) { this.content = content; }
-    TemplateLiteralContent(Expression variable) { this.variable = variable; }
+    TemplateLiteralContent(String content, int lineDefined) {
+        super(lineDefined);
+        this.content = content;
+    }
+    TemplateLiteralContent(Expression variable, int lineDefined) {
+        super(lineDefined);
+        this.variable = variable;
+    }
 
     @Override
     public String toString() {

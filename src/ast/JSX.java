@@ -11,12 +11,14 @@ public class JSX extends Returnable {
     List<JSX> children;
     Map<String, Object> props;
 
-    public JSX(String name) {
+    public JSX(String name, int lineDefined) {
+        super(lineDefined);
         this.identifier = name;
         props = new HashMap<>();
         children = new ArrayList<>();
     }
-    public JSX(Expression identifier) {
+    public JSX(Expression identifier, int lineDefined) {
+        super(lineDefined);
         this.identifier = identifier;
         props = new HashMap<>();
         children = new ArrayList<>();

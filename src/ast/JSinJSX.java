@@ -5,8 +5,8 @@ import java.util.stream.Stream;
 
 public class JSinJSX extends JSX {
     Expression expression;
-    public JSinJSX(Expression expression) {
-        super((Expression) null);
+    public JSinJSX(Expression expression, int lineDefined) {
+        super((Expression) null, lineDefined);
         this.expression = expression;
     }
 

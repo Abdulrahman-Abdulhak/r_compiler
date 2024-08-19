@@ -7,10 +7,11 @@ import java.util.List;
 public class Return extends SpecialLine {
     Expression expression;
 
-    public Return() {
-        this(null);
+    public Return(int lineDefined) {
+        this(null, lineDefined);
     }
-    public Return(Expression exp) {
+    public Return(Expression exp, int lineDefined) {
+        super(lineDefined);
         this.expression = exp;
     }
 

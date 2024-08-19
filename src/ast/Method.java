@@ -1,8 +1,8 @@
 package ast;
 
 public class Method extends Function {
-    public Method(ValidName name, Args args, FunctionBody body) {
-        super(name, args, body);
+    public Method(ValidName name, Args args, FunctionBody body, int lineDefined) {
+        super(name, args, body, lineDefined);
     }
 
     @Override

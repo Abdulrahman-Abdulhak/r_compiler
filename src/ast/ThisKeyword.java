@@ -3,7 +3,9 @@ package ast;
 import java.util.List;
 
 public class ThisKeyword extends Returnable {
-    public ThisKeyword() {}
+    public ThisKeyword(int lineDefined) {
+        super(lineDefined);
+    }
 
     @Override
     String type() { return "This Keyword"; }

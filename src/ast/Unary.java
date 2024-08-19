@@ -7,11 +7,13 @@ public class Unary extends Expression {
     String sign;
     Expression expression;
 
-    public Unary(Expression expression, boolean isPlus) {
+    public Unary(Expression expression, boolean isPlus, int lineDefined) {
+        super(lineDefined);
         this.expression = expression;
         this.sign = isPlus ? "+" : "-";
     }
-    public Unary(Expression expression, String sign) {
+    public Unary(Expression expression, String sign, int lineDefined) {
+        super(lineDefined);
         this.expression = expression;
         this.sign = sign;
     }

@@ -1,7 +1,9 @@
 package ast;
 
 public class AnonymousFunction extends Function {
-    public AnonymousFunction(Args args, FunctionBody body) { super(args, body); }
+    public AnonymousFunction(Args args, FunctionBody body, int lineDefined) {
+        super(args, body, lineDefined);
+    }
 
     @Override
     String subType() { return "Anonymous"; }

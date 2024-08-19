@@ -1,5 +1,6 @@
 package visitor;
 
+import Util.SymbolTableUtil;
 import antlr.ReactParser;
 
 import ast.*;
@@ -24,15 +25,15 @@ public class ExpressionVisitor extends GeneralVisitor<Expression> {
 
         if(ctx.templateLiteral() != null) {
             var template = new TemplateLiteralVisitor(symbolTable).visit(ctx.templateLiteral());
-            return new FunctionCall(nameSpace, template);
+            return new FunctionCall(nameSpace, template, SymbolTableUtil.getLine(ctx));
         }
 
-        Param param = new Param();
+        Param param = new Param(SymbolTableUtil.getLine(ctx.param()));
         for (var exp : ctx.param().expression()) {
             param.addNewParameter(visit(exp));
         }
 
-        return new FunctionCall(nameSpace, param);
+        return new FunctionCall(nameSpace, param, SymbolTableUtil.getLine(ctx));
     }
 
     @Override
@@ -40,7 +41,7 @@ public class ExpressionVisitor extends GeneralVisitor<Expression> {
         Expression parent = visit(ctx.expression());
         Notation notation = new NotationVisitor(symbolTable).visit(ctx.notation());
 
-        return new MemberGet(parent, notation);
+        return new MemberGet(parent, notation, SymbolTableUtil.getLine(ctx));
     }
 
     @Override
@@ -48,20 +49,20 @@ public class ExpressionVisitor extends GeneralVisitor<Expression> {
         Expression expression = visit(ctx.expression());
 
         if(ctx.param() != null) {
-            Param param = new Param();
+            Param param = new Param(SymbolTableUtil.getLine(ctx.param()));
             for (var exp : ctx.param().expression()) {
                 param.addNewParameter(visit(exp));
             }
-            return new New(expression, param);
+            return new New(expression, param, SymbolTableUtil.getLine(ctx));
         }
 
-        return new New(expression);
+        return new New(expression, SymbolTableUtil.getLine(ctx));
     }
 
     @Override
     public Incremental visitPostIncre(ReactParser.PostIncreContext ctx) {
         Expression exp = visit(ctx.expression());
-        var incremental = new Incremental(exp);
+        var incremental = new Incremental(exp, SymbolTableUtil.getLine(ctx));
 
         incremental.setPost(true);
 
@@ -74,7 +75,7 @@ public class ExpressionVisitor extends GeneralVisitor<Expression> {
     @Override
     public Incremental visitPreInc(ReactParser.PreIncContext ctx) {
         Expression exp = visit(ctx.expression());
-        var incremental = new Incremental(exp);
+        var incremental = new Incremental(exp, SymbolTableUtil.getLine(ctx));
 
         incremental.setPost(false);
 
@@ -87,7 +88,7 @@ public class ExpressionVisitor extends GeneralVisitor<Expression> {
     @Override
     public LogicalNot visitLogicalNOT(ReactParser.LogicalNOTContext ctx) {
         var exp = visit(ctx.expression());
-        return new LogicalNot(exp);
+        return new LogicalNot(exp, SymbolTableUtil.getLine(ctx));
     }
 
     @Override
@@ -95,7 +96,7 @@ public class ExpressionVisitor extends GeneralVisitor<Expression> {
         var exp = visit(ctx.expression());
         var sign = ctx.unarysOp().getText();
 
-        return new Unary(exp, sign);
+        return new Unary(exp, sign, SymbolTableUtil.getLine(ctx));
     }
 
     @Override
@@ -103,7 +104,7 @@ public class ExpressionVisitor extends GeneralVisitor<Expression> {
         Expression left = visit(ctx.expression(0));
         Expression right = visit(ctx.expression(1));
 
-        return new Pow(left, right);
+        return new Pow(left, right, SymbolTableUtil.getLine(ctx));
     }
 
     @Override
@@ -112,7 +113,7 @@ public class ExpressionVisitor extends GeneralVisitor<Expression> {
         String sign = ctx.multiplicativeOp().getText();
         Expression right = visit(ctx.expression(1));
 
-        return new Multiplication(left, sign, right);
+        return new Multiplication(left, sign, right, SymbolTableUtil.getLine(ctx));
     }
 
     @Override
@@ -121,7 +122,7 @@ public class ExpressionVisitor extends GeneralVisitor<Expression> {
         String sign = ctx.additiveOp().getText();
         Expression right = visit(ctx.expression(1));
 
-        return new Addition(left, sign, right);
+        return new Addition(left, sign, right, SymbolTableUtil.getLine(ctx));
     }
 
     @Override
@@ -130,7 +131,7 @@ public class ExpressionVisitor extends GeneralVisitor<Expression> {
         String sign = ctx.compareOP().getText();
         Expression right = visit(ctx.expression(1));
 
-        return new Compare(left, sign, right);
+        return new Compare(left, sign, right, SymbolTableUtil.getLine(ctx));
     }
 
     @Override
@@ -139,7 +140,7 @@ public class ExpressionVisitor extends GeneralVisitor<Expression> {
         String sign = ctx.equalCompareOP().getText();
         Expression right = visit(ctx.expression(1));
 
-        return new CompareWithEqual(left, sign, right);
+        return new CompareWithEqual(left, sign, right, SymbolTableUtil.getLine(ctx));
     }
 
     @Override
@@ -147,7 +148,7 @@ public class ExpressionVisitor extends GeneralVisitor<Expression> {
         Expression left = visit(ctx.expression(0));
         Expression right = visit(ctx.expression(1));
 
-        return new LogicalAnd(left, right);
+        return new LogicalAnd(left, right, SymbolTableUtil.getLine(ctx));
     }
 
     @Override
@@ -155,7 +156,7 @@ public class ExpressionVisitor extends GeneralVisitor<Expression> {
         Expression left = visit(ctx.expression(0));
         Expression right = visit(ctx.expression(1));
 
-        return new LogicalOr(left, right);
+        return new LogicalOr(left, right, SymbolTableUtil.getLine(ctx));
     }
 
     @Override
@@ -163,7 +164,7 @@ public class ExpressionVisitor extends GeneralVisitor<Expression> {
         Expression left = visit(ctx.expression(0));
         Expression right = visit(ctx.expression(1));
 
-        return new LogicalNull(left, right);
+        return new LogicalNull(left, right, SymbolTableUtil.getLine(ctx));
     }
 
     @Override
@@ -172,7 +173,7 @@ public class ExpressionVisitor extends GeneralVisitor<Expression> {
         Expression onTruth = visit(ctx.expression(1));
         Expression onFalse = visit(ctx.expression(2));
 
-        return new TernaryOperator(condition, onTruth, onFalse);
+        return new TernaryOperator(condition, onTruth, onFalse, SymbolTableUtil.getLine(ctx));
     }
 
     @Override
@@ -181,13 +182,13 @@ public class ExpressionVisitor extends GeneralVisitor<Expression> {
         String sign = ctx.assinmentOp().getText();
         Expression right = visit(ctx.expression(1));
 
-        return new Assignment(left, sign, right);
+        return new Assignment(left, sign, right, SymbolTableUtil.getLine(ctx));
     }
 
     @Override
     public ArraySpread visitArraySpread(ReactParser.ArraySpreadContext ctx) {
         Expression exp = visit(ctx.expression());
-        return new ArraySpread(exp);
+        return new ArraySpread(exp, SymbolTableUtil.getLine(ctx));
     }
 
     @Override

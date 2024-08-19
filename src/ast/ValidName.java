@@ -5,7 +5,10 @@ import java.util.List;
 public class ValidName extends Expression {
     String identifier;
 
-    public ValidName(String id) { identifier = id; }
+    public ValidName(String id, int lineDefined) {
+        super(lineDefined);
+        identifier = id;
+    }
 
     public String getIdentifier() {
         return identifier;

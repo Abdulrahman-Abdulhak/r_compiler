@@ -11,15 +11,17 @@ public abstract class Function extends Returnable {
     FunctionBody body;
     Expression returnExp;
 
-    public Function(Args args, FunctionBody body) {
-        this(null, args, body);
+    public Function(Args args, FunctionBody body, int lineDefined) {
+        this(null, args, body, lineDefined);
     }
-    public Function(ValidName name, Args args, FunctionBody body) {
+    public Function(ValidName name, Args args, FunctionBody body, int lineDefined) {
+        super(lineDefined);
         this.name = name;
         this.args = args;
         this.body = body;
     }
-    public Function(Args args, Expression expression) {
+    public Function(Args args, Expression expression, int lineDefined) {
+        super(lineDefined);
         this.args = args;
         this.returnExp = expression;
     }

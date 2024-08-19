@@ -10,16 +10,22 @@ public class DestructuredObjVar extends Node {
     ValidName var;
     Expression defaultValue;
 
-    public DestructuredObjVar(ValidName var) { this.var = var; }
-    public DestructuredObjVar(Object key, ValidName var) {
+    public DestructuredObjVar(ValidName var, int lineDefined) {
+        super(lineDefined);
+        this.var = var;
+    }
+    public DestructuredObjVar(Object key, ValidName var, int lineDefined) {
+        super(lineDefined);
         this.key = key;
         this.var = var;
     }
-    public DestructuredObjVar(ValidName var, Expression defaultValue) {
+    public DestructuredObjVar(ValidName var, Expression defaultValue, int lineDefined) {
+        super(lineDefined);
         this.defaultValue = defaultValue;
         this.var = var;
     }
-    public DestructuredObjVar(Object key, ValidName var, Expression defaultValue) {
+    public DestructuredObjVar(Object key, ValidName var, Expression defaultValue, int lineDefined) {
+        super(lineDefined);
         this.key = key;
         this.var = var;
         this.defaultValue = defaultValue;

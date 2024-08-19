@@ -9,39 +9,48 @@ public class ObjectPropDefine extends Node {
     Object key;
     Expression value, destructuredObject;
 
-    public ObjectPropDefine(int key, Expression value) {
+    public ObjectPropDefine(int key, Expression value, int lineDefined) {
+        super(lineDefined);
         this.key = key;
         this.value = value;
     }
-    public ObjectPropDefine(float key, Expression value) {
+    public ObjectPropDefine(float key, Expression value, int lineDefined) {
+        super(lineDefined);
         this.key = key;
         this.value = value;
     }
-    public ObjectPropDefine(double key, Expression value) {
+    public ObjectPropDefine(double key, Expression value, int lineDefined) {
+        super(lineDefined);
         this.key = key;
         this.value = value;
     }
-    public ObjectPropDefine(String key, Expression value) {
+    public ObjectPropDefine(String key, Expression value, int lineDefined) {
+        super(lineDefined);
         this.key = key;
         this.value = value;
     }
-    public ObjectPropDefine(ValidName key, Expression value) {
+    public ObjectPropDefine(ValidName key, Expression value, int lineDefined) {
+        super(lineDefined);
         this.key = key;
         this.value = value;
     }
-    public ObjectPropDefine(ValidName var) {
+    public ObjectPropDefine(ValidName var, int lineDefined) {
+        super(lineDefined);
         key = var;
         value = var;
     }
-    public ObjectPropDefine(Method method) {
+    public ObjectPropDefine(Method method, int lineDefined) {
+        super(lineDefined);
         key = method.name;
         value = method;
     }
-    public ObjectPropDefine(Expression computedKey, Expression value) {
+    public ObjectPropDefine(Expression computedKey, Expression value, int lineDefined) {
+        super(lineDefined);
         key = computedKey;
         this.value = value;
     }
-    public ObjectPropDefine(Expression destructuredObject) {
+    public ObjectPropDefine(Expression destructuredObject, int lineDefined) {
+        super(lineDefined);
         this.destructuredObject = destructuredObject;
     }
 

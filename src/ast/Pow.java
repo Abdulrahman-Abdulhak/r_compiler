@@ -4,7 +4,9 @@ import java.util.List;
 import java.util.stream.Stream;
 
 public class Pow extends LeftRightOperation {
-    public Pow(Expression left, Expression right) { super(left, right); }
+    public Pow(Expression left, Expression right, int lineDefined) {
+        super(left, right, lineDefined);
+    }
 
     @Override
     String type() { return "Pow"; }

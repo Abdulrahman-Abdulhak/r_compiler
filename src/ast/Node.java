@@ -5,6 +5,18 @@ import Util.ToString;
 import java.util.List;
 
 abstract public class Node {
+    int lineDefined;
+    public Node(int lineDefined) {
+        this.lineDefined = lineDefined;
+    }
+
+    public int getLineDefined() {
+        return lineDefined;
+    }
+    public void setLineDefined(int lineDefined) {
+        this.lineDefined = lineDefined;
+    }
+
     public abstract String nodeName();
 
     public abstract List<Node> childNodes();

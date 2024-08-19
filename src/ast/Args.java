@@ -4,19 +4,24 @@ import Util.ToString;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Stream;
 
 public class Args extends Node {
     List<Arg> args;
     ValidName rest;
 
-    public Args() { args = new ArrayList<>(); }
-    public Args(ValidName arg) {
+    public Args(int lineDefined) {
+        super(lineDefined);
         args = new ArrayList<>();
-        this.addArgument(arg);
+    }
+    public Args(ValidName arg, int lineDefined) {
+        super(lineDefined);
+        args = new ArrayList<>();
+        this.addArgument(arg, lineDefined);
     }
 
-    public void addArgument(ValidName arg) { args.add(new Arg(arg)); }
+    public void addArgument(ValidName arg, int lineDefined) {
+        args.add(new Arg(arg, lineDefined));
+    }
     public void addArgument(Arg arg) { args.add(arg); }
 
     public void setRest(ValidName rest) { this.rest = rest; }

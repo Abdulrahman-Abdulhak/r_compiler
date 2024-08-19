@@ -10,11 +10,13 @@ public class FunctionCall extends Expression {
     TemplateLiteral templateLiteral;
     Expression nameSpace;
 
-    public FunctionCall(Expression functionNameSpace, Param param) {
+    public FunctionCall(Expression functionNameSpace, Param param, int lineDefined) {
+        super(lineDefined);
         nameSpace = functionNameSpace;
         this.param = param;
     }
-    public FunctionCall(Expression functionNameSpace, TemplateLiteral param) {
+    public FunctionCall(Expression functionNameSpace, TemplateLiteral param, int lineDefined) {
+        super(lineDefined);
         nameSpace = functionNameSpace;
         templateLiteral = param;
     }

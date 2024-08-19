@@ -11,31 +11,35 @@ public class For extends Line {
     Line line;
     Block body;
 
-    public For(Line line) {
-        this((Declare) null, null, null, line);
+    public For(Line line, int lineDefined) {
+        this((Declare) null, null, null, line, lineDefined);
     }
-    public For(Block body) {
-        this((Declare) null, null, null, body);
+    public For(Block body, int lineDefined) {
+        this((Declare) null, null, null, body, lineDefined);
     }
-    public For(Declare init, List<Expression> conditions, List<Expression> iterators, Line line) {
+    public For(Declare init, List<Expression> conditions, List<Expression> iterators, Line line, int lineDefined) {
+        super(lineDefined);
         initDeclare = init;
         this.conditions = conditions;
         this.iterators = iterators;
         this.line = line;
     }
-    public For(Declare init, List<Expression> conditions, List<Expression> iterators, Block body) {
+    public For(Declare init, List<Expression> conditions, List<Expression> iterators, Block body, int lineDefined) {
+        super(lineDefined);
         initDeclare = init;
         this.conditions = conditions;
         this.iterators = iterators;
         this.body = body;
     }
-    public For(List<Expression> init, List<Expression> conditions, List<Expression> iterators, Line line) {
+    public For(List<Expression> init, List<Expression> conditions, List<Expression> iterators, Line line, int lineDefined) {
+        super(lineDefined);
         initExpressions = init;
         this.conditions = conditions;
         this.iterators = iterators;
         this.line = line;
     }
-    public For(List<Expression> init, List<Expression> conditions, List<Expression> iterators, Block body) {
+    public For(List<Expression> init, List<Expression> conditions, List<Expression> iterators, Block body, int lineDefined) {
+        super(lineDefined);
         initExpressions = init;
         this.conditions = conditions;
         this.iterators = iterators;

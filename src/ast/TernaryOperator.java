@@ -6,7 +6,8 @@ import java.util.stream.Stream;
 public class TernaryOperator extends Expression {
     Expression condition, onTruth, onFalse;
 
-    public TernaryOperator(Expression condition, Expression onTruth, Expression onFalse) {
+    public TernaryOperator(Expression condition, Expression onTruth, Expression onFalse, int lineDefined) {
+        super(lineDefined);
         this.condition = condition;
         this.onTruth = onTruth;
         this.onFalse= onFalse;

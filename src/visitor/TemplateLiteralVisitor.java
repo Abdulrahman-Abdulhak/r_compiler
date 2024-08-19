@@ -1,5 +1,6 @@
 package visitor;
 
+import Util.SymbolTableUtil;
 import antlr.ReactParser;
 
 import ast.TemplateLiteral;
@@ -12,10 +13,10 @@ public class TemplateLiteralVisitor extends GeneralVisitor<TemplateLiteral> {
 
     @Override
     public TemplateLiteral visitTemplateLiteral(ReactParser.TemplateLiteralContext ctx) {
-        var template = new TemplateLiteral();
+        var template = new TemplateLiteral(SymbolTableUtil.getLine(ctx));
 
         for (var content : ctx.templateLiteralContent())
-            template.addContent(content.getText());
+            template.addContent(content.getText(), SymbolTableUtil.getLine(content));
 
         return template;
     }

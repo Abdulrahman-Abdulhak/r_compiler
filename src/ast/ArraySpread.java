@@ -6,7 +6,10 @@ import java.util.stream.Stream;
 public class ArraySpread extends Expression {
     Expression array;
 
-    public ArraySpread(Expression array) { this.array = array; }
+    public ArraySpread(Expression array, int lineDefined) {
+        super(lineDefined);
+        this.array = array;
+    }
 
     @Override
     String type() { return "ArraySpread"; }

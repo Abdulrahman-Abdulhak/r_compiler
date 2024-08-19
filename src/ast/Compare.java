@@ -4,8 +4,8 @@ import java.util.List;
 import java.util.stream.Stream;
 
 public class Compare extends LeftRightOperation {
-    public Compare(Expression left, String sign, Expression right) {
-        super(left, sign, right);
+    public Compare(Expression left, String sign, Expression right, int lineDefined) {
+        super(left, sign, right, lineDefined);
     }
 
     @Override

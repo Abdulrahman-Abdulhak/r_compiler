@@ -8,35 +8,43 @@ public class PrimeType extends Returnable {
     VariableType variableType;
     Object value;
 
-    public PrimeType(int value) {
+    public PrimeType(int value, int lineDefined) {
+        super(lineDefined);
         this.value = value;
         variableType = VariableType.num;
     }
-    public PrimeType(float value) {
+    public PrimeType(float value, int lineDefined) {
+        super(lineDefined);
         this.value = value;
         variableType = VariableType.num;
     }
-    public PrimeType(double value) {
+    public PrimeType(double value, int lineDefined) {
+        super(lineDefined);
         this.value = value;
         variableType = VariableType.num;
     }
-    public PrimeType(JsString str) {
+    public PrimeType(JsString str, int lineDefined) {
+        super(lineDefined);
         value = str;
         variableType = VariableType.string;
     }
-    public PrimeType(String str) {
+    public PrimeType(String str, int lineDefined) {
+        super(lineDefined);
         value = str;
         variableType = VariableType.string;
     }
-    public PrimeType(boolean bool) {
+    public PrimeType(boolean bool, int lineDefined) {
+        super(lineDefined);
         value = bool;
         variableType = VariableType.bool;
     }
-    public PrimeType(JsNull nullVal) {
+    public PrimeType(JsNull nullVal, int lineDefined) {
+        super(lineDefined);
         value = nullVal;
         variableType = VariableType.jsNull;
     }
-    public PrimeType() {
+    public PrimeType(int lineDefined) {
+        super(lineDefined);
         value = null;
         variableType = VariableType.undefined;
     }

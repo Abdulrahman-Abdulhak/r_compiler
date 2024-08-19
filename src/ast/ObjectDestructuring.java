@@ -8,7 +8,10 @@ import java.util.List;
 public class ObjectDestructuring extends Node {
     List<DestructuredObjVar> vars;
 
-    public ObjectDestructuring() { vars = new ArrayList<>(); }
+    public ObjectDestructuring(int lineDefined) {
+        super(lineDefined);
+        vars = new ArrayList<>();
+    }
 
     public void addVar(DestructuredObjVar var) { vars.add(var); }
 
