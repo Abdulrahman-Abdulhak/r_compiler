@@ -36,10 +36,13 @@ public class ObjectPropVisitor extends GeneralVisitor<ObjectPropDefine> {
     @Override
     public ObjectPropDefine visitMethodPropDefine(ReactParser.MethodPropDefineContext ctx) {
         var methodCtx = ctx.method();
+
+        var methodName = methodCtx.validName().getText();
+        var methodScope = new SymbolTable("method " + methodName);
         var method = new Method(
-                VisitorUtil.create(methodCtx.validName()),
-                VisitorUtil.create(methodCtx.args(), symbolTable),
-                VisitorUtil.create(methodCtx.block(), symbolTable)
+                new ValidName(methodName),
+                new ArgsVisitor(methodScope).visitArgs(methodCtx.args()),
+                new BlockVisitor(methodScope).visitFunctionBody(methodCtx.functionBody())
         );
 
         return new ObjectPropDefine(method);

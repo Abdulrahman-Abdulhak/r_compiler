@@ -5,17 +5,16 @@ import Util.ToString;
 public abstract class Function extends Returnable {
     ValidName name;
     Args args;
-    Block block;
+    FunctionBody body;
     Expression returnExp;
 
-    public Function(ValidName name, Args args, Block block) {
+    public Function(Args args, FunctionBody body) {
+        this(null, args, body);
+    }
+    public Function(ValidName name, Args args, FunctionBody body) {
         this.name = name;
         this.args = args;
-        this.block = block;
-    }
-    public Function(Args args, Block block) {
-        this.args = args;
-        this.block = block;
+        this.body = body;
     }
     public Function(Args args, Expression expression) {
         this.args = args;
@@ -30,6 +29,6 @@ public abstract class Function extends Returnable {
 
     @Override
     Object[] members() {
-        return new Object[]{"name", name, "args", args, "body", block, "body", returnExp};
+        return new Object[]{"name", name, "args", args, "body", body, "body", returnExp};
     }
 }

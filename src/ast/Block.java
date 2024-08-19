@@ -16,11 +16,15 @@ public class Block extends Line {
         return null;
     }
 
+    String type() {
+        return "Block";
+    }
+
     @Override
     public String toString() {
         return ToString.self(
-                "Block",
-                ToString.var("lines", lines)
+            type(),
+            ToString.var("lines", lines)
         );
     }
 }

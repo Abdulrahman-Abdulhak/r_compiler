@@ -2,6 +2,7 @@ package visitor;
 
 import antlr.ReactParser;
 import ast.Block;
+import ast.FunctionBody;
 import symbolTable.SymbolTable;
 
 public class BlockVisitor extends GeneralVisitor<Block> {
@@ -13,11 +14,24 @@ public class BlockVisitor extends GeneralVisitor<Block> {
     @Override
     public Block visitBlock(ReactParser.BlockContext ctx) {
         var block = new Block();
+
         var lineVisitor = new LineVisitor(symbolTable);
 
-        for (var line : ctx.line())
+        for (var line : ctx.allLines())
             block.addLine(lineVisitor.visit(line));
 
         return block;
+    }
+
+    @Override
+    public FunctionBody visitFunctionBody(ReactParser.FunctionBodyContext ctx) {
+        var body = new FunctionBody();
+
+        var lineVisitor = new LineVisitor(symbolTable);
+
+        for (var line : ctx.functionLines())
+            body.addLine(lineVisitor.visit(line));
+
+        return body;
     }
 }

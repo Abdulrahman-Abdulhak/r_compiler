@@ -27,7 +27,7 @@ public class FunctionVisitor extends GeneralVisitor<Function> {
     }
 
     @Override
-    public Function visitArrowFunction(ReactParser.ArrowFunctionContext ctx) {
+    public ArrowFunction visitArrowFunction(ReactParser.ArrowFunctionContext ctx) {
         var functionScope = symbolTable.addTable();
 
         var nameCtx = ctx.validName();
@@ -49,39 +49,39 @@ public class FunctionVisitor extends GeneralVisitor<Function> {
             return new ArrowFunction(args, exp);
         }
 
-        var block = VisitorUtil.create(ctx.block(), functionScope);
+        var body = new BlockVisitor(functionScope).visitFunctionBody(ctx.functionBody());
 
-        if(name != null) return new ArrowFunction(name, block);
-        return new ArrowFunction(args, block);
+        if(name != null) return new ArrowFunction(name, body);
+        return new ArrowFunction(args, body);
     }
 
     @Override
-    public Function visitNormalFunction(ReactParser.NormalFunctionContext ctx) {
+    public NormalFunction visitNormalFunction(ReactParser.NormalFunctionContext ctx) {
         var functionNameCtx = ctx.validName();
         ValidName functionName = VisitorUtil.create(functionNameCtx);
         var functionScope = symbolTable.addTable(functionName);
 
-        var args = VisitorUtil.create(ctx.args(), functionScope);
-        var block = VisitorUtil.create(ctx.block(), functionScope);
+        var args = new ArgsVisitor(functionScope).visitArgs(ctx.args());
+        var block = new BlockVisitor(functionScope).visitFunctionBody(ctx.functionBody());
 
         var func = new NormalFunction(functionName, args, block);
 
         SymbolTableUtil.initSymbol(
-                symbolTable,
-                functionName.getIdentifier(),
-                functionNameCtx,
-                SymbolDefineMethod.function()
+            symbolTable,
+            functionName.getIdentifier(),
+            functionNameCtx,
+            SymbolDefineMethod.function()
         );
 
         return func;
     }
 
     @Override
-    public Function visitAnonymousFunction(ReactParser.AnonymousFunctionContext ctx) {
+    public AnonymousFunction visitAnonymousFunction(ReactParser.AnonymousFunctionContext ctx) {
         var functionScope = symbolTable.addTable();
 
-        var args = VisitorUtil.create(ctx.args(), functionScope);
-        var block = VisitorUtil.create(ctx.block(), functionScope);
+        var args = new ArgsVisitor(functionScope).visitArgs(ctx.args());
+        var block = new BlockVisitor(functionScope).visitFunctionBody(ctx.functionBody());
 
         return new AnonymousFunction(args, block);
     }

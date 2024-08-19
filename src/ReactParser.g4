@@ -13,16 +13,16 @@ program: line* EOF;
 line
     : statement         #statementLine
     | if                #ifLine
+    | switch            #switchLine
     | while             #whileLine
     | for               #forLine
     | forin             #forInLine
     | forof             #forOfLine
     | doWhile           #doWhileLine
     | block             #blockLine
-    | specialLine       #specialLineLine
     ;
 
-specialLine: break | continue | return;
+// special lines
 return: RETURN expression?;
 continue: CONTINUE STRING?;
 break: BREAK STRING?;
@@ -30,9 +30,12 @@ break: BREAK STRING?;
 
 // function representaions
 function: arrowFunction | normalFunction | anonymousFunction;
-arrowFunction: (args | validName) ARROW (block | expression);
-normalFunction: FUNCTION validName args block;
-anonymousFunction: FUNCTION args block;
+arrowFunction: (args | validName) ARROW (functionBody | expression);
+normalFunction: FUNCTION validName args functionBody;
+anonymousFunction: FUNCTION args functionBody;
+
+functionBody: OPEN_CURLY_BRACES functionLines* CLOSE_CURLY_BRACES;
+functionLines: line | return;
 
 args: OPEN_BRACKET ((arg COMMA)*(arg | rest))? CLOSE_BRACKET;
 arg
@@ -94,11 +97,11 @@ moduleExportItem
     ;
 
 declare: declarers declareSyntax (COMMA declareSyntax)*;
-declareSyntax: declarable assignmentRightHand?;
-assignmentRightHand: (assignmentDeclarable)* ASSIGNMENT_OP expression;
-assignmentDeclarable: ASSIGNMENT_OP declarable;
-declarable: validName | objectDestructuring | arrayDestructuring;
-declarers: VAR | LET | CONST;
+                        declareSyntax: declarable assignmentRightHand?;
+                        assignmentRightHand: (assignmentDeclarable)* ASSIGNMENT_OP expression;
+                        assignmentDeclarable: ASSIGNMENT_OP declarable;
+                        declarable: validName | objectDestructuring | arrayDestructuring;
+                        declarers: VAR | LET | CONST;
 
 expression
     : OPEN_BRACKET expression CLOSE_BRACKET                                    #parentheses
@@ -184,25 +187,31 @@ equalCompareOP: EQ_COMPARE_OP | STRICT_EQ_COMPARE_OP | NEQ_COMPARE_OP | STRICT_N
 
 
 // conditions & loops
-if: IF scopeHead scopeBody;
-while: WHILE scopeHead scopeBody;
-doWhile: DO scopeBody WHILE scopeHead;
+allLines: line | return | break | continue;
+if: IF OPEN_BRACKET expression CLOSE_BRACKET (block | allLines);
+
+switch: SWITCH OPEN_BRACKET expression CLOSE_BRACKET switchBody;
+switchBody: OPEN_CURLY_BRACES caseLine* CLOSE_CURLY_BRACES;
+caseLine: (((CASE expression) | DEFAULT) COLON)+ allLines*;
+
+while: WHILE OPEN_BRACKET expression CLOSE_BRACKET (block | allLines);
+doWhile: DO (block | allLines) WHILE OPEN_BRACKET expression CLOSE_BRACKET;
 
 // for syntax: for(expression 1; expression 2; expression 3) bodyScobe
 // expression 1:
-for: FOR OPEN_BRACKET forExpression1? SEMICOLON expressionList? SEMICOLON expressionList? CLOSE_BRACKET scopeBody;
+for: FOR OPEN_BRACKET forExpression1? SEMICOLON forExpression2? SEMICOLON forExpression3? CLOSE_BRACKET (block | allLines);
 forExpression1: declare | expressionList;
+forExpression2: expressionList;
+forExpression3: expressionList;
 expressionList: (expression COMMA)* expression;
 
-forin: FOR OPEN_BRACKET declarers? validName IN expression CLOSE_BRACKET scopeBody;
-forof: FOR OPEN_BRACKET declarers? validName OF expression CLOSE_BRACKET scopeBody;
+forin: FOR OPEN_BRACKET declarers? validName IN expression CLOSE_BRACKET (block | allLines);
+forof: FOR OPEN_BRACKET declarers? validName OF expression CLOSE_BRACKET (block | allLines);
 
-scopeHead: OPEN_BRACKET expression CLOSE_BRACKET;
-scopeBody: block | line;
 // end of _conditions & loops_
 
 
-block: OPEN_CURLY_BRACES line* CLOSE_CURLY_BRACES;
+block: OPEN_CURLY_BRACES allLines* CLOSE_CURLY_BRACES;
 
 object: OPEN_CURLY_BRACES ((objPropDefine COMMA)*objPropDefine COMMA?)? CLOSE_CURLY_BRACES;
 objPropDefine
@@ -213,7 +222,7 @@ objPropDefine
     | ELLIPSIS expression                                                       #objecPropsPropDefine
     ;
 objPropName: STRING | validName | num;
-method: validName args block;
+method: validName args functionBody;
 
 array: OPEN_SQUARE_BRACKET ((expression COMMA+)*expression COMMA*)? CLOSE_SQUARE_BRACKET;
 

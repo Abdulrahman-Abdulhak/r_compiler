@@ -1,0 +1,86 @@
+package ast;
+
+import Util.ToString;
+
+import java.util.List;
+
+public class For extends Line {
+    Declare initDeclare;
+    List<Expression> initExpressions, conditions, iterators;
+    Line line;
+    Block body;
+
+    public For(Line line) {
+        this((Declare) null, null, null, line);
+    }
+    public For(Block body) {
+        this((Declare) null, null, null, body);
+    }
+    public For(Declare init, List<Expression> conditions, List<Expression> iterators, Line line) {
+        initDeclare = init;
+        this.conditions = conditions;
+        this.iterators = iterators;
+        this.line = line;
+    }
+    public For(Declare init, List<Expression> conditions, List<Expression> iterators, Block body) {
+        initDeclare = init;
+        this.conditions = conditions;
+        this.iterators = iterators;
+        this.body = body;
+    }
+    public For(List<Expression> init, List<Expression> conditions, List<Expression> iterators, Line line) {
+        initExpressions = init;
+        this.conditions = conditions;
+        this.iterators = iterators;
+        this.line = line;
+    }
+    public For(List<Expression> init, List<Expression> conditions, List<Expression> iterators, Block body) {
+        initExpressions = init;
+        this.conditions = conditions;
+        this.iterators = iterators;
+        this.body = body;
+    }
+
+    public Declare getInitDeclare() {
+        return initDeclare;
+    }
+    public void setInitDeclare(Declare initDeclare) {
+        this.initDeclare = initDeclare;
+    }
+
+    public List<Expression> getConditions() {
+        return conditions;
+    }
+    public void setConditions(List<Expression> conditions) {
+        this.conditions = conditions;
+    }
+
+    public List<Expression> getInitExpressions() {
+        return initExpressions;
+    }
+    public void setInitExpressions(List<Expression> initExpressions) {
+        this.initExpressions = initExpressions;
+    }
+
+    public List<Expression> getIterators() {
+        return iterators;
+    }
+    public void setIterators(List<Expression> iterators) {
+        this.iterators = iterators;
+    }
+
+    @Override
+    String lineContent() {
+        return ToString.self(
+            "for Loop",
+                ToString.allNotNull(
+                    "init", initDeclare,
+                    "init", initExpressions,
+                    "conditions", conditions,
+                    "iterators", iterators,
+                    "body", line,
+                    "body", body
+                )
+        );
+    }
+}

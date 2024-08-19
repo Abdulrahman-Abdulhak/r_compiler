@@ -7,6 +7,9 @@ import symbolTable.SymbolTable;
 import symbolTable.property.SymbolDefinitionLine;
 import symbolTable.property.SymbolProperty;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class SymbolTableUtil {
     public static Integer getLine(ParserRuleContext ctx) {
         var symbol = VisitorUtil.getFirstToken(ctx);
@@ -29,5 +32,19 @@ public class SymbolTableUtil {
 
         properties.addProperty(new SymbolDefinitionLine(line));
         table.insert(symbol, properties);
+    }
+
+    public static void print(SymbolTable table) {
+        var tables = new ArrayList<SymbolTable>();
+        tables.add(table);
+        print(tables);
+    }
+    public static void print(List<SymbolTable> tables) {
+        while (!tables.isEmpty()) {
+            var table = tables.removeFirst();
+            System.out.println(table.toString());
+
+            tables.addAll(table.getChildren());
+        }
     }
 }

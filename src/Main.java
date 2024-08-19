@@ -1,3 +1,4 @@
+import Util.SymbolTableUtil;
 import antlr.ReactLexer;
 import antlr.ReactParser;
 import org.antlr.v4.runtime.CharStream;
@@ -7,13 +8,12 @@ import symbolTable.SymbolTable;
 import visitor.ProgramVisitor;
 
 import java.io.IOException;
-import java.util.Arrays;
 
 import static org.antlr.v4.runtime.CharStreams.fromFileName;
 
 public class Main {
     public static void main(String[] args) throws IOException {
-        String source = "C:\\Files\\Java\\r_compiler\\src\\testFiles\\test1.txt";
+        String source = "C:\\Files\\Developer\\Java\\r_compiler\\src\\testFiles\\test1.txt";
         CharStream charStream = fromFileName(source);
 
         ReactLexer lexer = new ReactLexer(charStream);
@@ -33,7 +33,6 @@ public class Main {
 //        System.out.println();
 //        System.out.println();
 //        System.out.println();
-        System.out.println(globalSymbolTable);
-        System.out.println(globalSymbolTable.getChildren().get(0));
+        SymbolTableUtil.print(globalSymbolTable);
     }
 }
