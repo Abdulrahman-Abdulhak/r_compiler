@@ -3,7 +3,7 @@ package ast;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Declarement {
+public class Declarement extends Node {
     List<String> signs;
     List<Declarable> declarables;
     Expression value;
@@ -51,5 +51,18 @@ public class Declarement {
         if(i > 0) str.append(value);
 
         return str.toString() + value;
+    }
+
+    @Override
+    public String nodeName() {
+        return "Declarement";
+    }
+
+    @Override
+    public List<Node> childNodes() {
+        var children = new ArrayList<Node>(declarables);
+        children.add(value);
+
+        return children;
     }
 }

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
 
 public class JSX extends Returnable {
     Object identifier;
@@ -41,5 +42,16 @@ public class JSX extends Returnable {
     @Override
     Object[] members() {
         return new Object[]{"identifier", identifier, "props", props, "children", children};
+    }
+
+    @Override
+    public String nodeName() {
+        return "JSX";
+    }
+
+    @Override
+    public List<Node> childNodes() {
+        var identifier = this.identifier instanceof Expression ? (Expression) this.identifier : null;
+        return Stream.of(identifier).map(item -> (Node) item).toList();
     }
 }

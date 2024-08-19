@@ -1,5 +1,8 @@
 package ast;
 
+import java.util.List;
+import java.util.stream.Stream;
+
 public class TernaryOperator extends Expression {
     Expression condition, onTruth, onFalse;
 
@@ -15,5 +18,15 @@ public class TernaryOperator extends Expression {
     @Override
     Object[] members() {
         return new Object[]{"condition", condition, "onTruth", onTruth, "onFalse", onFalse};
+    }
+
+    @Override
+    public String nodeName() {
+        return "Ternary Operator";
+    }
+
+    @Override
+    public List<Node> childNodes() {
+        return Stream.of(condition, onTruth, onFalse).map(item -> (Node) item).toList();
     }
 }

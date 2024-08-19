@@ -2,6 +2,9 @@ package ast;
 
 import Util.ToString;
 
+import java.util.List;
+import java.util.stream.Stream;
+
 public class FunctionCall extends Expression {
     Param param;
     TemplateLiteral templateLiteral;
@@ -28,5 +31,15 @@ public class FunctionCall extends Expression {
             "parameters", param,
             "parameters", templateLiteral
         };
+    }
+
+    @Override
+    public String nodeName() {
+        return "Function Call";
+    }
+
+    @Override
+    public List<Node> childNodes() {
+        return Stream.of(nameSpace, param, templateLiteral).toList();
     }
 }

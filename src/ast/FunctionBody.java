@@ -5,4 +5,9 @@ public class FunctionBody extends Block {
     String type() {
         return "Function Body";
     }
+
+    @Override
+    public String nodeName() {
+        return "Function Body";
+    }
 }

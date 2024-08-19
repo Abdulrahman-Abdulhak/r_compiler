@@ -37,4 +37,14 @@ public class Declare extends Statement {
                 ToString.all("declarer", declarer, "declare list", declarements)
         );
     }
+
+    @Override
+    public String nodeName() {
+        return "Declare " + declarer;
+    }
+
+    @Override
+    public List<Node> childNodes() {
+        return declarements.stream().map(declare -> (Node) declare).toList();
+    }
 }

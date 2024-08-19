@@ -14,8 +14,8 @@ public abstract class Expression extends Statement {
         var inside = strPart1 + (strPart2.isEmpty() ? "": ",\n") + strPart2;
 
         return ToString.self(
-                "Expression",
-                inside
+            "Expression",
+            inside
         );
     }
 }

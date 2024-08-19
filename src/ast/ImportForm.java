@@ -2,7 +2,10 @@ package ast;
 
 import Util.ToString;
 
-public class ImportForm {
+import java.util.List;
+import java.util.stream.Stream;
+
+public class ImportForm extends Node {
     ValidName theDefault, fullImportAlias;
     NamedImport namedImport;
 
@@ -40,11 +43,21 @@ public class ImportForm {
     @Override
     public String toString() {
         var inside = ToString.allNotNull(
-                "default", theDefault.identifier,
-                "Named_Import", namedImport,
-                "Full Import", ToString.nameAlias("*", fullImportAlias)
+            "default", theDefault.identifier,
+            "Named_Import", namedImport,
+            "Full Import", ToString.nameAlias("*", fullImportAlias)
         );
 
         return ToString.self("", inside );
+    }
+
+    @Override
+    public String nodeName() {
+        return "Import Form";
+    }
+
+    @Override
+    public List<Node> childNodes() {
+        return Stream.of(theDefault, fullImportAlias, namedImport).toList();
     }
 }

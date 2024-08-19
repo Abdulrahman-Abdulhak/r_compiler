@@ -1,5 +1,8 @@
 package ast;
 
+import java.util.List;
+import java.util.stream.Stream;
+
 public class New extends Expression {
     Expression expression;
     Param param;
@@ -25,5 +28,15 @@ public class New extends Expression {
     @Override
     Object[] members() {
         return new Object[]{"expression", expression, "param", param};
+    }
+
+    @Override
+    public String nodeName() {
+        return "Keyword:" + type();
+    }
+
+    @Override
+    public List<Node> childNodes() {
+        return Stream.of(param, expression).map(item -> (Node) item).toList();
     }
 }

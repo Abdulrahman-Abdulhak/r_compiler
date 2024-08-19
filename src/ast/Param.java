@@ -5,7 +5,7 @@ import Util.ToString;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Param {
+public class Param extends Node {
     List<Expression> parameters;
 
     public Param() { parameters = new ArrayList<>(); }
@@ -15,10 +15,20 @@ public class Param {
     @Override
     public String toString() {
         return ToString.self(
-                "",
-                ToString.list(parameters),
-                "[",
-                "]"
+            "",
+            ToString.list(parameters),
+            "[",
+            "]"
         );
+    }
+
+    @Override
+    public String nodeName() {
+        return "Parameters";
+    }
+
+    @Override
+    public List<Node> childNodes() {
+        return parameters.stream().map(item -> (Node) item).toList();
     }
 }

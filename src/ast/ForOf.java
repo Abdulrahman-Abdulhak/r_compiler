@@ -2,6 +2,9 @@ package ast;
 
 import Util.ToString;
 
+import java.util.List;
+import java.util.stream.Stream;
+
 public class ForOf extends Line {
     ValidName variable;
     Expression iterable;
@@ -32,5 +35,15 @@ public class ForOf extends Line {
                 "body", body
             )
         );
+    }
+
+    @Override
+    public String nodeName() {
+        return "For-Of Loop";
+    }
+
+    @Override
+    public List<Node> childNodes() {
+        return Stream.of(variable, iterable, line, body).map(item -> (Node) item).toList();
     }
 }

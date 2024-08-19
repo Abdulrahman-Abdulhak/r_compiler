@@ -19,4 +19,14 @@ public class JsObject extends Returnable {
     Object[] members() {
         return new Object[]{"properties", props};
     }
+
+    @Override
+    public String nodeName() {
+        return "Object";
+    }
+
+    @Override
+    public List<Node> childNodes() {
+        return props.stream().map(prop -> (Node) prop).toList();
+    }
 }

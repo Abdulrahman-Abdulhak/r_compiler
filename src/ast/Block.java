@@ -27,4 +27,14 @@ public class Block extends Line {
             ToString.var("lines", lines)
         );
     }
+
+    @Override
+    public String nodeName() {
+        return "Block";
+    }
+
+    @Override
+    public List<Node> childNodes() {
+        return lines.stream().map(line -> (Node) line).toList();
+    }
 }

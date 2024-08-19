@@ -2,6 +2,8 @@ package ast;
 
 import symbolTable.VariableType;
 
+import java.util.List;
+
 public class PrimeType extends Returnable {
     VariableType variableType;
     Object value;
@@ -45,5 +47,24 @@ public class PrimeType extends Returnable {
     @Override
     Object[] members() {
         return new Object[]{"variableType", variableType.name(), "value", value};
+    }
+
+    public String valueString() {
+        return switch (variableType) {
+            case num, bool -> value.toString();
+            case string -> value instanceof String ? value.toString() : ((JsString) value).value;
+            case jsNull -> "null";
+            case undefined -> "undefined";
+        };
+    }
+
+    @Override
+    public String nodeName() {
+        return "Prime Type: " + valueString();
+    }
+
+    @Override
+    public List<Node> childNodes() {
+        return null;
     }
 }

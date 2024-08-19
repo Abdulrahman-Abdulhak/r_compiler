@@ -2,6 +2,9 @@ package ast;
 
 import Util.ToString;
 
+import java.util.List;
+import java.util.stream.Stream;
+
 public abstract class Function extends Returnable {
     ValidName name;
     Args args;
@@ -30,5 +33,10 @@ public abstract class Function extends Returnable {
     @Override
     Object[] members() {
         return new Object[]{"name", name, "args", args, "body", body, "body", returnExp};
+    }
+
+    @Override
+    public List<Node> childNodes() {
+        return Stream.of(name, args, body, returnExp).map(item -> (Node) item).toList();
     }
 }

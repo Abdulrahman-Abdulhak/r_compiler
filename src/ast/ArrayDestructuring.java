@@ -3,9 +3,10 @@ package ast;
 import Util.ToString;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-public class ArrayDestructuring {
+public class ArrayDestructuring extends Node {
     Map<Object, Object> varWithDefault;
 
     public ArrayDestructuring() {
@@ -26,5 +27,16 @@ public class ArrayDestructuring {
     @Override
     public String toString() {
         return  "array destructuring: " + "var : defaultValue" + "\n" + ToString.map(varWithDefault);
+    }
+
+    @Override
+    public String nodeName() {
+        return "Array Destructuring";
+    }
+
+    @Override
+    public List<Node> childNodes() {
+        var vars = varWithDefault.keySet();
+        return vars.stream().map(key -> (Node) new ValidName(key + "")).toList();
     }
 }

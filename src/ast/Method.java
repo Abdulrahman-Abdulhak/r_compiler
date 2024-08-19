@@ -7,4 +7,9 @@ public class Method extends Function {
 
     @Override
     String subType() { return "Method"; }
+
+    @Override
+    public String nodeName() {
+        return "Method";
+    }
 }

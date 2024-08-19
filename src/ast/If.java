@@ -2,6 +2,9 @@ package ast;
 
 import Util.ToString;
 
+import java.util.List;
+import java.util.stream.Stream;
+
 public class If extends Line {
     Expression test;
     Block body;
@@ -47,5 +50,15 @@ public class If extends Line {
                     "body", line
                 )
         );
+    }
+
+    @Override
+    public String nodeName() {
+        return "If";
+    }
+
+    @Override
+    public List<Node> childNodes() {
+        return Stream.of(test, body, line).map(item -> (Node) item).toList();
     }
 }

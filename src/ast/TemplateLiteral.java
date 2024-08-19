@@ -5,19 +5,6 @@ import Util.ToString;
 import java.util.ArrayList;
 import java.util.List;
 
-class TemplateLiteralContent {
-    String content;
-    Expression variable;
-
-    TemplateLiteralContent(String content) { this.content = content; }
-    TemplateLiteralContent(Expression variable) { this.variable = variable; }
-
-    @Override
-    public String toString() {
-        return content == null ? variable.toString() : content;
-    }
-}
-
 public class TemplateLiteral extends JsString {
     List<TemplateLiteralContent> contents;
 
@@ -36,10 +23,20 @@ public class TemplateLiteral extends JsString {
     @Override
     public String toString() {
         return ToString.self(
-                "TemplateLiteral",
-                ToString.list(contents),
-                "[",
-                "]"
+            "TemplateLiteral",
+            ToString.list(contents),
+            "[",
+            "]"
         );
+    }
+
+    @Override
+    public String nodeName() {
+        return "Template Literal";
+    }
+
+    @Override
+    public List<Node> childNodes() {
+        return contents.stream().map(item -> (Node) item).toList();
     }
 }

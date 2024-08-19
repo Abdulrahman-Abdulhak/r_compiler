@@ -1,5 +1,7 @@
 package ast;
 
+import java.util.List;
+
 public class ValidName extends Expression {
     String identifier;
 
@@ -15,5 +17,15 @@ public class ValidName extends Expression {
     @Override
     Object[] members() {
         return new Object[]{"identifier", identifier};
+    }
+
+    @Override
+    public String nodeName() {
+        return "Variable";
+    }
+
+    @Override
+    public List<Node> childNodes() {
+        return null;
     }
 }

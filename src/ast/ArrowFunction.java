@@ -8,4 +8,9 @@ public class ArrowFunction extends Function {
 
     @Override
     String subType() { return "ArrowFunction"; }
+
+    @Override
+    public String nodeName() {
+        return "Arrow Function";
+    }
 }

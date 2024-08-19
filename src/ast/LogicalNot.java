@@ -1,5 +1,8 @@
 package ast;
 
+import java.util.List;
+import java.util.stream.Stream;
+
 public class LogicalNot extends Expression {
     Expression expression;
 
@@ -11,5 +14,15 @@ public class LogicalNot extends Expression {
     @Override
     Object[] members() {
         return new Object[]{};
+    }
+
+    @Override
+    public String nodeName() {
+        return "Logical Not";
+    }
+
+    @Override
+    public List<Node> childNodes() {
+        return Stream.of(expression).map(item -> (Node) item).toList();
     }
 }

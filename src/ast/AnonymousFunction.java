@@ -5,4 +5,9 @@ public class AnonymousFunction extends Function {
 
     @Override
     String subType() { return "Anonymous"; }
+
+    @Override
+    public String nodeName() {
+        return "Anonymous Function";
+    }
 }

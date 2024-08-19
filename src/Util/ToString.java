@@ -4,16 +4,16 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class ToString {
-    private static String indentLines(String str) {
+    public static String indentLines(String str) {
         return indentLines(str, "\t", true);
     }
-    private static String indentLines(String str, boolean indentFirstLine) {
+    public static String indentLines(String str, boolean indentFirstLine) {
         return indentLines(str, "\t", indentFirstLine);
     }
-    private static String indentLines(String str, String indentation) {
+    public static String indentLines(String str, String indentation) {
         return indentLines(str, indentation, true);
     }
-    private static String indentLines(String str, String indentation, boolean indentFirstLine) {
+    public static String indentLines(String str, String indentation, boolean indentFirstLine) {
         var startIndentation = indentFirstLine && !str.isEmpty() ? indentation : "";
         return startIndentation + str.replaceAll("\n", "\n" + indentation);
     }

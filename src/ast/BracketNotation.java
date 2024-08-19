@@ -1,5 +1,8 @@
 package ast;
 
+import java.util.List;
+import java.util.stream.Stream;
+
 public class BracketNotation extends Notation {
     Expression member;
 
@@ -15,4 +18,14 @@ public class BracketNotation extends Notation {
 
     @Override
     Object getMember() { return member; }
+
+    @Override
+    public String subNodeName() {
+        return "Bracket Notation";
+    }
+
+    @Override
+    public List<Node> childNodes() {
+        return Stream.of(member).map(item -> (Node) item).toList();
+    }
 }

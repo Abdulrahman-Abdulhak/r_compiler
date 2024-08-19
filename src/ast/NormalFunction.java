@@ -7,4 +7,9 @@ public class NormalFunction extends Function {
 
     @Override
     String subType() { return null; }
+
+    @Override
+    public String nodeName() {
+        return "Function";
+    }
 }

@@ -4,8 +4,9 @@ import Util.ToString;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 
-public class NamedImport {
+public class NamedImport extends Node {
     List<String> names;
     List<ValidName> convertedNames;
 
@@ -47,5 +48,15 @@ public class NamedImport {
     @Override
     public String toString() {
         return ToString.namesAliases(names, convertedNames);
+    }
+
+    @Override
+    public String nodeName() {
+        return "Named Import";
+    }
+
+    @Override
+    public List<Node> childNodes() {
+        return convertedNames.stream().map(item -> (Node) item).toList();
     }
 }

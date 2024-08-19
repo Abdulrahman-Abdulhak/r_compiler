@@ -2,7 +2,7 @@ package ast;
 
 import Util.ToString;
 
-public abstract class Line {
+public abstract class Line extends Node {
 
     abstract String lineContent();
 

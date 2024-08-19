@@ -3,6 +3,7 @@ package ast;
 import Util.ToString;
 
 import java.util.List;
+import java.util.stream.Stream;
 
 public class For extends Line {
     Declare initDeclare;
@@ -82,5 +83,16 @@ public class For extends Line {
                     "body", body
                 )
         );
+    }
+
+    @Override
+    public String nodeName() {
+        return "For Loop";
+    }
+
+    @Override
+    public List<Node> childNodes() {
+        var children = Stream.of(initDeclare, initExpressions, conditions, iterators, line, body);
+        return children.map(item -> (Node) item).toList();
     }
 }

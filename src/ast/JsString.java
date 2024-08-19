@@ -2,7 +2,9 @@ package ast;
 
 import Util.ToString;
 
-public class JsString {
+import java.util.List;
+
+public class JsString extends Node {
     String value;
 
     public JsString(String value) { this.value = value; }
@@ -10,5 +12,15 @@ public class JsString {
     @Override
     public String toString() {
         return value;
+    }
+
+    @Override
+    public String nodeName() {
+        return "String";
+    }
+
+    @Override
+    public List<Node> childNodes() {
+        return null;
     }
 }

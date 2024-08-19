@@ -2,7 +2,10 @@ package ast;
 
 import Util.ToString;
 
-public class DestructuredObjVar {
+import java.util.List;
+import java.util.stream.Stream;
+
+public class DestructuredObjVar extends Node {
     Object key;
     ValidName var;
     Expression defaultValue;
@@ -29,8 +32,18 @@ public class DestructuredObjVar {
     @Override
     public String toString() {
         return ToString.self(
-                "Destructured-Object Var",
-                ToString.allNotNull("original-key", key, "variable", var, "default-val", defaultValue)
+            "Destructured-Object Var",
+            ToString.allNotNull("original-key", key, "variable", var, "default-val", defaultValue)
         );
+    }
+
+    @Override
+    public String nodeName() {
+        return "Destructured Object Variable";
+    }
+
+    @Override
+    public List<Node> childNodes() {
+        return Stream.of(var, defaultValue).map(item -> (Node) item).toList();
     }
 }

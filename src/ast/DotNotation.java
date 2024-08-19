@@ -1,5 +1,8 @@
 package ast;
 
+import java.util.List;
+import java.util.stream.Stream;
+
 public class DotNotation extends Notation {
     ValidName member;
 
@@ -14,4 +17,14 @@ public class DotNotation extends Notation {
 
     @Override
     Object getMember() { return member; }
+
+    @Override
+    public String subNodeName() {
+        return "Dot Notation";
+    }
+
+    @Override
+    public List<Node> childNodes() {
+        return Stream.of(member).map(item -> (Node) item).toList();
+    }
 }

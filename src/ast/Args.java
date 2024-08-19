@@ -4,8 +4,9 @@ import Util.ToString;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 
-public class Args {
+public class Args extends Node {
     List<Arg> args;
     ValidName rest;
 
@@ -23,10 +24,23 @@ public class Args {
     @Override
     public String toString() {
         return ToString.self(
-                "",
-                ToString.list(args),
-                "[",
-                "]"
+            "",
+            ToString.list(args),
+            "[",
+            "]"
         );
+    }
+
+    @Override
+    public String nodeName() {
+        return "Arguments";
+    }
+
+    @Override
+    public List<Node> childNodes() {
+        var children = new ArrayList<Node>(args);
+        children.add(rest);
+
+        return children;
     }
 }

@@ -20,8 +20,22 @@ public class Switch extends Line {
     @Override
     String lineContent() {
         return ToString.self(
-                "switch",
-                ToString.allNotNull("expression", test, "cases", cases)
+            "switch",
+            ToString.allNotNull("expression", test, "cases", cases)
         );
+    }
+
+    @Override
+    public String nodeName() {
+        return "Switch";
+    }
+
+    @Override
+    public List<Node> childNodes() {
+        var children = new ArrayList<Node>();
+        children.add(test);
+        children.addAll(cases);
+
+        return children;
     }
 }

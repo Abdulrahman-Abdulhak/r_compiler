@@ -17,4 +17,14 @@ public class JsArray extends Returnable {
     Object[] members() {
         return new Object[]{"items", items};
     }
+
+    @Override
+    public String nodeName() {
+        return null;
+    }
+
+    @Override
+    public List<Node> childNodes() {
+        return items.stream().map(item -> (Node) item).toList();
+    }
 }

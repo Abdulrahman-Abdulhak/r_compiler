@@ -3,11 +3,10 @@ package ast;
 import Util.ToString;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-public class Case {
+public class Case extends Node {
     List<Expression> values;
     List<Line> body;
     boolean haveDefault;
@@ -66,13 +65,26 @@ public class Case {
     @Override
     public String toString() {
         return ToString.self(
-                "cases",
-                ToString.allNotNull(
-                "have default", haveDefault,
-                    "with value", values.size() == 1 ? values.get(0) : null,
-                    "with values", values.size() > 1 ? values : null,
-                    "body", body
-                )
+            "cases",
+            ToString.allNotNull(
+            "have default", haveDefault,
+                "with value", values.size() == 1 ? values.get(0) : null,
+                "with values", values.size() > 1 ? values : null,
+                "body", body
+            )
         );
+    }
+
+    @Override
+    public String nodeName() {
+        return "Case";
+    }
+
+    @Override
+    public List<Node> childNodes() {
+        var children = new ArrayList<Node>(values);
+        children.addAll(body);
+
+        return children;
     }
 }

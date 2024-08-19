@@ -2,7 +2,10 @@ package ast;
 
 import Util.ToString;
 
-public class ObjectPropDefine {
+import java.util.List;
+import java.util.stream.Stream;
+
+public class ObjectPropDefine extends Node {
     Object key;
     Expression value, destructuredObject;
 
@@ -23,11 +26,11 @@ public class ObjectPropDefine {
         this.value = value;
     }
     public ObjectPropDefine(ValidName key, Expression value) {
-        this.key = key.identifier;
+        this.key = key;
         this.value = value;
     }
     public ObjectPropDefine(ValidName var) {
-        key = var.identifier;
+        key = var;
         value = var;
     }
     public ObjectPropDefine(Method method) {
@@ -52,5 +55,16 @@ public class ObjectPropDefine {
             );
         }
         return ToString.all("key", key, "value", value);
+    }
+
+    @Override
+    public String nodeName() {
+        return "Object Property Definition";
+    }
+
+    @Override
+    public List<Node> childNodes() {
+        var useKey = key instanceof Expression ? (Expression) key : null;
+        return Stream.of(useKey, value, destructuredObject).map(item -> (Node) item).toList();
     }
 }

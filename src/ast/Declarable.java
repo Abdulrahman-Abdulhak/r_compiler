@@ -2,7 +2,10 @@ package ast;
 
 import Util.ToString;
 
-public class Declarable {
+import java.util.List;
+import java.util.stream.Stream;
+
+public class Declarable extends Node {
     String varName;
     ArrayDestructuring arr;
     ObjectDestructuring obj;
@@ -26,5 +29,15 @@ public class Declarable {
     @Override
     public String toString() {
         return ToString.allNotNull("new var", varName, "new var", arr, "new var", obj);
+    }
+
+    @Override
+    public String nodeName() {
+        return "Declarable";
+    }
+
+    @Override
+    public List<Node> childNodes() {
+        return Stream.of(arr, obj).toList();
     }
 }
