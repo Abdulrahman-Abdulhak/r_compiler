@@ -8,12 +8,13 @@ import ast.Args;
 import Util.VisitorUtil;
 import Util.SymbolTableUtil;
 
+import errors.Error;
 import symbolTable.SymbolTable;
 import symbolTable.property.SymbolDefineMethod;
 
 public class ArgsVisitor extends GeneralVisitor<Args> {
-    public ArgsVisitor(SymbolTable symbolTable) {
-        super(symbolTable);
+    public ArgsVisitor(SymbolTable symbolTable, Error errors) {
+        super(symbolTable, errors);
     }
 
     @Override
@@ -31,11 +32,11 @@ public class ArgsVisitor extends GeneralVisitor<Args> {
                 SymbolTableUtil.initSymbol(symbolTable, name, nameCtx, defineMethod);
             }
             if(arg.objectDestructuring() != null) {
-                var wholeDestruct = VisitorUtil.create(arg.objectDestructuring(), symbolTable, defineMethod);
+                var wholeDestruct = VisitorUtil.create(arg.objectDestructuring(), symbolTable, errors, defineMethod);
                 args.addArgument(new Arg(wholeDestruct, SymbolTableUtil.getLine(arg.objectDestructuring())));
             }
             if(arg.arrayDestructuring() != null) {
-                var destructuredVars = VisitorUtil.create(arg.arrayDestructuring(), symbolTable, defineMethod);
+                var destructuredVars = VisitorUtil.create(arg.arrayDestructuring(), symbolTable, errors, defineMethod);
                 args.addArgument(new Arg(destructuredVars, SymbolTableUtil.getLine(arg.arrayDestructuring())));
             }
         }

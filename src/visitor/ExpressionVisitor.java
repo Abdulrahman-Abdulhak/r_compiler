@@ -4,14 +4,16 @@ import Util.SymbolTableUtil;
 import antlr.ReactParser;
 
 import ast.*;
+import ast.Void;
+import errors.Error;
 import symbolTable.SymbolTable;
 import Util.VisitorUtil;
 
 import java.util.Objects;
 
 public class ExpressionVisitor extends GeneralVisitor<Expression> {
-    public ExpressionVisitor(SymbolTable symbolTable) {
-        super(symbolTable);
+    public ExpressionVisitor(SymbolTable symbolTable, Error errors) {
+        super(symbolTable, errors);
     }
 
     @Override
@@ -20,11 +22,19 @@ public class ExpressionVisitor extends GeneralVisitor<Expression> {
     }
 
     @Override
+    public Void visitVoid(ReactParser.VoidContext ctx) {
+        return new Void(
+            new ExpressionVisitor(symbolTable, errors).visit(ctx.expression()),
+            SymbolTableUtil.getLine(ctx)
+        );
+    }
+
+    @Override
     public FunctionCall visitFunctionCall(ReactParser.FunctionCallContext ctx) {
         Expression nameSpace = visit(ctx.expression());
 
         if(ctx.templateLiteral() != null) {
-            var template = new TemplateLiteralVisitor(symbolTable).visit(ctx.templateLiteral());
+            var template = new TemplateLiteralVisitor(symbolTable, errors).visit(ctx.templateLiteral());
             return new FunctionCall(nameSpace, template, SymbolTableUtil.getLine(ctx));
         }
 
@@ -39,7 +49,7 @@ public class ExpressionVisitor extends GeneralVisitor<Expression> {
     @Override
     public MemberGet visitMemberGet(ReactParser.MemberGetContext ctx) {
         Expression parent = visit(ctx.expression());
-        Notation notation = new NotationVisitor(symbolTable).visit(ctx.notation());
+        Notation notation = new NotationVisitor(symbolTable, errors).visit(ctx.notation());
 
         return new MemberGet(parent, notation, SymbolTableUtil.getLine(ctx));
     }
@@ -83,6 +93,14 @@ public class ExpressionVisitor extends GeneralVisitor<Expression> {
         incremental.setIncrease(Objects.equals(sign, "++"));
 
         return incremental;
+    }
+
+    @Override
+    public TypeOf visitTypeOf(ReactParser.TypeOfContext ctx) {
+        return new TypeOf(
+            new ExpressionVisitor(symbolTable, errors).visit(ctx.expression()),
+            SymbolTableUtil.getLine(ctx)
+        );
     }
 
     @Override
@@ -192,12 +210,23 @@ public class ExpressionVisitor extends GeneralVisitor<Expression> {
     }
 
     @Override
+    public Comma visitComma(ReactParser.CommaContext ctx) {
+        var expressionVisitor = new ExpressionVisitor(symbolTable, errors);
+
+        return new Comma(
+            expressionVisitor.visit(ctx.expression(0)),
+            expressionVisitor.visit(ctx.expression(1)),
+            SymbolTableUtil.getLine(ctx)
+        );
+    }
+
+    @Override
     public ValidName visitVariable(ReactParser.VariableContext ctx) {
         return VisitorUtil.create(ctx.validName());
     }
 
     @Override
     public Returnable visitValue(ReactParser.ValueContext ctx) {
-        return new ReturnableVisitor(symbolTable).visit(ctx.returnable());
+        return new ReturnableVisitor(symbolTable, errors).visit(ctx.returnable());
     }
 }

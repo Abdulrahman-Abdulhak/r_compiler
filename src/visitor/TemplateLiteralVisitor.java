@@ -4,11 +4,12 @@ import Util.SymbolTableUtil;
 import antlr.ReactParser;
 
 import ast.TemplateLiteral;
+import errors.Error;
 import symbolTable.SymbolTable;
 
 public class TemplateLiteralVisitor extends GeneralVisitor<TemplateLiteral> {
-    public TemplateLiteralVisitor(SymbolTable symbolTable) {
-        super(symbolTable);
+    public TemplateLiteralVisitor(SymbolTable symbolTable, Error errors) {
+        super(symbolTable, errors);
     }
 
     @Override

@@ -1,6 +1,7 @@
 package Util;
 
 import antlr.ReactParser;
+import errors.Error;
 import org.antlr.v4.runtime.Token;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.TerminalNode;
@@ -32,35 +33,37 @@ public class VisitorUtil {
     public static ObjectDestructuring create(
             ReactParser.ObjectDestructuringContext ctx,
             SymbolTable symbolTable,
+            Error errors,
             SymbolDefineMethod defineMethod
     ) {
-        var visitor = new ObjectDestructuringVisitor(symbolTable, defineMethod);
+        var visitor = new ObjectDestructuringVisitor(symbolTable, errors, defineMethod);
         return visitor.visitObjectDestructuring(ctx);
     }
 
     public static ArrayDestructuring create(
             ReactParser.ArrayDestructuringContext ctx,
             SymbolTable symbolTable,
+            Error errors,
             SymbolDefineMethod defineMethod
     ) {
-        var visitor = new ArrayDestructuringVisitor(symbolTable, defineMethod);
+        var visitor = new ArrayDestructuringVisitor(symbolTable, errors, defineMethod);
         return visitor.visitArrayDestructuring(ctx);
     }
 
-    public static Args create(ReactParser.ArgsContext ctx, SymbolTable symbolTable) {
-        return new ArgsVisitor(symbolTable).visitArgs(ctx);
+    public static Args create(ReactParser.ArgsContext ctx, SymbolTable symbolTable, Error errors) {
+        return new ArgsVisitor(symbolTable, errors).visitArgs(ctx);
     }
 
-    public static Block create(ReactParser.BlockContext ctx, SymbolTable symbolTable) {
-        return new BlockVisitor(symbolTable).visitBlock(ctx);
+    public static Block create(ReactParser.BlockContext ctx, SymbolTable symbolTable, Error errors) {
+        return new BlockVisitor(symbolTable, errors).visitBlock(ctx);
     }
 
-    public static void fromAttrList(JSX jsx, List<ReactParser.AttibuteValueContext> attrs, SymbolTable symbolTable) {
+    public static void fromAttrList(JSX jsx, List<ReactParser.AttibuteValueContext> attrs, SymbolTable symbolTable, Error errors) {
         for (var attrCtx : attrs) {
             var name = attrCtx.tagAttribute().getText();
             var js = attrCtx.jsInJsx();
 
-            if(js != null) jsx.addProp(name, new ExpressionVisitor(symbolTable).visit(js.expression()));
+            if(js != null) jsx.addProp(name, new ExpressionVisitor(symbolTable, errors).visit(js.expression()));
             else if (attrCtx.STRING() != null) jsx.addProp(name, attrCtx.STRING().getText());
             else jsx.addProp(name, "\"true\"");
         }

@@ -5,17 +5,18 @@ import antlr.ReactParser;
 
 import ast.*;
 import Util.VisitorUtil;
+import errors.Error;
 import symbolTable.SymbolTable;
 
 public class ObjectPropVisitor extends GeneralVisitor<ObjectPropDefine> {
-    public ObjectPropVisitor(SymbolTable symbolTable) {
-        super(symbolTable);
+    public ObjectPropVisitor(SymbolTable symbolTable, Error errors) {
+        super(symbolTable, errors);
     }
 
     @Override
     public ObjectPropDefine visitNormalPropDefine(ReactParser.NormalPropDefineContext ctx) {
         var propName = ctx.objPropName();
-        var exp = new ExpressionVisitor(symbolTable).visit(propName.getChild(2));
+        var exp = new ExpressionVisitor(symbolTable, errors).visit(propName.getChild(2));
 
         var str = propName.STRING();
         if(str != null) return new ObjectPropDefine(str.getText(), exp, SymbolTableUtil.getLine(str));
@@ -46,8 +47,8 @@ public class ObjectPropVisitor extends GeneralVisitor<ObjectPropDefine> {
         var methodScope = new SymbolTable("method " + methodName);
         var method = new Method(
             new ValidName(methodName, SymbolTableUtil.getLine(methodCtx.validName())),
-            new ArgsVisitor(methodScope).visitArgs(methodCtx.args()),
-            new BlockVisitor(methodScope).visitFunctionBody(methodCtx.functionBody()),
+            new ArgsVisitor(methodScope, errors).visitArgs(methodCtx.args()),
+            new BlockVisitor(methodScope, errors).visitFunctionBody(methodCtx.functionBody()),
             SymbolTableUtil.getLine(methodCtx)
         );
 
@@ -58,7 +59,7 @@ public class ObjectPropVisitor extends GeneralVisitor<ObjectPropDefine> {
     public ObjectPropDefine visitComputedPropDefine(ReactParser.ComputedPropDefineContext ctx) {
         var exp1 = ctx.expression(0);
         var exp2 = ctx.expression(0);
-        var expVisitor = new ExpressionVisitor(symbolTable);
+        var expVisitor = new ExpressionVisitor(symbolTable, errors);
 
         return new ObjectPropDefine(
             expVisitor.visit(exp1),
@@ -71,7 +72,7 @@ public class ObjectPropVisitor extends GeneralVisitor<ObjectPropDefine> {
     public ObjectPropDefine visitObjecPropsPropDefine(ReactParser.ObjecPropsPropDefineContext ctx) {
         var exp = ctx.expression();
         return new ObjectPropDefine(
-            new ExpressionVisitor(symbolTable).visit(exp),
+            new ExpressionVisitor(symbolTable, errors).visit(exp),
             SymbolTableUtil.getLine(ctx)
         );
     }

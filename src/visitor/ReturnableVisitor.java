@@ -4,14 +4,15 @@ import Util.SymbolTableUtil;
 import antlr.ReactParser;
 
 import ast.*;
+import errors.Error;
 import symbolTable.SymbolTable;
 import Util.VisitorUtil;
 
 import java.util.Objects;
 
 public class ReturnableVisitor extends GeneralVisitor<Returnable> {
-    public ReturnableVisitor(SymbolTable symbolTable) {
-        super(symbolTable);
+    public ReturnableVisitor(SymbolTable symbolTable, Error errors) {
+        super(symbolTable, errors);
     }
 
     @Override
@@ -23,7 +24,7 @@ public class ReturnableVisitor extends GeneralVisitor<Returnable> {
         if(strings != null) {
             JsString str;
             if(strings.getChild(0).getChildCount() > 0) {
-                str = new TemplateLiteralVisitor(symbolTable).visit(strings.getChild(0));
+                str = new TemplateLiteralVisitor(symbolTable, errors).visit(strings.getChild(0));
             } else str = new JsString(strings.getChild(0).getText(), SymbolTableUtil.getLine(strings));
 
             return new PrimeType(str, SymbolTableUtil.getLine(ctx));
@@ -45,7 +46,7 @@ public class ReturnableVisitor extends GeneralVisitor<Returnable> {
         var obj = new JsObject(SymbolTableUtil.getLine(ctx));
         var props = ctx.objPropDefine();
 
-        var objPropVisitor = new ObjectPropVisitor(symbolTable);
+        var objPropVisitor = new ObjectPropVisitor(symbolTable, errors);
         for(var propCtx : props) {
             obj.addProperty(objPropVisitor.visit(propCtx));
         }
@@ -56,7 +57,7 @@ public class ReturnableVisitor extends GeneralVisitor<Returnable> {
     @Override
     public JsArray visitArray(ReactParser.ArrayContext ctx) {
         var arr = new JsArray(SymbolTableUtil.getLine(ctx));
-        var expVisitor = new ExpressionVisitor(symbolTable);
+        var expVisitor = new ExpressionVisitor(symbolTable, errors);
 
         for(var item : ctx.expression()) {
             arr.addItem(expVisitor.visit(item));
@@ -67,7 +68,7 @@ public class ReturnableVisitor extends GeneralVisitor<Returnable> {
 
     @Override
     public Function visitFunction(ReactParser.FunctionContext ctx) {
-        return new FunctionVisitor(symbolTable).visit(ctx);
+        return new FunctionVisitor(symbolTable, errors).visit(ctx);
     }
 
     @Override
@@ -81,11 +82,11 @@ public class ReturnableVisitor extends GeneralVisitor<Returnable> {
         if(voidTagCtx != null) {
             var exp = voidTagCtx.jsxName().expression();
             JSX jsx;
-            if(exp != null) jsx = new JSX(new ExpressionVisitor(symbolTable).visit(exp), SymbolTableUtil.getLine(exp));
+            if(exp != null) jsx = new JSX(new ExpressionVisitor(symbolTable, errors).visit(exp), SymbolTableUtil.getLine(exp));
             else jsx = new JSX(voidTagCtx.jsxName().getText(), SymbolTableUtil.getLine(voidTagCtx));
 
             var attrsCtx = voidTagCtx.attibuteValue();
-            VisitorUtil.fromAttrList(jsx, attrsCtx, symbolTable);
+            VisitorUtil.fromAttrList(jsx, attrsCtx, symbolTable, errors);
 
             return jsx;
         }
@@ -93,16 +94,16 @@ public class ReturnableVisitor extends GeneralVisitor<Returnable> {
         JSX jsx;
 
         var exp = fullTagCtx.jsxName(0).expression();
-        if(exp != null) jsx = new JSX(new ExpressionVisitor(symbolTable).visit(exp), SymbolTableUtil.getLine(exp));
+        if(exp != null) jsx = new JSX(new ExpressionVisitor(symbolTable, errors).visit(exp), SymbolTableUtil.getLine(exp));
         else jsx = new JSX(fullTagCtx.jsxName(0).getText(), SymbolTableUtil.getLine(fullTagCtx));
 
         var attrsCtx = fullTagCtx.attibuteValue();
-        VisitorUtil.fromAttrList(jsx, attrsCtx, symbolTable);
+        VisitorUtil.fromAttrList(jsx, attrsCtx, symbolTable, errors);
 
         var childrenCtx = fullTagCtx.jsxChildren();
         for (var childCtx : childrenCtx) {
             if(childCtx.jsInJsx() != null) {
-                var js = new ExpressionVisitor(symbolTable).visit(childCtx.jsInJsx().expression());
+                var js = new ExpressionVisitor(symbolTable, errors).visit(childCtx.jsInJsx().expression());
                 jsx.addChild(new JSinJSX(js, SymbolTableUtil.getLine(childCtx.jsInJsx())));
             } else {
                 jsx.addChild(visitJsx(childCtx.jsx()));

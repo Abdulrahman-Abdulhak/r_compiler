@@ -4,11 +4,12 @@ import Util.SymbolTableUtil;
 import antlr.ReactParser;
 
 import ast.*;
+import errors.Error;
 import symbolTable.SymbolTable;
 
 public class StatementVisitor extends GeneralVisitor<Statement> {
-    public StatementVisitor(SymbolTable symbolTable) {
-        super(symbolTable);
+    public StatementVisitor(SymbolTable symbolTable, Error errors) {
+        super(symbolTable, errors);
     }
 
     @Override
@@ -19,7 +20,7 @@ public class StatementVisitor extends GeneralVisitor<Statement> {
         if(formCtx == null) return new ImportStatement(from, SymbolTableUtil.getLine(ctx));
 
         return new ImportStatement(
-            new ImportFormVisitor(symbolTable).visit(formCtx.importForm()),
+            new ImportFormVisitor(symbolTable, errors).visit(formCtx.importForm()),
             from,
             SymbolTableUtil.getLine(ctx)
         );
@@ -32,12 +33,12 @@ public class StatementVisitor extends GeneralVisitor<Statement> {
 
     @Override
     public Declare visitDeclaration(ReactParser.DeclarationContext ctx) {
-        return new DeclareVisitor(symbolTable).visit(ctx.declare());
+        return new DeclareVisitor(symbolTable, errors).visit(ctx.declare());
     }
 
     @Override
     public Expression visitExp(ReactParser.ExpContext ctx) {
-        return new ExpressionVisitor(symbolTable).visit(ctx.expression());
+        return new ExpressionVisitor(symbolTable, errors).visit(ctx.expression());
     }
 
     @Override

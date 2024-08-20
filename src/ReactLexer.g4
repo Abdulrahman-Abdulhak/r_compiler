@@ -37,6 +37,7 @@ CONTINUE: 'continue';
 CONST: 'const';
 DEFAULT: 'default';
 DO: 'do';
+ELSE: 'else';
 EXPORT: 'export';
 FOR: 'for';
 FROM: 'from';
@@ -52,7 +53,9 @@ RETURN: 'return';
 SET: 'set';
 SWITCH: 'switch';
 THIS: 'this';
+TYPE_OF: 'typeof';
 VAR: 'var';
+VOID: 'void';
 WHILE: 'while';
 YIELD: 'yield';
 

@@ -49,8 +49,24 @@ public class SymbolTable {
         insert(key, new SymbolProperty(propName, propValue));
     }
 
+    public boolean has(String key) {
+        return has(key, false);
+    }
+    public boolean has(String key, boolean inScope) {
+        var isInTable = rows.containsKey(key);
+
+        if(!isInTable && inScope && parent != null) return parent.has(key, true);
+        return isInTable;
+    }
+
     public SymbolProperties lookup(String key) {
         return rows.get(key);
+    }
+    public SymbolProperties lookup(String key, boolean inScope) {
+        var inTable = rows.get(key);
+
+        if(inTable == null && inScope && parent != null) return parent.lookup(key, true);
+        return inTable;
     }
 
     public SymbolTable addTable() {

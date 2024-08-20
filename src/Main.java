@@ -1,6 +1,7 @@
 import Util.SymbolTableUtil;
 import antlr.ReactLexer;
 import antlr.ReactParser;
+import errors.Error;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
@@ -13,7 +14,7 @@ import static org.antlr.v4.runtime.CharStreams.fromFileName;
 
 public class Main {
     public static void main(String[] args) throws IOException {
-        String source = "C:\\Files\\Developer\\Java\\r_compiler\\src\\testFiles\\test1.txt";
+        String source = "C:\\Files\\Developer\\Java\\r_compiler\\src\\libraries\\react.txt";
         CharStream charStream = fromFileName(source);
 
         ReactLexer lexer = new ReactLexer(charStream);
@@ -23,8 +24,9 @@ public class Main {
         ParseTree ast =  parser.program();
 
         var globalSymbolTable = new SymbolTable("Global Table");
+        var errors = new Error();
 
-        ProgramVisitor reactVisitor = new ProgramVisitor(globalSymbolTable);
+        ProgramVisitor reactVisitor = new ProgramVisitor(globalSymbolTable, errors);
         var tree = reactVisitor.visit(ast);
 
 //        System.out.println(tree);

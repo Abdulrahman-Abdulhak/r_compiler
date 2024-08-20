@@ -5,6 +5,7 @@ import antlr.ReactParser;
 import ast.DestructuredObjVar;
 import ast.ObjectDestructuring;
 
+import errors.Error;
 import symbolTable.SymbolTable;
 import symbolTable.VariableDefineMethod;
 import symbolTable.property.SymbolDefineMethod;
@@ -15,11 +16,11 @@ import Util.SymbolTableUtil;
 public class ObjectDestructuringVisitor extends GeneralVisitor<ObjectDestructuring> {
     final SymbolDefineMethod defineMethod;
 
-    public ObjectDestructuringVisitor(SymbolTable symbolTable, VariableDefineMethod varMethod) {
-        this(symbolTable, new SymbolDefineMethod(varMethod));
+    public ObjectDestructuringVisitor(SymbolTable symbolTable, Error errors, VariableDefineMethod varMethod) {
+        this(symbolTable, errors, new SymbolDefineMethod(varMethod));
     }
-    public ObjectDestructuringVisitor(SymbolTable symbolTable, SymbolDefineMethod defineMethod) {
-        super(symbolTable);
+    public ObjectDestructuringVisitor(SymbolTable symbolTable, Error errors, SymbolDefineMethod defineMethod) {
+        super(symbolTable, errors);
         this.defineMethod = defineMethod;
     }
 
@@ -35,7 +36,7 @@ public class ObjectDestructuringVisitor extends GeneralVisitor<ObjectDestructuri
             var validName = VisitorUtil.create(objVarCtx.validName());
 
             if(haveDefaultVal) {
-                var exp = new ExpressionVisitor(symbolTable).visit(objVarCtx.expression());
+                var exp = new ExpressionVisitor(symbolTable, errors).visit(objVarCtx.expression());
                 if(haveOriginalName)
                     destructuredVar = new DestructuredObjVar(
                             objVarCtx.objPropName().getText(),

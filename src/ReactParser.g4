@@ -12,7 +12,7 @@ program: line* EOF;
 
 line
     : statement         #statementLine
-    | if                #ifLine
+    | ifLines           #ifLine
     | switch            #switchLine
     | while             #whileLine
     | for               #forLine
@@ -105,12 +105,14 @@ declare: declarers declareSyntax (COMMA declareSyntax)*;
 
 expression
     : OPEN_BRACKET expression CLOSE_BRACKET                                    #parentheses
+    | VOID expression                                                          #void
     | expression (param | templateLiteral)                                     #functionCall
     | expression notation                                                      #memberGet
     | NEW expression param?                                                    #new
     | expression incrementsOp                                                  #postIncre
     | incrementsOp expression                                                  #preInc
     | LOGIC_NOT_OP expression                                                  #logicalNOT
+    | TYPE_OF expression                                                       #typeOf
     | unarysOp expression                                                      #unary
     | expression POW_OP expression                                             #pow
     | expression multiplicativeOp expression                                   #mult
@@ -123,6 +125,7 @@ expression
     | expression TERNARY_OP1 expression COLON expression                       #ternary
     | expression assinmentOp expression                                        #assignment
     | ELLIPSIS expression                                                      #arraySpread
+    | expression COMMA expression                                              #comma
     | validName                                                                #variable
     | returnable                                                               #value
     ;
@@ -132,7 +135,7 @@ incrementsOp: INCREMENT_OP | DECREMENT_OP;
 unarysOp: ADD_OP | SUP_OP;
 
 notation
-    : (DOT | OPTIONAL_CHAINING_OP) validName                                        #dotNotation
+    : (DOT | OPTIONAL_CHAINING_OP) allPossibleWords                                 #dotNotation
     | OPTIONAL_CHAINING_OP? OPEN_SQUARE_BRACKET expression CLOSE_SQUARE_BRACKET     #bracketNotation
     ;
 //objectable
@@ -187,8 +190,14 @@ equalCompareOP: EQ_COMPARE_OP | STRICT_EQ_COMPARE_OP | NEQ_COMPARE_OP | STRICT_N
 
 
 // conditions & loops
-allLines: line | return | break | continue;
-if: IF OPEN_BRACKET expression CLOSE_BRACKET (block | allLines);
+allLines: (line | return | break | continue) noUseStatement?;
+ifLines: ifElseIfElse | ifElseIf | ifElse | if;
+if: IF OPEN_BRACKET expression CLOSE_BRACKET (allLines | block);
+ifElse: if else;
+ifElseIf: if elseIf+;
+ifElseIfElse: if elseIf+ else;
+elseIf: ELSE IF OPEN_BRACKET expression CLOSE_BRACKET (allLines | block);
+else: ELSE (allLines | block);
 
 switch: SWITCH OPEN_BRACKET expression CLOSE_BRACKET switchBody;
 switchBody: OPEN_CURLY_BRACES caseLine* CLOSE_CURLY_BRACES;
@@ -231,8 +240,10 @@ destructuredObjVar: (objPropName COLON)? validName (ASSIGNMENT_OP expression)?;
 arrayDestructuring: OPEN_SQUARE_BRACKET (destructuredArrVar COMMA)* destructuredArrVar COMMA? CLOSE_SQUARE_BRACKET;
 destructuredArrVar: validName (ASSIGNMENT_OP expression)?;
 
+allPossibleWords: validName | nonSetableKeyWords;
 validName: ID | setableKeywords | htmlElement | voidElement | attributeOriginalName;
 setableKeywords: AS | ASYNC | FROM | GET | OF | SET | YIELD;
+nonSetableKeyWords: BREAK | CASE | CLASS | CONTINUE | CONST | DEFAULT | DO | EXPORT | FOR | FUNCTION | IF | IMPORT | IN | LET | NEW | RETURN | SWITCH | THIS | TYPE_OF | VAR | VOID | WHILE;
 
 returnable
     : primeType       #primitive
@@ -264,7 +275,10 @@ fullTag
         (jsxChildren)*
       LESS_THAN_OP DIV_OP jsxName GREATER_THAN_OP
     ;
-jsxChildren: jsx | jsInJsx;
+
+characters: COLON | COMMA | DOT | ELLIPSIS | SEMICOLON | OPEN_BRACKET | CLOSE_BRACKET | OPEN_SQUARE_BRACKET | CLOSE_SQUARE_BRACKET | OPEN_CURLY_BRACES | CLOSE_CURLY_BRACES | OPEN_TEMPLATE_LITERAL;
+jsxChildren: jsx | jsInJsx | words;
+words: allPossibleWords | characters;
 jsxName: voidElement | htmlElement | validName | expression;
 
 htmlElement: A | ABBR | ACRONYM | ADDRESS | APPLET | ARTICLE | ASIDE | AUDIO | B | BASEFONT | BDI | BDO | BIG | BLOCKQUOTE | BODY | BUTTON | CANVAS | CAPTION | CENTER | CITE | CODE | COLGROUP | DATA | DATALIST | DD | DEL | DETAILS | DFN | DIALOG | DIR | DIV | DL | DT | EM | FIELDSET | FIGCAPTION | FIGURE | FONT | FOOTER | FORM | FRAME | FRAMESET | H1 | H2 | H3 | H4 | H5 | H6 | HEAD | HEADER | HGROUP | HTML | I | IFRAME | INS | KBD | LABEL | LEGEND | LI | MAIN | MAP | MARK | MENU | METER | NAV | NOFRAMES | NOSCRIPT | OBJECT | OL | OPTGROUP | OPTION | OUTPUT | P | PICTURE | PRE | PROGRESS | Q | RP | RT | RUBY | S | SAMP | SCRIPT | SEARCH | SECTION | SELECT | SMALL | SPAN | STRIKE | STRONG | STYLE | SUB | SUMMARY | SUP | SVG | TABLE | TBODY | TD | TEMPLATE | TEXTAREA | TFOOT | TH | THEAD | TIME | TITLE | TR | TT | U | UL | VAR | VIDEO;

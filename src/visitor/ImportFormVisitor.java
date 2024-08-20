@@ -7,12 +7,13 @@ import ast.ImportForm;
 import Util.VisitorUtil;
 import Util.SymbolTableUtil;
 
+import errors.Error;
 import symbolTable.SymbolTable;
 import symbolTable.property.SymbolDefineMethod;
 
 public class ImportFormVisitor extends GeneralVisitor<ImportForm> {
-    public ImportFormVisitor(SymbolTable symbolTable) {
-        super(symbolTable);
+    public ImportFormVisitor(SymbolTable symbolTable, Error errors) {
+        super(symbolTable, errors);
     }
 
     @Override

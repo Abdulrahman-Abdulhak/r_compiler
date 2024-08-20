@@ -6,14 +6,17 @@ import antlr.ReactParser;
 import ast.*;
 
 import Util.VisitorUtil;
+import errors.Error;
+import errors.messages.ElseNotLast;
+import errors.messages.MultipleElseUse;
 import symbolTable.SymbolTable;
 import symbolTable.property.SymbolDefineMethod;
 
 import java.util.ArrayList;
 
 public class LineVisitor extends GeneralVisitor<Line> {
-    public LineVisitor(SymbolTable symbolTable) {
-        super(symbolTable);
+    public LineVisitor(SymbolTable symbolTable, Error errors) {
+        super(symbolTable, errors);
     }
 
     @Override
@@ -43,30 +46,187 @@ public class LineVisitor extends GeneralVisitor<Line> {
     @Override
     public Return visitReturn(ReactParser.ReturnContext ctx) {
         var exp = ctx.expression();
-        if(exp != null) return new Return(new ExpressionVisitor(symbolTable).visit(exp), SymbolTableUtil.getLine(ctx));
+        if(exp != null) return new Return(new ExpressionVisitor(symbolTable, errors).visit(exp), SymbolTableUtil.getLine(ctx));
         return new Return(SymbolTableUtil.getLine(ctx));
     }
 
     @Override
     public Statement visitStatementLine(ReactParser.StatementLineContext ctx) {
-        return new StatementVisitor(symbolTable).visit(ctx.statement());
+        return new StatementVisitor(symbolTable, errors).visit(ctx.statement());
     }
 
     @Override
     public If visitIfLine(ReactParser.IfLineContext ctx) {
-        var test = new ExpressionVisitor(symbolTable).visit(ctx.if_().expression());
+        if(ctx.ifLines().if_() != null) {
+            return visitIf(ctx.ifLines().if_());
+        }
+        if(ctx.ifLines().ifElse() != null) {
+            return visitIfElse(ctx.ifLines().ifElse());
+        }
+        if(ctx.ifLines().ifElseIf() != null) {
+            return visitIfElseIf(ctx.ifLines().ifElseIf());
+        }
+
+        return visitIfElseIfElse(ctx.ifLines().ifElseIfElse());
+    }
+
+    @Override
+    public If visitIf(ReactParser.IfContext ctx) {
+        var test = new ExpressionVisitor(symbolTable, errors).visit(ctx.expression());
+
+        var line = ctx.allLines();
+        var block = ctx.block();
+
+        If theIf;
+
+        if(line != null) {
+            theIf = new If(test, visitAllLines(line), SymbolTableUtil.getLine(ctx));
+        } else {
+            theIf = new If(
+                test,
+                new BlockVisitor(
+                    symbolTable.addTable(symbolTable.getName() + ".if"),
+                    errors
+                ).visitBlock(block),
+                SymbolTableUtil.getLine(ctx)
+            );
+        }
+
+        return theIf;
+    }
+
+    @Override
+    public If visitIfElse(ReactParser.IfElseContext ctx) {
+        var test = new ExpressionVisitor(symbolTable, errors).visit(ctx.if_().expression());
 
         var line = ctx.if_().allLines();
         var block = ctx.if_().block();
 
+        If theIf;
+
         if(line != null) {
-            return new If(test, visitAllLines(line), SymbolTableUtil.getLine(ctx));
+            theIf = new If(test, visitAllLines(line), SymbolTableUtil.getLine(ctx));
+        } else {
+            theIf = new If(
+                    test,
+                    new BlockVisitor(
+                            symbolTable.addTable(symbolTable.getName() + ".if"),
+                            errors
+                    ).visitBlock(block),
+                    SymbolTableUtil.getLine(ctx)
+            );
         }
 
-        return new If(
+        var elseContext = ctx.else_();
+
+        if (elseContext != null)
+            theIf.setChainedElse(visitElse(elseContext));
+
+        return theIf;
+    }
+
+    @Override
+    public If visitIfElseIf(ReactParser.IfElseIfContext ctx) {
+        var test = new ExpressionVisitor(symbolTable, errors).visit(ctx.if_().expression());
+
+        var line = ctx.if_().allLines();
+        var block = ctx.if_().block();
+
+        If theIf;
+
+        if(line != null) {
+            theIf = new If(test, visitAllLines(line), SymbolTableUtil.getLine(ctx));
+        } else {
+            theIf = new If(
+                    test,
+                    new BlockVisitor(
+                            symbolTable.addTable(symbolTable.getName() + ".if"),
+                            errors
+                    ).visitBlock(block),
+                    SymbolTableUtil.getLine(ctx)
+            );
+        }
+
+        var elseIfContexts = ctx.elseIf();
+
+        if(elseIfContexts != null)
+            for (var elseIfContext : elseIfContexts) {
+                theIf.addElseIf(visitElseIf(elseIfContext));
+            }
+
+        return theIf;
+    }
+
+    @Override
+    public If visitIfElseIfElse(ReactParser.IfElseIfElseContext ctx) {
+        var test = new ExpressionVisitor(symbolTable, errors).visit(ctx.if_().expression());
+
+        var line = ctx.if_().allLines();
+        var block = ctx.if_().block();
+
+        If theIf;
+
+        if(line != null) {
+            theIf = new If(test, visitAllLines(line), SymbolTableUtil.getLine(ctx));
+        } else {
+            theIf = new If(
+                    test,
+                    new BlockVisitor(
+                            symbolTable.addTable(symbolTable.getName() + ".if"),
+                            errors
+                    ).visitBlock(block),
+                    SymbolTableUtil.getLine(ctx)
+            );
+        }
+
+        var elseIfContexts = ctx.elseIf();
+        var elseContext = ctx.else_();
+
+        if(elseIfContexts != null)
+            for (var elseIfContext : elseIfContexts) {
+                theIf.addElseIf(visitElseIf(elseIfContext));
+            }
+
+        if (elseContext != null)
+            theIf.setChainedElse(visitElse(elseContext));
+
+        return theIf;
+    }
+
+    @Override
+    public ElseIf visitElseIf(ReactParser.ElseIfContext ctx) {
+        var test = new ExpressionVisitor(symbolTable, errors).visit(ctx.expression());
+
+        var line = ctx.allLines();
+        var block = ctx.block();
+
+        if(line != null) {
+            return new ElseIf(test, visitAllLines(line), SymbolTableUtil.getLine(ctx));
+        }
+
+        return new ElseIf(
             test,
             new BlockVisitor(
-                symbolTable.addTable(symbolTable.getName() + ".if")
+                symbolTable.addTable(symbolTable.getName() + ".else-if"),
+                errors
+            ).visitBlock(block),
+            SymbolTableUtil.getLine(ctx)
+        );
+    }
+
+    @Override
+    public Else visitElse(ReactParser.ElseContext ctx) {
+        var line = ctx.allLines();
+        var block = ctx.block();
+
+        if(line != null) {
+            return new Else(visitAllLines(line), SymbolTableUtil.getLine(ctx));
+        }
+
+        return new Else(
+            new BlockVisitor(
+                symbolTable.addTable(symbolTable.getName() + ".else"),
+                errors
             ).visitBlock(block),
             SymbolTableUtil.getLine(ctx)
         );
@@ -74,14 +234,14 @@ public class LineVisitor extends GeneralVisitor<Line> {
 
     @Override
     public Switch visitSwitchLine(ReactParser.SwitchLineContext ctx) {
-        var test = new ExpressionVisitor(symbolTable).visit(ctx.switch_().expression());
+        var test = new ExpressionVisitor(symbolTable, errors).visit(ctx.switch_().expression());
 
         // scope of switch
         var switchBodySymbols = new SymbolTable(symbolTable.getName() + ".switch");
         symbolTable.addTable(switchBodySymbols);
 
         var cases = new ArrayList<Case>();
-        var caseVisitor = new CaseVisitor(switchBodySymbols);
+        var caseVisitor = new CaseVisitor(switchBodySymbols, errors);
         for (var caseLine : ctx.switch_().switchBody().caseLine()) {
             cases.add(caseVisitor.visitCaseLine(caseLine));
         }
@@ -91,7 +251,7 @@ public class LineVisitor extends GeneralVisitor<Line> {
 
     @Override
     public While visitWhileLine(ReactParser.WhileLineContext ctx) {
-        var test = new ExpressionVisitor(symbolTable).visit(ctx.while_().expression());
+        var test = new ExpressionVisitor(symbolTable, errors).visit(ctx.while_().expression());
 
         var line = ctx.while_().allLines();
         var block = ctx.while_().block();
@@ -103,7 +263,8 @@ public class LineVisitor extends GeneralVisitor<Line> {
         return new While(
             test,
             new BlockVisitor(
-                symbolTable.addTable(symbolTable.getName() + ".while")
+                symbolTable.addTable(symbolTable.getName() + ".while"),
+                errors
             ).visitBlock(block),
             SymbolTableUtil.getLine(ctx)
         );
@@ -111,7 +272,7 @@ public class LineVisitor extends GeneralVisitor<Line> {
 
     @Override
     public DoWhile visitDoWhileLine(ReactParser.DoWhileLineContext ctx) {
-        var test = new ExpressionVisitor(symbolTable).visit(ctx.doWhile().expression());
+        var test = new ExpressionVisitor(symbolTable, errors).visit(ctx.doWhile().expression());
 
         var line = ctx.doWhile().allLines();
         var block = ctx.doWhile().block();
@@ -123,7 +284,8 @@ public class LineVisitor extends GeneralVisitor<Line> {
         return new DoWhile(
             test,
             new BlockVisitor(
-                symbolTable.addTable(symbolTable.getName() + ".while")
+                symbolTable.addTable(symbolTable.getName() + ".while"),
+                errors
             ).visitBlock(block),
             SymbolTableUtil.getLine(ctx)
         );
@@ -139,7 +301,7 @@ public class LineVisitor extends GeneralVisitor<Line> {
 
         var forTable = symbolTable.addTable(symbolTable.getName() + ".for");
 
-        var expressionVisitor = new ExpressionVisitor(forTable);
+        var expressionVisitor = new ExpressionVisitor(forTable, errors);
         var expList2 = exp2Context != null ? new ArrayList<Expression>() : null;
         var expList3 = exp3Context != null ? new ArrayList<Expression>() : null;
 
@@ -153,15 +315,15 @@ public class LineVisitor extends GeneralVisitor<Line> {
             }
 
         var body = forCtx.block() != null
-                ? new BlockVisitor(forTable).visitBlock(forCtx.block())
+                ? new BlockVisitor(forTable, errors).visitBlock(forCtx.block())
                 : null;
         var line = forCtx.allLines() != null
-                ? new LineVisitor(forTable).visitAllLines(forCtx.allLines())
+                ? new LineVisitor(forTable, errors).visitAllLines(forCtx.allLines())
                 : null;
 
         if(init == null || init.declare() != null) {
             var declareContext = init != null ? init.declare() : null;
-            var declare = declareContext != null ? new DeclareVisitor(forTable).visit(declareContext) : null;
+            var declare = declareContext != null ? new DeclareVisitor(forTable, errors).visit(declareContext) : null;
 
             return body == null
                     ? new For(declare, expList2, expList3, line, SymbolTableUtil.getLine(ctx))
@@ -188,12 +350,12 @@ public class LineVisitor extends GeneralVisitor<Line> {
 
         SymbolTableUtil.initSymbol(forTable, variable.getIdentifier(), forCtx.validName(), new SymbolDefineMethod(forCtx.declarers().getText()));
 
-        var iterable = new ExpressionVisitor(forTable).visit(forCtx.expression());
+        var iterable = new ExpressionVisitor(forTable, errors).visit(forCtx.expression());
         var body = forCtx.block() != null
-                ? new BlockVisitor(forTable).visitBlock(forCtx.block())
+                ? new BlockVisitor(forTable, errors).visitBlock(forCtx.block())
                 : null;
         var line = forCtx.allLines() != null
-                ? new LineVisitor(forTable).visitAllLines(forCtx.allLines())
+                ? new LineVisitor(forTable, errors).visitAllLines(forCtx.allLines())
                 : null;
 
         return body == null
@@ -210,12 +372,12 @@ public class LineVisitor extends GeneralVisitor<Line> {
 
         SymbolTableUtil.initSymbol(forTable, variable.getIdentifier(), forCtx.validName(), new SymbolDefineMethod(forCtx.declarers().getText()));
 
-        var iterable = new ExpressionVisitor(forTable).visit(forCtx.expression());
+        var iterable = new ExpressionVisitor(forTable, errors).visit(forCtx.expression());
         var body = forCtx.block() != null
-                ? new BlockVisitor(forTable).visitBlock(forCtx.block())
+                ? new BlockVisitor(forTable, errors).visitBlock(forCtx.block())
                 : null;
         var line = forCtx.allLines() != null
-                ? new LineVisitor(forTable).visitAllLines(forCtx.allLines())
+                ? new LineVisitor(forTable, errors).visitAllLines(forCtx.allLines())
                 : null;
 
         return body == null
@@ -226,6 +388,6 @@ public class LineVisitor extends GeneralVisitor<Line> {
     @Override
     public Block visitBlockLine(ReactParser.BlockLineContext ctx) {
         var newTable = symbolTable.addTable(symbolTable.getName() + ".block");
-        return VisitorUtil.create(ctx.block(), newTable);
+        return VisitorUtil.create(ctx.block(), newTable, errors);
     }
 }
