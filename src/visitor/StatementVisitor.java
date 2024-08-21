@@ -17,12 +17,13 @@ public class StatementVisitor extends GeneralVisitor<Statement> {
         var from = ctx.importStatement().STRING().getText();
 
         var formCtx = ctx.importStatement().form();
-        if(formCtx == null) return new ImportStatement(from, SymbolTableUtil.getLine(ctx));
+        if(formCtx == null) return new ImportStatement(from, SymbolTableUtil.getLine(ctx), symbolTable);
 
         return new ImportStatement(
             new ImportFormVisitor(symbolTable, errors).visit(formCtx.importForm()),
             from,
-            SymbolTableUtil.getLine(ctx)
+            SymbolTableUtil.getLine(ctx),
+            symbolTable
         );
     }
 

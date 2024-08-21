@@ -97,11 +97,11 @@ moduleExportItem
     ;
 
 declare: declarers declareSyntax (COMMA declareSyntax)*;
-                        declareSyntax: declarable assignmentRightHand?;
-                        assignmentRightHand: (assignmentDeclarable)* ASSIGNMENT_OP expression;
-                        assignmentDeclarable: ASSIGNMENT_OP declarable;
-                        declarable: validName | objectDestructuring | arrayDestructuring;
-                        declarers: VAR | LET | CONST;
+declareSyntax: declarable assignmentRightHand?;
+assignmentRightHand: (assignmentDeclarable)* ASSIGNMENT_OP expression;
+assignmentDeclarable: ASSIGNMENT_OP declarable;
+declarable: validName | objectDestructuring | arrayDestructuring;
+declarers: VAR | LET | CONST;
 
 expression
     : OPEN_BRACKET expression CLOSE_BRACKET                                    #parentheses
@@ -125,7 +125,7 @@ expression
     | expression TERNARY_OP1 expression COLON expression                       #ternary
     | expression assinmentOp expression                                        #assignment
     | ELLIPSIS expression                                                      #arraySpread
-    | expression COMMA expression                                              #comma
+//    | expression COMMA expression                                              #comma
     | validName                                                                #variable
     | returnable                                                               #value
     ;
@@ -204,7 +204,7 @@ switchBody: OPEN_CURLY_BRACES caseLine* CLOSE_CURLY_BRACES;
 caseLine: (((CASE expression) | DEFAULT) COLON)+ allLines*;
 
 while: WHILE OPEN_BRACKET expression CLOSE_BRACKET (block | allLines);
-doWhile: DO (block | allLines) WHILE OPEN_BRACKET expression CLOSE_BRACKET;
+doWhile: DO block WHILE OPEN_BRACKET expression CLOSE_BRACKET;
 
 // for syntax: for(expression 1; expression 2; expression 3) bodyScobe
 // expression 1:
@@ -278,7 +278,7 @@ fullTag
 
 characters: COLON | COMMA | DOT | ELLIPSIS | SEMICOLON | OPEN_BRACKET | CLOSE_BRACKET | OPEN_SQUARE_BRACKET | CLOSE_SQUARE_BRACKET | OPEN_CURLY_BRACES | CLOSE_CURLY_BRACES | OPEN_TEMPLATE_LITERAL;
 jsxChildren: jsx | jsInJsx | words;
-words: allPossibleWords | characters;
+words: allPossibleWords | characters+;
 jsxName: voidElement | htmlElement | validName | expression;
 
 htmlElement: A | ABBR | ACRONYM | ADDRESS | APPLET | ARTICLE | ASIDE | AUDIO | B | BASEFONT | BDI | BDO | BIG | BLOCKQUOTE | BODY | BUTTON | CANVAS | CAPTION | CENTER | CITE | CODE | COLGROUP | DATA | DATALIST | DD | DEL | DETAILS | DFN | DIALOG | DIR | DIV | DL | DT | EM | FIELDSET | FIGCAPTION | FIGURE | FONT | FOOTER | FORM | FRAME | FRAMESET | H1 | H2 | H3 | H4 | H5 | H6 | HEAD | HEADER | HGROUP | HTML | I | IFRAME | INS | KBD | LABEL | LEGEND | LI | MAIN | MAP | MARK | MENU | METER | NAV | NOFRAMES | NOSCRIPT | OBJECT | OL | OPTGROUP | OPTION | OUTPUT | P | PICTURE | PRE | PROGRESS | Q | RP | RT | RUBY | S | SAMP | SCRIPT | SEARCH | SECTION | SELECT | SMALL | SPAN | STRIKE | STRONG | STYLE | SUB | SUMMARY | SUP | SVG | TABLE | TBODY | TD | TEMPLATE | TEXTAREA | TFOOT | TH | THEAD | TIME | TITLE | TR | TT | U | UL | VAR | VIDEO;

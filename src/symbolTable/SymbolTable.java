@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
+import java.util.function.Predicate;
 
 public class SymbolTable {
     private String name;
@@ -21,6 +23,18 @@ public class SymbolTable {
         this.name = name;
         children = new ArrayList<>();
         rows = new Hashtable<>();
+    }
+
+    public boolean anyUntilAncestor(Function<SymbolTable, Boolean> predicate) {
+        boolean res = false;
+        var current = this;
+
+        while (!res && current != null) {
+            res = predicate.apply(current);
+            current = current.parent;
+        }
+
+        return res;
     }
 
     public void setRows(Map<String, SymbolProperties> rows) {
@@ -55,7 +69,7 @@ public class SymbolTable {
     public boolean has(String key, boolean inScope) {
         var isInTable = rows.containsKey(key);
 
-        if(!isInTable && inScope && parent != null) return parent.has(key, true);
+        if(!isInTable && !inScope && parent != null) return parent.has(key, true);
         return isInTable;
     }
 
@@ -153,9 +167,9 @@ public class SymbolTable {
         str.append('\n');
 
         if(name != null && !name.isEmpty()) {
-            var availableSpaces = widthOfTable - name.length() - 2;
+            var availableSpaces = Math.abs(widthOfTable - name.length() - 2);
             var spacesBeforeName = availableSpaces / 2;
-            var spacesAfterName = availableSpaces - spacesBeforeName;
+            var spacesAfterName = Math.abs(availableSpaces - spacesBeforeName);
 
             str.append(bar);
             str.repeat(" ", spacesBeforeName);

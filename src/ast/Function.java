@@ -1,6 +1,8 @@
 package ast;
 
 import Util.ToString;
+import errors.messages.ErrorMessage;
+import symbolTable.SymbolTable;
 
 import java.util.List;
 import java.util.stream.Stream;
@@ -11,19 +13,29 @@ public abstract class Function extends Returnable {
     FunctionBody body;
     Expression returnExp;
 
-    public Function(Args args, FunctionBody body, int lineDefined) {
-        this(null, args, body, lineDefined);
+    public Function(Args args, FunctionBody body, int lineDefined, SymbolTable symbolTable) {
+        this(null, args, body, lineDefined, symbolTable);
     }
-    public Function(ValidName name, Args args, FunctionBody body, int lineDefined) {
-        super(lineDefined);
+    public Function(ValidName name, Args args, FunctionBody body, int lineDefined, SymbolTable symbolTable) {
+        super(lineDefined, symbolTable);
         this.name = name;
         this.args = args;
         this.body = body;
     }
-    public Function(Args args, Expression expression, int lineDefined) {
-        super(lineDefined);
+    public Function(Args args, Expression expression, int lineDefined, SymbolTable symbolTable) {
+        super(lineDefined, symbolTable);
         this.args = args;
         this.returnExp = expression;
+    }
+
+    @Override
+    public ErrorMessage errorMessage() {
+        return body.errorMessage();
+    }
+
+    @Override
+    public boolean errorCheck() {
+        return body.errorCheck();
     }
 
     abstract String subType();
@@ -39,6 +51,6 @@ public abstract class Function extends Returnable {
 
     @Override
     public List<Node> childNodes() {
-        return Stream.of(name, args, body, returnExp).map(item -> (Node) item).toList();
+        return Stream.of(name, args, body, returnExp).toList();
     }
 }

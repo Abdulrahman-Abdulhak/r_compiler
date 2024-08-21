@@ -1,11 +1,14 @@
 package ast;
 
+import symbolTable.SymbolTable;
+
 import java.util.List;
 import java.util.stream.Stream;
 
 public class LogicalOr extends LeftRightOperation {
-    public LogicalOr(Expression left, Expression right, int lineDefined) {
-        super(left, right, lineDefined);
+    public LogicalOr(Expression left, Expression right, int lineDefined, SymbolTable symbolTable) {
+        super(left, right, lineDefined, symbolTable);
+        sign = "||";
     }
 
     @Override

@@ -15,7 +15,7 @@ public class BlockVisitor extends GeneralVisitor<Block> {
 
     @Override
     public Block visitBlock(ReactParser.BlockContext ctx) {
-        var block = new Block(SymbolTableUtil.getLine(ctx));
+        var block = new Block(SymbolTableUtil.getLine(ctx), symbolTable);
 
         var lineVisitor = new LineVisitor(symbolTable, errors);
 
@@ -27,7 +27,7 @@ public class BlockVisitor extends GeneralVisitor<Block> {
 
     @Override
     public FunctionBody visitFunctionBody(ReactParser.FunctionBodyContext ctx) {
-        var body = new FunctionBody(SymbolTableUtil.getLine(ctx));
+        var body = new FunctionBody(SymbolTableUtil.getLine(ctx), symbolTable);
 
         var lineVisitor = new LineVisitor(symbolTable, errors);
 

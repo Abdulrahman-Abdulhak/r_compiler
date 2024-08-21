@@ -1,12 +1,14 @@
 package ast;
 
+import symbolTable.SymbolTable;
+
 import java.util.List;
 import java.util.stream.Stream;
 
 public class JSinJSX extends JSX {
     Expression expression;
-    public JSinJSX(Expression expression, int lineDefined) {
-        super((Expression) null, lineDefined);
+    public JSinJSX(Expression expression, int lineDefined, SymbolTable symbolTable) {
+        super((Expression) null, lineDefined, symbolTable);
         this.expression = expression;
     }
 
@@ -23,5 +25,10 @@ public class JSinJSX extends JSX {
     @Override
     public List<Node> childNodes() {
         return Stream.of(expression).map(item -> (Node) item).toList();
+    }
+
+    @Override
+    public String generate() {
+        return expression.generate();
     }
 }

@@ -1,15 +1,15 @@
 package visitor;
 
-import Util.SymbolTableUtil;
 import antlr.ReactParser;
 
 import ast.*;
 
 import Util.VisitorUtil;
+import Util.SymbolTableUtil;
 import errors.Error;
-import errors.messages.ElseNotLast;
-import errors.messages.MultipleElseUse;
+import errors.messages.ReturnOutsideFunction;
 import symbolTable.SymbolTable;
+import symbolTable.VariableDefineMethod;
 import symbolTable.property.SymbolDefineMethod;
 
 import java.util.ArrayList;
@@ -32,22 +32,29 @@ public class LineVisitor extends GeneralVisitor<Line> {
     @Override
     public Break visitBreak(ReactParser.BreakContext ctx) {
         var label = ctx.STRING();
-        if(label != null) return new Break(label.getText(), SymbolTableUtil.getLine(ctx));
-        return new Break(SymbolTableUtil.getLine(ctx));
+        if(label != null) return new Break(label.getText(), SymbolTableUtil.getLine(ctx), symbolTable);
+        return new Break(SymbolTableUtil.getLine(ctx), symbolTable);
     }
 
     @Override
     public Continue visitContinue(ReactParser.ContinueContext ctx) {
         var label = ctx.STRING();
-        if(label != null) return new Continue(label.getText(), SymbolTableUtil.getLine(ctx));
-        return new Continue(SymbolTableUtil.getLine(ctx));
+        if(label != null) return new Continue(label.getText(), SymbolTableUtil.getLine(ctx), symbolTable);
+        return new Continue(SymbolTableUtil.getLine(ctx), symbolTable);
     }
 
     @Override
     public Return visitReturn(ReactParser.ReturnContext ctx) {
         var exp = ctx.expression();
-        if(exp != null) return new Return(new ExpressionVisitor(symbolTable, errors).visit(exp), SymbolTableUtil.getLine(ctx));
-        return new Return(SymbolTableUtil.getLine(ctx));
+        if(!symbolTable.getName().contains(".function")) {
+            errors.addError(
+                new ReturnOutsideFunction(
+                    SymbolTableUtil.getLine(ctx)
+                )
+            );
+        }
+        if(exp != null) return new Return(new ExpressionVisitor(symbolTable, errors).visit(exp), SymbolTableUtil.getLine(ctx), symbolTable);
+        return new Return(SymbolTableUtil.getLine(ctx), symbolTable);
     }
 
     @Override
@@ -80,7 +87,7 @@ public class LineVisitor extends GeneralVisitor<Line> {
         If theIf;
 
         if(line != null) {
-            theIf = new If(test, visitAllLines(line), SymbolTableUtil.getLine(ctx));
+            theIf = new If(test, visitAllLines(line), SymbolTableUtil.getLine(ctx), symbolTable);
         } else {
             theIf = new If(
                 test,
@@ -88,7 +95,8 @@ public class LineVisitor extends GeneralVisitor<Line> {
                     symbolTable.addTable(symbolTable.getName() + ".if"),
                     errors
                 ).visitBlock(block),
-                SymbolTableUtil.getLine(ctx)
+                SymbolTableUtil.getLine(ctx),
+                symbolTable
             );
         }
 
@@ -105,15 +113,16 @@ public class LineVisitor extends GeneralVisitor<Line> {
         If theIf;
 
         if(line != null) {
-            theIf = new If(test, visitAllLines(line), SymbolTableUtil.getLine(ctx));
+            theIf = new If(test, visitAllLines(line), SymbolTableUtil.getLine(ctx), symbolTable);
         } else {
             theIf = new If(
-                    test,
-                    new BlockVisitor(
-                            symbolTable.addTable(symbolTable.getName() + ".if"),
-                            errors
-                    ).visitBlock(block),
-                    SymbolTableUtil.getLine(ctx)
+                test,
+                new BlockVisitor(
+                    symbolTable.addTable(symbolTable.getName() + ".if"),
+                    errors
+                ).visitBlock(block),
+                SymbolTableUtil.getLine(ctx),
+                symbolTable
             );
         }
 
@@ -135,15 +144,16 @@ public class LineVisitor extends GeneralVisitor<Line> {
         If theIf;
 
         if(line != null) {
-            theIf = new If(test, visitAllLines(line), SymbolTableUtil.getLine(ctx));
+            theIf = new If(test, visitAllLines(line), SymbolTableUtil.getLine(ctx), symbolTable);
         } else {
             theIf = new If(
-                    test,
-                    new BlockVisitor(
-                            symbolTable.addTable(symbolTable.getName() + ".if"),
-                            errors
-                    ).visitBlock(block),
-                    SymbolTableUtil.getLine(ctx)
+                test,
+                new BlockVisitor(
+                    symbolTable.addTable(symbolTable.getName() + ".if"),
+                    errors
+                ).visitBlock(block),
+                SymbolTableUtil.getLine(ctx),
+                symbolTable
             );
         }
 
@@ -167,15 +177,16 @@ public class LineVisitor extends GeneralVisitor<Line> {
         If theIf;
 
         if(line != null) {
-            theIf = new If(test, visitAllLines(line), SymbolTableUtil.getLine(ctx));
+            theIf = new If(test, visitAllLines(line), SymbolTableUtil.getLine(ctx), symbolTable);
         } else {
             theIf = new If(
-                    test,
-                    new BlockVisitor(
-                            symbolTable.addTable(symbolTable.getName() + ".if"),
-                            errors
-                    ).visitBlock(block),
-                    SymbolTableUtil.getLine(ctx)
+                test,
+                new BlockVisitor(
+                    symbolTable.addTable(symbolTable.getName() + ".if"),
+                    errors
+                ).visitBlock(block),
+                SymbolTableUtil.getLine(ctx),
+                symbolTable
             );
         }
 
@@ -201,7 +212,7 @@ public class LineVisitor extends GeneralVisitor<Line> {
         var block = ctx.block();
 
         if(line != null) {
-            return new ElseIf(test, visitAllLines(line), SymbolTableUtil.getLine(ctx));
+            return new ElseIf(test, visitAllLines(line), SymbolTableUtil.getLine(ctx), symbolTable);
         }
 
         return new ElseIf(
@@ -210,7 +221,8 @@ public class LineVisitor extends GeneralVisitor<Line> {
                 symbolTable.addTable(symbolTable.getName() + ".else-if"),
                 errors
             ).visitBlock(block),
-            SymbolTableUtil.getLine(ctx)
+            SymbolTableUtil.getLine(ctx),
+            symbolTable
         );
     }
 
@@ -220,7 +232,7 @@ public class LineVisitor extends GeneralVisitor<Line> {
         var block = ctx.block();
 
         if(line != null) {
-            return new Else(visitAllLines(line), SymbolTableUtil.getLine(ctx));
+            return new Else(visitAllLines(line), SymbolTableUtil.getLine(ctx), symbolTable);
         }
 
         return new Else(
@@ -228,7 +240,8 @@ public class LineVisitor extends GeneralVisitor<Line> {
                 symbolTable.addTable(symbolTable.getName() + ".else"),
                 errors
             ).visitBlock(block),
-            SymbolTableUtil.getLine(ctx)
+            SymbolTableUtil.getLine(ctx),
+            symbolTable
         );
     }
 
@@ -246,7 +259,7 @@ public class LineVisitor extends GeneralVisitor<Line> {
             cases.add(caseVisitor.visitCaseLine(caseLine));
         }
 
-        return new Switch(test, cases, SymbolTableUtil.getLine(ctx));
+        return new Switch(test, cases, SymbolTableUtil.getLine(ctx), symbolTable);
     }
 
     @Override
@@ -257,7 +270,7 @@ public class LineVisitor extends GeneralVisitor<Line> {
         var block = ctx.while_().block();
 
         if(line != null) {
-            return new While(test, visitAllLines(line), SymbolTableUtil.getLine(ctx));
+            return new While(test, visitAllLines(line), SymbolTableUtil.getLine(ctx), symbolTable);
         }
 
         return new While(
@@ -266,29 +279,20 @@ public class LineVisitor extends GeneralVisitor<Line> {
                 symbolTable.addTable(symbolTable.getName() + ".while"),
                 errors
             ).visitBlock(block),
-            SymbolTableUtil.getLine(ctx)
+            SymbolTableUtil.getLine(ctx),
+            symbolTable
         );
     }
 
     @Override
     public DoWhile visitDoWhileLine(ReactParser.DoWhileLineContext ctx) {
         var test = new ExpressionVisitor(symbolTable, errors).visit(ctx.doWhile().expression());
+        var block = new BlockVisitor(
+            symbolTable.addTable(symbolTable.getName() + ".while"),
+            errors
+        ).visitBlock(ctx.doWhile().block());
 
-        var line = ctx.doWhile().allLines();
-        var block = ctx.doWhile().block();
-
-        if(line != null) {
-            return new DoWhile(test, visitAllLines(line), SymbolTableUtil.getLine(ctx));
-        }
-
-        return new DoWhile(
-            test,
-            new BlockVisitor(
-                symbolTable.addTable(symbolTable.getName() + ".while"),
-                errors
-            ).visitBlock(block),
-            SymbolTableUtil.getLine(ctx)
-        );
+        return new DoWhile(test, block, SymbolTableUtil.getLine(ctx), symbolTable);
     }
 
     @Override
@@ -326,8 +330,8 @@ public class LineVisitor extends GeneralVisitor<Line> {
             var declare = declareContext != null ? new DeclareVisitor(forTable, errors).visit(declareContext) : null;
 
             return body == null
-                    ? new For(declare, expList2, expList3, line, SymbolTableUtil.getLine(ctx))
-                    : new For(declare, expList2, expList3, body, SymbolTableUtil.getLine(ctx));
+                    ? new For(declare, expList2, expList3, line, SymbolTableUtil.getLine(ctx), symbolTable)
+                    : new For(declare, expList2, expList3, body, SymbolTableUtil.getLine(ctx), symbolTable);
         }
 
         var exp1Context = init.expressionList();
@@ -337,8 +341,8 @@ public class LineVisitor extends GeneralVisitor<Line> {
         }
 
         return body == null
-                ? new For(expList1, expList2, expList3, line, SymbolTableUtil.getLine(ctx))
-                : new For(expList1, expList2, expList3, body, SymbolTableUtil.getLine(ctx));
+                ? new For(expList1, expList2, expList3, line, SymbolTableUtil.getLine(ctx), symbolTable)
+                : new For(expList1, expList2, expList3, body, SymbolTableUtil.getLine(ctx), symbolTable);
     }
 
     @Override
@@ -346,9 +350,10 @@ public class LineVisitor extends GeneralVisitor<Line> {
         var forCtx = ctx.forin();
 
         var forTable = symbolTable.addTable(symbolTable.getName() + ".for-in");
-        var variable = VisitorUtil.create(forCtx.validName());
+        var variable = VisitorUtil.create(forCtx.validName(), symbolTable);
 
-        SymbolTableUtil.initSymbol(forTable, variable.getIdentifier(), forCtx.validName(), new SymbolDefineMethod(forCtx.declarers().getText()));
+        var varDefineMethod = VariableDefineMethod.fromString(forCtx.declarers().getText());
+        SymbolTableUtil.initSymbol(forTable, variable.getIdentifier(), forCtx.validName(), new SymbolDefineMethod(varDefineMethod));
 
         var iterable = new ExpressionVisitor(forTable, errors).visit(forCtx.expression());
         var body = forCtx.block() != null
@@ -359,8 +364,8 @@ public class LineVisitor extends GeneralVisitor<Line> {
                 : null;
 
         return body == null
-                ? new ForIn(variable, iterable, line, SymbolTableUtil.getLine(ctx))
-                : new ForIn(variable, iterable, body, SymbolTableUtil.getLine(ctx));
+                ? new ForIn(varDefineMethod, variable, iterable, line, SymbolTableUtil.getLine(ctx), symbolTable)
+                : new ForIn(varDefineMethod, variable, iterable, body, SymbolTableUtil.getLine(ctx), symbolTable);
     }
 
     @Override
@@ -368,9 +373,10 @@ public class LineVisitor extends GeneralVisitor<Line> {
         var forCtx = ctx.forof();
 
         var forTable = symbolTable.addTable(symbolTable.getName() + ".for-of");
-        var variable = VisitorUtil.create(forCtx.validName());
+        var variable = VisitorUtil.create(forCtx.validName(), symbolTable);
 
-        SymbolTableUtil.initSymbol(forTable, variable.getIdentifier(), forCtx.validName(), new SymbolDefineMethod(forCtx.declarers().getText()));
+        var varDefineMethod = VariableDefineMethod.fromString(forCtx.declarers().getText());
+        SymbolTableUtil.initSymbol(forTable, variable.getIdentifier(), forCtx.validName(), new SymbolDefineMethod(varDefineMethod));
 
         var iterable = new ExpressionVisitor(forTable, errors).visit(forCtx.expression());
         var body = forCtx.block() != null
@@ -380,9 +386,10 @@ public class LineVisitor extends GeneralVisitor<Line> {
                 ? new LineVisitor(forTable, errors).visitAllLines(forCtx.allLines())
                 : null;
 
+
         return body == null
-                ? new ForOf(variable, iterable, line, SymbolTableUtil.getLine(ctx))
-                : new ForOf(variable, iterable, body, SymbolTableUtil.getLine(ctx));
+                ? new ForOf(varDefineMethod, variable, iterable, line, SymbolTableUtil.getLine(ctx), symbolTable)
+                : new ForOf(varDefineMethod, variable, iterable, body, SymbolTableUtil.getLine(ctx), symbolTable);
     }
 
     @Override

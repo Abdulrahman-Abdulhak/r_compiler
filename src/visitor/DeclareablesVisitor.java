@@ -32,16 +32,16 @@ public class DeclareablesVisitor extends GeneralVisitor<Declarable> {
     @Override
     public Declarable visitValidName(ReactParser.ValidNameContext ctx) {
         SymbolTableUtil.initSymbol(symbolTable, ctx.getText(), ctx, defineMethod);
-        return new Declarable(ctx.getText(), SymbolTableUtil.getLine(ctx));
+        return new Declarable(ctx.getText(), SymbolTableUtil.getLine(ctx), symbolTable);
     }
 
     @Override
     public Declarable visitObjectDestructuring(ReactParser.ObjectDestructuringContext ctx) {
-        return new Declarable(VisitorUtil.create(ctx, symbolTable, errors, defineMethod), SymbolTableUtil.getLine(ctx));
+        return new Declarable(VisitorUtil.create(ctx, symbolTable, errors, defineMethod), SymbolTableUtil.getLine(ctx), symbolTable);
     }
 
     @Override
     public Declarable visitArrayDestructuring(ReactParser.ArrayDestructuringContext ctx) {
-        return new Declarable(VisitorUtil.create(ctx, symbolTable, errors, defineMethod), SymbolTableUtil.getLine(ctx));
+        return new Declarable(VisitorUtil.create(ctx, symbolTable, errors, defineMethod), SymbolTableUtil.getLine(ctx), symbolTable);
     }
 }

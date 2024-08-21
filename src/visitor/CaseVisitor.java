@@ -31,6 +31,6 @@ public class CaseVisitor extends GeneralVisitor<Case> {
             lines.add(lineVisitor.visit(line));
         }
 
-        return new Case(values, lines, haveDefault, SymbolTableUtil.getLine(ctx));
+        return new Case(values, lines, haveDefault, SymbolTableUtil.getLine(ctx), symbolTable);
     }
 }

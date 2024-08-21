@@ -5,6 +5,7 @@ import antlr.ReactParser;
 
 import ast.*;
 import errors.Error;
+import errors.messages.NotSameTag;
 import symbolTable.SymbolTable;
 import Util.VisitorUtil;
 
@@ -25,7 +26,7 @@ public class ReturnableVisitor extends GeneralVisitor<Returnable> {
             JsString str;
             if(strings.getChild(0).getChildCount() > 0) {
                 str = new TemplateLiteralVisitor(symbolTable, errors).visit(strings.getChild(0));
-            } else str = new JsString(strings.getChild(0).getText(), SymbolTableUtil.getLine(strings));
+            } else str = new JsString(strings.getChild(0).getText(), SymbolTableUtil.getLine(strings), symbolTable);
 
             return new PrimeType(str, SymbolTableUtil.getLine(ctx));
         }
@@ -43,7 +44,7 @@ public class ReturnableVisitor extends GeneralVisitor<Returnable> {
 
     @Override
     public JsObject visitObject(ReactParser.ObjectContext ctx) {
-        var obj = new JsObject(SymbolTableUtil.getLine(ctx));
+        var obj = new JsObject(SymbolTableUtil.getLine(ctx), symbolTable);
         var props = ctx.objPropDefine();
 
         var objPropVisitor = new ObjectPropVisitor(symbolTable, errors);
@@ -56,7 +57,7 @@ public class ReturnableVisitor extends GeneralVisitor<Returnable> {
 
     @Override
     public JsArray visitArray(ReactParser.ArrayContext ctx) {
-        var arr = new JsArray(SymbolTableUtil.getLine(ctx));
+        var arr = new JsArray(SymbolTableUtil.getLine(ctx), symbolTable);
         var expVisitor = new ExpressionVisitor(symbolTable, errors);
 
         for(var item : ctx.expression()) {
@@ -73,17 +74,19 @@ public class ReturnableVisitor extends GeneralVisitor<Returnable> {
 
     @Override
     public ThisKeyword visitThisKeyword(ReactParser.ThisKeywordContext ctx) {
-        return new ThisKeyword(SymbolTableUtil.getLine(ctx));
+        return new ThisKeyword(SymbolTableUtil.getLine(ctx), symbolTable);
     }
 
     @Override
     public JSX visitJsx(ReactParser.JsxContext ctx) {
         var voidTagCtx = ctx.voidTag();
         if(voidTagCtx != null) {
-            var exp = voidTagCtx.jsxName().expression();
+            var name = voidTagCtx.jsxName();
+            var exp = name.expression();
             JSX jsx;
-            if(exp != null) jsx = new JSX(new ExpressionVisitor(symbolTable, errors).visit(exp), SymbolTableUtil.getLine(exp));
-            else jsx = new JSX(voidTagCtx.jsxName().getText(), SymbolTableUtil.getLine(voidTagCtx));
+            if(exp != null) jsx = new JSX(new ExpressionVisitor(symbolTable, errors).visit(exp), SymbolTableUtil.getLine(exp), symbolTable);
+            else if(name.validName() != null) jsx = new JSX(new ValidName(name.validName().getText(), SymbolTableUtil.getLine(exp), symbolTable), SymbolTableUtil.getLine(exp), symbolTable);
+            else jsx = new JSX(voidTagCtx.jsxName().getText(), SymbolTableUtil.getLine(voidTagCtx), symbolTable);
 
             var attrsCtx = voidTagCtx.attibuteValue();
             VisitorUtil.fromAttrList(jsx, attrsCtx, symbolTable, errors);
@@ -94,8 +97,8 @@ public class ReturnableVisitor extends GeneralVisitor<Returnable> {
         JSX jsx;
 
         var exp = fullTagCtx.jsxName(0).expression();
-        if(exp != null) jsx = new JSX(new ExpressionVisitor(symbolTable, errors).visit(exp), SymbolTableUtil.getLine(exp));
-        else jsx = new JSX(fullTagCtx.jsxName(0).getText(), SymbolTableUtil.getLine(fullTagCtx));
+        if(exp != null) jsx = new JSX(new ExpressionVisitor(symbolTable, errors).visit(exp), SymbolTableUtil.getLine(exp), symbolTable);
+        else jsx = new JSX(fullTagCtx.jsxName(0).getText(), SymbolTableUtil.getLine(fullTagCtx), symbolTable);
 
         var attrsCtx = fullTagCtx.attibuteValue();
         VisitorUtil.fromAttrList(jsx, attrsCtx, symbolTable, errors);
@@ -104,10 +107,20 @@ public class ReturnableVisitor extends GeneralVisitor<Returnable> {
         for (var childCtx : childrenCtx) {
             if(childCtx.jsInJsx() != null) {
                 var js = new ExpressionVisitor(symbolTable, errors).visit(childCtx.jsInJsx().expression());
-                jsx.addChild(new JSinJSX(js, SymbolTableUtil.getLine(childCtx.jsInJsx())));
+                jsx.addChild(new JSinJSX(js, SymbolTableUtil.getLine(childCtx.jsInJsx()), symbolTable));
+            } else if (childCtx.words() != null) {
+                jsx.addChild(new WordJSX(childCtx.words().getText(), SymbolTableUtil.getLine(childCtx.words())));
             } else {
                 jsx.addChild(visitJsx(childCtx.jsx()));
             }
+        }
+
+        if(!Objects.equals(fullTagCtx.jsxName(0).getText(), fullTagCtx.jsxName(1).getText())) {
+            errors.addError(
+                new NotSameTag(
+                    SymbolTableUtil.getLine(fullTagCtx.jsxName(1))
+                )
+            );
         }
 
         return jsx;

@@ -1,5 +1,8 @@
 package ast;
 
+import errors.messages.ErrorMessage;
+import symbolTable.SymbolTable;
+
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -7,8 +10,8 @@ public class Incremental extends Expression {
     boolean increase, post;
     Expression expression;
 
-    public Incremental(Expression exp, int lineDefined) {
-        super(lineDefined);
+    public Incremental(Expression exp, int lineDefined, SymbolTable symbolTable) {
+        super(lineDefined, symbolTable);
         expression = exp;
     }
 
@@ -34,6 +37,16 @@ public class Incremental extends Expression {
     }
 
     @Override
+    public ErrorMessage errorMessage() {
+        return expression.errorMessage();
+    }
+
+    @Override
+    public boolean errorCheck() {
+        return expression.errorCheck();
+    }
+
+    @Override
     public String nodeName() {
         return type();
     }
@@ -41,5 +54,15 @@ public class Incremental extends Expression {
     @Override
     public List<Node> childNodes() {
         return Stream.of(expression).map(item -> (Node) item).toList();
+    }
+
+    public String sign() {
+        return increase ? "++" : "--";
+    }
+
+    @Override
+    public String generate() {
+        var exp = expression.generate();
+        return post ? exp + sign() : sign() + exp;
     }
 }

@@ -1,8 +1,11 @@
 package ast;
 
+import errors.messages.ErrorMessage;
+import symbolTable.SymbolTable;
+
 public class AnonymousFunction extends Function {
-    public AnonymousFunction(Args args, FunctionBody body, int lineDefined) {
-        super(args, body, lineDefined);
+    public AnonymousFunction(Args args, FunctionBody body, int lineDefined, SymbolTable symbolTable) {
+        super(args, body, lineDefined, symbolTable);
     }
 
     @Override
@@ -11,5 +14,10 @@ public class AnonymousFunction extends Function {
     @Override
     public String nodeName() {
         return "Anonymous Function";
+    }
+
+    @Override
+    public String generate() {
+        return "function " + args.generate() + " " + body.generate();
     }
 }

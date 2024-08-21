@@ -1,10 +1,11 @@
 package ast;
 
 import Util.ToString;
+import symbolTable.SymbolTable;
 
 public abstract class Expression extends Statement {
-    public Expression(int lineDefined) {
-        super(lineDefined);
+    public Expression(int lineDefined, SymbolTable symbolTable) {
+        super(lineDefined, symbolTable);
     }
 
     abstract String type();

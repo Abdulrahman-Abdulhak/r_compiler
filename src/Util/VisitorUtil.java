@@ -16,6 +16,8 @@ import java.util.List;
 
 public class VisitorUtil {
     public static Token getFirstToken(ParserRuleContext ctx) {
+        if(ctx == null) return null;
+
         var tree = ctx.getChild(0);
 
         while(!(tree instanceof TerminalNode)) {
@@ -26,8 +28,8 @@ public class VisitorUtil {
         return ((TerminalNode) tree).getSymbol();
     }
 
-    public static ValidName create(ReactParser.ValidNameContext ctx) {
-        return new ValidName(ctx.getText(), SymbolTableUtil.getLine(ctx));
+    public static ValidName create(ReactParser.ValidNameContext ctx, SymbolTable symbolTable) {
+        return new ValidName(ctx.getText(), SymbolTableUtil.getLine(ctx), symbolTable);
     }
 
     public static ObjectDestructuring create(
@@ -70,7 +72,7 @@ public class VisitorUtil {
     }
 
     public static NamedImport create(ReactParser.NamedImportContext ctx, SymbolTable symbolTable) {
-        final var named = new NamedImport(SymbolTableUtil.getLine(ctx));
+        final var named = new NamedImport(SymbolTableUtil.getLine(ctx), symbolTable);
         for(var itemCtx : ctx.namedImportItem())
             forNamedImport(named, itemCtx, symbolTable);
 
@@ -87,13 +89,13 @@ public class VisitorUtil {
                 // for more than one default in one import
             }
 
-            var name = create(alias);
+            var name = create(alias, symbolTable);
             named.addNameWithConverted(item.getText(), name);
             SymbolTableUtil.initSymbol(symbolTable, name.getIdentifier(), alias, defineMethod);
             return;
         }
 
-        var validName = create(ctx.validName());
+        var validName = create(ctx.validName(), symbolTable);
         named.addOriginalName(ctx.validName().getText());
         SymbolTableUtil.initSymbol(symbolTable, validName.getIdentifier(), ctx.validName(), defineMethod);
     }

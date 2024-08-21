@@ -29,12 +29,12 @@ public class FunctionVisitor extends GeneralVisitor<Function> {
 
     @Override
     public ArrowFunction visitArrowFunction(ReactParser.ArrowFunctionContext ctx) {
-        var functionScope = symbolTable.addTable();
+        var functionScope = symbolTable.addTable(".function");
 
         var nameCtx = ctx.validName();
         ValidName name = null;
         if(nameCtx != null) {
-            name = VisitorUtil.create(nameCtx);
+            name = VisitorUtil.create(nameCtx, functionScope);
             SymbolTableUtil.initSymbol(functionScope, name.getIdentifier(), nameCtx, SymbolDefineMethod.argument());
         }
 
@@ -46,26 +46,26 @@ public class FunctionVisitor extends GeneralVisitor<Function> {
         if (expCtx != null) {
             exp = new ExpressionVisitor(functionScope, errors).visit(expCtx);
 
-            if(name != null) return new ArrowFunction(name, exp, SymbolTableUtil.getLine(ctx));
-            return new ArrowFunction(args, exp, SymbolTableUtil.getLine(ctx));
+            if(name != null) return new ArrowFunction(name, exp, SymbolTableUtil.getLine(ctx), functionScope);
+            return new ArrowFunction(args, exp, SymbolTableUtil.getLine(ctx), functionScope);
         }
 
         var body = new BlockVisitor(functionScope, errors).visitFunctionBody(ctx.functionBody());
 
-        if(name != null) return new ArrowFunction(name, body, SymbolTableUtil.getLine(ctx));
-        return new ArrowFunction(args, body, SymbolTableUtil.getLine(ctx));
+        if(name != null) return new ArrowFunction(name, body, SymbolTableUtil.getLine(ctx), functionScope);
+        return new ArrowFunction(args, body, SymbolTableUtil.getLine(ctx), functionScope);
     }
 
     @Override
     public NormalFunction visitNormalFunction(ReactParser.NormalFunctionContext ctx) {
         var functionNameCtx = ctx.validName();
-        ValidName functionName = VisitorUtil.create(functionNameCtx);
-        var functionScope = symbolTable.addTable(functionName);
+        ValidName functionName = VisitorUtil.create(functionNameCtx, symbolTable);
+        var functionScope = symbolTable.addTable(".function:" + functionName.getIdentifier());
 
         var args = new ArgsVisitor(functionScope, errors).visitArgs(ctx.args());
         var block = new BlockVisitor(functionScope, errors).visitFunctionBody(ctx.functionBody());
 
-        var func = new NormalFunction(functionName, args, block, SymbolTableUtil.getLine(ctx));
+        var func = new NormalFunction(functionName, args, block, SymbolTableUtil.getLine(ctx), functionScope);
 
         SymbolTableUtil.initSymbol(
             symbolTable,
@@ -79,11 +79,11 @@ public class FunctionVisitor extends GeneralVisitor<Function> {
 
     @Override
     public AnonymousFunction visitAnonymousFunction(ReactParser.AnonymousFunctionContext ctx) {
-        var functionScope = symbolTable.addTable();
+        var functionScope = symbolTable.addTable(".function");
 
         var args = new ArgsVisitor(functionScope, errors).visitArgs(ctx.args());
         var block = new BlockVisitor(functionScope, errors).visitFunctionBody(ctx.functionBody());
 
-        return new AnonymousFunction(args, block, SymbolTableUtil.getLine(ctx));
+        return new AnonymousFunction(args, block, SymbolTableUtil.getLine(ctx), functionScope);
     }
 }

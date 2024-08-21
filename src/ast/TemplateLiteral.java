@@ -1,6 +1,7 @@
 package ast;
 
 import Util.ToString;
+import symbolTable.SymbolTable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,8 +9,8 @@ import java.util.List;
 public class TemplateLiteral extends JsString {
     List<TemplateLiteralContent> contents;
 
-    public TemplateLiteral(int lineDefined) {
-        super("", lineDefined);
+    public TemplateLiteral(int lineDefined, SymbolTable symbolTable) {
+        super("", lineDefined, symbolTable);
         contents = new ArrayList<>();
     }
 
@@ -17,7 +18,7 @@ public class TemplateLiteral extends JsString {
         contents.add(new TemplateLiteralContent(content, lineDefined));
     }
     public void addContent(Expression exp, int lineDefined) {
-        contents.add(new TemplateLiteralContent(exp, lineDefined));
+        contents.add(new TemplateLiteralContent(exp, lineDefined, symbolTable));
     }
 
     @Override
@@ -38,5 +39,20 @@ public class TemplateLiteral extends JsString {
     @Override
     public List<Node> childNodes() {
         return contents.stream().map(item -> (Node) item).toList();
+    }
+
+    private String contentGenerate() {
+        if(contents == null || contents.isEmpty()) return "";
+
+        var str = new StringBuilder();
+
+        for (var content : contents)
+            str.append(content.generate());
+
+        return str.toString();
+    }
+    @Override
+    public String generate() {
+        return "`" + contentGenerate() + "`";
     }
 }

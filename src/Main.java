@@ -14,7 +14,7 @@ import static org.antlr.v4.runtime.CharStreams.fromFileName;
 
 public class Main {
     public static void main(String[] args) throws IOException {
-        String source = "C:\\Files\\Developer\\Java\\r_compiler\\src\\libraries\\react.txt";
+        String source = "C:\\Files\\Developer\\Java\\r_compiler\\src\\testFiles\\test2.txt";
         CharStream charStream = fromFileName(source);
 
         ReactLexer lexer = new ReactLexer(charStream);
@@ -28,14 +28,17 @@ public class Main {
 
         ProgramVisitor reactVisitor = new ProgramVisitor(globalSymbolTable, errors);
         var tree = reactVisitor.visit(ast);
+        System.out.println(tree.generate());
+//        tree.getErrors(errors);
 
+//        errors.showErrors();
 //        System.out.println(tree);
 //        System.out.println();
 //        System.out.println();
 //        System.out.println();
 //        System.out.println();
 //        System.out.println();
-        SymbolTableUtil.print(globalSymbolTable);
+//        SymbolTableUtil.print(globalSymbolTable);
 //        tree.printTree();
     }
 }

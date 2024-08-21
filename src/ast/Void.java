@@ -1,5 +1,7 @@
 package ast;
 
+import errors.messages.ErrorMessage;
+
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -7,7 +9,7 @@ public class Void extends Expression {
     Expression expression;
 
     public Void(Expression expression, int defineLine) {
-        super(defineLine);
+        super(defineLine, null);
         this.expression = expression;
     }
 
@@ -29,6 +31,16 @@ public class Void extends Expression {
     }
 
     @Override
+    public ErrorMessage errorMessage() {
+        return expression.errorMessage();
+    }
+
+    @Override
+    public boolean errorCheck() {
+        return expression.errorCheck();
+    }
+
+    @Override
     public String nodeName() {
         return "Void Operator";
     }
@@ -36,5 +48,10 @@ public class Void extends Expression {
     @Override
     public List<Node> childNodes() {
         return Stream.of(expression).map(item -> (Node) item).toList();
+    }
+
+    @Override
+    public String generate() {
+        return "void " + expression.generate();
     }
 }

@@ -1,13 +1,16 @@
 package ast;
 
+import errors.messages.ErrorMessage;
+import symbolTable.SymbolTable;
+
 import java.util.List;
 import java.util.stream.Stream;
 
 public class TypeOf extends Expression {
     Expression value;
 
-    public TypeOf(Expression value, int defineLine) {
-        super(defineLine);
+    public TypeOf(Expression value, int defineLine, SymbolTable symbolTable) {
+        super(defineLine, symbolTable);
         this.value = value;
     }
 
@@ -22,6 +25,16 @@ public class TypeOf extends Expression {
     }
 
     @Override
+    public ErrorMessage errorMessage() {
+        return value.errorMessage();
+    }
+
+    @Override
+    public boolean errorCheck() {
+        return value.errorCheck();
+    }
+
+    @Override
     public String nodeName() {
         return "Type OF";
     }
@@ -29,5 +42,10 @@ public class TypeOf extends Expression {
     @Override
     public List<Node> childNodes() {
         return Stream.of(value).map(item -> (Node) item).toList();
+    }
+
+    @Override
+    public String generate() {
+        return "typeof " + value.generate();
     }
 }

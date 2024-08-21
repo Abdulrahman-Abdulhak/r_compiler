@@ -1,11 +1,13 @@
 package ast;
 
+import symbolTable.SymbolTable;
+
 import java.util.List;
 import java.util.stream.Stream;
 
 public class Multiplication extends LeftRightOperation {
-        public Multiplication(Expression left, String sign, Expression right, int lineDefined) {
-                super(left, sign, right, lineDefined);
+        public Multiplication(Expression left, String sign, Expression right, int lineDefined, SymbolTable symbolTable) {
+                super(left, sign, right, lineDefined, symbolTable);
         }
 
         @Override

@@ -1,14 +1,23 @@
 package ast;
 
 import Util.ToString;
+import errors.Error;
+import errors.messages.ErrorMessage;
+import symbolTable.SymbolTable;
 
+import java.util.ArrayList;
 import java.util.List;
 
 abstract public class Node {
     int lineDefined;
-    public Node(int lineDefined) {
+    SymbolTable symbolTable;
+    public Node(int lineDefined, SymbolTable symbolTable) {
         this.lineDefined = lineDefined;
+        this.symbolTable = symbolTable;
     }
+
+    public abstract ErrorMessage errorMessage();
+    public abstract boolean errorCheck();
 
     public int getLineDefined() {
         return lineDefined;
@@ -47,4 +56,23 @@ abstract public class Node {
     public void printTree() {
         System.out.println(treeAsString());
     }
+
+    public void getErrors(Error errors) {
+        var nodes = new ArrayList<Node>();
+        nodes.add(this);
+
+        while (!nodes.isEmpty()) {
+            var current = nodes.removeFirst();
+            System.out.println(nodeName());
+            if(current == null) continue;
+
+            if(current.errorCheck()) errors.addError(current.errorMessage());
+
+            var children = childNodes();
+            System.out.println(children.size());
+            if(children != null) nodes.addAll(children);
+        }
+    }
+
+    public abstract String generate();
 }

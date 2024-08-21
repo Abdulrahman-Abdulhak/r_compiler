@@ -1,8 +1,10 @@
 package ast;
 
+import symbolTable.SymbolTable;
+
 public class FunctionBody extends Block {
-    public FunctionBody(int lineDefined) {
-        super(lineDefined);
+    public FunctionBody(int lineDefined, SymbolTable symbolTable) {
+        super(lineDefined, symbolTable);
     }
 
     @Override

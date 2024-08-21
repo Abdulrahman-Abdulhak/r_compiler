@@ -26,38 +26,41 @@ public class ObjectDestructuringVisitor extends GeneralVisitor<ObjectDestructuri
 
     @Override
     public ObjectDestructuring visitObjectDestructuring(ReactParser.ObjectDestructuringContext ctx) {
-        var wholeDestruct = new ObjectDestructuring(SymbolTableUtil.getLine(ctx));
+        var wholeDestruct = new ObjectDestructuring(SymbolTableUtil.getLine(ctx), symbolTable);
 
         for(var objVarCtx : ctx.destructuredObjVar()) {
             DestructuredObjVar destructuredVar;
             boolean haveOriginalName = objVarCtx.objPropName() != null;
             boolean haveDefaultVal = objVarCtx.expression() != null;
 
-            var validName = VisitorUtil.create(objVarCtx.validName());
+            var validName = VisitorUtil.create(objVarCtx.validName(), symbolTable);
 
             if(haveDefaultVal) {
                 var exp = new ExpressionVisitor(symbolTable, errors).visit(objVarCtx.expression());
                 if(haveOriginalName)
                     destructuredVar = new DestructuredObjVar(
-                            objVarCtx.objPropName().getText(),
-                            validName,
-                            exp,
-                            SymbolTableUtil.getLine(objVarCtx.objPropName())
+                        objVarCtx.objPropName().getText(),
+                        validName,
+                        exp,
+                        SymbolTableUtil.getLine(objVarCtx.objPropName()),
+                        symbolTable
                     );
                 else
                     destructuredVar = new DestructuredObjVar(
-                            validName,
-                            exp,
-                            SymbolTableUtil.getLine(objVarCtx.validName())
+                        validName,
+                        exp,
+                        SymbolTableUtil.getLine(objVarCtx.validName()),
+                        symbolTable
                     );
             } else if (haveOriginalName)
                 destructuredVar = new DestructuredObjVar(
-                        objVarCtx.objPropName().getText(),
-                        validName,
-                        SymbolTableUtil.getLine(objVarCtx.objPropName())
+                    objVarCtx.objPropName().getText(),
+                    validName,
+                    SymbolTableUtil.getLine(objVarCtx.objPropName()),
+                    symbolTable
                 );
             else
-                destructuredVar = new DestructuredObjVar(validName, SymbolTableUtil.getLine(objVarCtx.validName()));
+                destructuredVar = new DestructuredObjVar(validName, SymbolTableUtil.getLine(objVarCtx.validName()), symbolTable);
 
             wholeDestruct.addVar(destructuredVar);
 

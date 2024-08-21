@@ -1,11 +1,13 @@
 package ast;
 
+import symbolTable.SymbolTable;
+
 import java.util.List;
 import java.util.stream.Stream;
 
 public class Assignment extends LeftRightOperation {
-    public Assignment(Expression assignable, String sign, Expression exp, int lineDefined) {
-        super(assignable, sign, exp, lineDefined);
+    public Assignment(Expression assignable, String sign, Expression exp, int lineDefined, SymbolTable symbolTable) {
+        super(assignable, sign, exp, lineDefined, symbolTable);
     }
 
     @Override

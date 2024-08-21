@@ -14,7 +14,7 @@ public class TemplateLiteralVisitor extends GeneralVisitor<TemplateLiteral> {
 
     @Override
     public TemplateLiteral visitTemplateLiteral(ReactParser.TemplateLiteralContext ctx) {
-        var template = new TemplateLiteral(SymbolTableUtil.getLine(ctx));
+        var template = new TemplateLiteral(SymbolTableUtil.getLine(ctx), symbolTable);
 
         for (var content : ctx.templateLiteralContent())
             template.addContent(content.getText(), SymbolTableUtil.getLine(content));

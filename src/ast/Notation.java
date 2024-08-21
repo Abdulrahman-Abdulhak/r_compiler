@@ -1,12 +1,13 @@
 package ast;
 
 import Util.ToString;
+import symbolTable.SymbolTable;
 
 public abstract class Notation extends Node {
     boolean optional = false;
 
-    public Notation(int lineDefined) {
-        super(lineDefined);
+    public Notation(int lineDefined, SymbolTable symbolTable) {
+        super(lineDefined, symbolTable);
     }
 
     abstract String getType();

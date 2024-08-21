@@ -1,11 +1,14 @@
 package ast;
 
+import symbolTable.SymbolTable;
+
 import java.util.List;
 import java.util.stream.Stream;
 
 public class Pow extends LeftRightOperation {
-    public Pow(Expression left, Expression right, int lineDefined) {
-        super(left, right, lineDefined);
+    public Pow(Expression left, Expression right, int lineDefined, SymbolTable symbolTable) {
+        super(left, right, lineDefined, symbolTable);
+        sign = "**";
     }
 
     @Override

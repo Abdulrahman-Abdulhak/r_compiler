@@ -1,6 +1,8 @@
 package ast;
 
 import Util.ToString;
+import errors.messages.ErrorMessage;
+import symbolTable.SymbolTable;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -11,29 +13,29 @@ public class Case extends Node {
     List<Line> body;
     boolean haveDefault;
 
-    public Case(Expression value, int lineDefined) {
-        this(Collections.singletonList(value), lineDefined);
+    public Case(Expression value, int lineDefined, SymbolTable symbolTable) {
+        this(Collections.singletonList(value), lineDefined, symbolTable);
     }
-    public Case(List<Expression> values, int lineDefined) {
-        this(values, new ArrayList<>(), lineDefined);
+    public Case(List<Expression> values, int lineDefined, SymbolTable symbolTable) {
+        this(values, new ArrayList<>(), lineDefined, symbolTable);
     }
-    public Case(Expression value, boolean haveDefault, int lineDefined) {
-        this(Collections.singletonList(value), haveDefault, lineDefined);
+    public Case(Expression value, boolean haveDefault, int lineDefined, SymbolTable symbolTable) {
+        this(Collections.singletonList(value), haveDefault, lineDefined, symbolTable);
     }
-    public Case(List<Expression> values, boolean haveDefault, int lineDefined) {
-        this(values, new ArrayList<>(), haveDefault, lineDefined);
+    public Case(List<Expression> values, boolean haveDefault, int lineDefined, SymbolTable symbolTable) {
+        this(values, new ArrayList<>(), haveDefault, lineDefined, symbolTable);
     }
-    public Case(Expression value, List<Line> body, int lineDefined) {
-        this(Collections.singletonList(value), body, lineDefined);
+    public Case(Expression value, List<Line> body, int lineDefined, SymbolTable symbolTable) {
+        this(Collections.singletonList(value), body, lineDefined, symbolTable);
     }
-    public Case(List<Expression> values, List<Line> body, int lineDefined) {
-        this(values, body, false, lineDefined);
+    public Case(List<Expression> values, List<Line> body, int lineDefined, SymbolTable symbolTable) {
+        this(values, body, false, lineDefined, symbolTable);
     }
-    public Case(Expression value, List<Line> body, boolean haveDefault, int lineDefined) {
-        this(Collections.singletonList(value), body, haveDefault, lineDefined);
+    public Case(Expression value, List<Line> body, boolean haveDefault, int lineDefined, SymbolTable symbolTable) {
+        this(Collections.singletonList(value), body, haveDefault, lineDefined, symbolTable);
     }
-    public Case(List<Expression> values, List<Line> body, boolean haveDefault, int lineDefined) {
-        super(lineDefined);
+    public Case(List<Expression> values, List<Line> body, boolean haveDefault, int lineDefined, SymbolTable symbolTable) {
+        super(lineDefined, symbolTable);
         this.values = values;
         this.body = body;
         this.haveDefault = haveDefault;
@@ -77,6 +79,20 @@ public class Case extends Node {
     }
 
     @Override
+    public ErrorMessage errorMessage() {
+        var errorValues = values.stream().filter(Node::errorCheck).toList();
+        var errorValue = errorValues.isEmpty() ? null : errorValues.getFirst();
+
+        if(errorValue == null) return null;
+        return errorValue.errorMessage();
+    }
+
+    @Override
+    public boolean errorCheck() {
+        return values.stream().anyMatch(Node::errorCheck);
+    }
+
+    @Override
     public String nodeName() {
         return "Case";
     }
@@ -87,5 +103,39 @@ public class Case extends Node {
         children.addAll(body);
 
         return children;
+    }
+
+    private String casesGenerate() {
+        if(values == null || values.isEmpty()) return "";
+
+        var str = new StringBuilder();
+
+        for (var value : values) {
+            str.append("case ");
+            str.append(value.generate());
+            str.append(": ");
+        }
+
+        return str.toString();
+    }
+    private String linesGenerate() {
+        if(body == null || body.isEmpty()) return "";
+
+        var str = new StringBuilder();
+
+        for (var line : body) {
+            var generatedLine = line.generate();
+            str.append(generatedLine);
+            str.append(generatedLine.endsWith(";") ? "" : ";");
+        }
+
+        return str.toString();
+    }
+
+    @Override
+    public String generate() {
+        var default_ = haveDefault ? "default: " : "";
+
+        return default_ + casesGenerate() + linesGenerate();
     }
 }

@@ -1,6 +1,8 @@
 package ast;
 
 import Util.ToString;
+import errors.messages.ErrorMessage;
+import symbolTable.SymbolTable;
 
 import java.util.List;
 import java.util.stream.Stream;
@@ -10,13 +12,13 @@ public class FunctionCall extends Expression {
     TemplateLiteral templateLiteral;
     Expression nameSpace;
 
-    public FunctionCall(Expression functionNameSpace, Param param, int lineDefined) {
-        super(lineDefined);
+    public FunctionCall(Expression functionNameSpace, Param param, int lineDefined, SymbolTable symbolTable) {
+        super(lineDefined, symbolTable);
         nameSpace = functionNameSpace;
         this.param = param;
     }
-    public FunctionCall(Expression functionNameSpace, TemplateLiteral param, int lineDefined) {
-        super(lineDefined);
+    public FunctionCall(Expression functionNameSpace, TemplateLiteral param, int lineDefined, SymbolTable symbolTable) {
+        super(lineDefined, symbolTable);
         nameSpace = functionNameSpace;
         templateLiteral = param;
     }
@@ -36,6 +38,17 @@ public class FunctionCall extends Expression {
     }
 
     @Override
+    public ErrorMessage errorMessage() {
+        if(nameSpace.errorCheck()) return nameSpace.errorMessage();
+        return param.errorMessage();
+    }
+
+    @Override
+    public boolean errorCheck() {
+        return nameSpace.errorCheck() || param.errorCheck();
+    }
+
+    @Override
     public String nodeName() {
         return "Function Call";
     }
@@ -43,5 +56,10 @@ public class FunctionCall extends Expression {
     @Override
     public List<Node> childNodes() {
         return Stream.of(nameSpace, param, templateLiteral).toList();
+    }
+
+    @Override
+    public String generate() {
+        return nameSpace.generate() + (param != null ? param.generate() : templateLiteral.generate());
     }
 }

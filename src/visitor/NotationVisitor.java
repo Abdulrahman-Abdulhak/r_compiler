@@ -19,18 +19,20 @@ public class NotationVisitor extends GeneralVisitor<Notation> {
     @Override
     public DotNotation visitDotNotation(ReactParser.DotNotationContext ctx) {
         return new DotNotation(
-                new ValidName(ctx.allPossibleWords().getText(), SymbolTableUtil.getLine(ctx.allPossibleWords())),
-                ctx.OPTIONAL_CHAINING_OP() != null,
-                SymbolTableUtil.getLine(ctx)
+            new ValidName(ctx.allPossibleWords().getText(), SymbolTableUtil.getLine(ctx.allPossibleWords()), symbolTable),
+            ctx.OPTIONAL_CHAINING_OP() != null,
+            SymbolTableUtil.getLine(ctx),
+            symbolTable
         );
     }
     
     @Override
     public Notation visitBracketNotation(ReactParser.BracketNotationContext ctx) {
         return new BracketNotation(
-                new ExpressionVisitor(symbolTable, errors).visit(ctx.expression()),
-                ctx.OPTIONAL_CHAINING_OP() != null,
-                SymbolTableUtil.getLine(ctx)
+            new ExpressionVisitor(symbolTable, errors).visit(ctx.expression()),
+            ctx.OPTIONAL_CHAINING_OP() != null,
+            SymbolTableUtil.getLine(ctx),
+            symbolTable
         );
     }
 }

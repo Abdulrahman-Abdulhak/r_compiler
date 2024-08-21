@@ -16,17 +16,17 @@ public class ObjectPropVisitor extends GeneralVisitor<ObjectPropDefine> {
     @Override
     public ObjectPropDefine visitNormalPropDefine(ReactParser.NormalPropDefineContext ctx) {
         var propName = ctx.objPropName();
-        var exp = new ExpressionVisitor(symbolTable, errors).visit(propName.getChild(2));
+        var exp = new ExpressionVisitor(symbolTable, errors).visit(ctx.expression());
 
         var str = propName.STRING();
-        if(str != null) return new ObjectPropDefine(str.getText(), exp, SymbolTableUtil.getLine(str));
+        if(str != null) return new ObjectPropDefine(str.getText(), exp, SymbolTableUtil.getLine(str), symbolTable);
 
         var num = propName.num();
-        if(num != null) return new ObjectPropDefine(Integer.parseInt(num.getText()), exp, SymbolTableUtil.getLine(num));
+        if(num != null) return new ObjectPropDefine(Integer.parseInt(num.getText()), exp, SymbolTableUtil.getLine(num), symbolTable);
 
         var validNameContext = propName.validName();
-        var validName = new ValidName(validNameContext.getText(), SymbolTableUtil.getLine(validNameContext));
-        return new ObjectPropDefine(validName, exp, SymbolTableUtil.getLine(ctx));
+        var validName = new ValidName(validNameContext.getText(), SymbolTableUtil.getLine(validNameContext), symbolTable);
+        return new ObjectPropDefine(validName, exp, SymbolTableUtil.getLine(ctx), symbolTable);
     }
 
     @Override
@@ -34,8 +34,9 @@ public class ObjectPropVisitor extends GeneralVisitor<ObjectPropDefine> {
         var validNameCtx = ctx.validName();
 
         return new ObjectPropDefine(
-            new ValidName(validNameCtx.getText(), SymbolTableUtil.getLine(validNameCtx)),
-            SymbolTableUtil.getLine(ctx)
+            new ValidName(validNameCtx.getText(), SymbolTableUtil.getLine(validNameCtx), symbolTable),
+            SymbolTableUtil.getLine(ctx),
+            symbolTable
         );
     }
 
@@ -46,13 +47,14 @@ public class ObjectPropVisitor extends GeneralVisitor<ObjectPropDefine> {
         var methodName = methodCtx.validName().getText();
         var methodScope = new SymbolTable("method " + methodName);
         var method = new Method(
-            new ValidName(methodName, SymbolTableUtil.getLine(methodCtx.validName())),
+            new ValidName(methodName, SymbolTableUtil.getLine(methodCtx.validName()), symbolTable),
             new ArgsVisitor(methodScope, errors).visitArgs(methodCtx.args()),
             new BlockVisitor(methodScope, errors).visitFunctionBody(methodCtx.functionBody()),
-            SymbolTableUtil.getLine(methodCtx)
+            SymbolTableUtil.getLine(methodCtx),
+            symbolTable
         );
 
-        return new ObjectPropDefine(method, SymbolTableUtil.getLine(ctx));
+        return new ObjectPropDefine(method, SymbolTableUtil.getLine(ctx), symbolTable);
     }
 
     @Override
@@ -64,7 +66,8 @@ public class ObjectPropVisitor extends GeneralVisitor<ObjectPropDefine> {
         return new ObjectPropDefine(
             expVisitor.visit(exp1),
             expVisitor.visit(exp2),
-            SymbolTableUtil.getLine(ctx)
+            SymbolTableUtil.getLine(ctx),
+            symbolTable
         );
     }
 
@@ -73,7 +76,8 @@ public class ObjectPropVisitor extends GeneralVisitor<ObjectPropDefine> {
         var exp = ctx.expression();
         return new ObjectPropDefine(
             new ExpressionVisitor(symbolTable, errors).visit(exp),
-            SymbolTableUtil.getLine(ctx)
+            SymbolTableUtil.getLine(ctx),
+            symbolTable
         );
     }
 }

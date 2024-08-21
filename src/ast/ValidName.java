@@ -1,12 +1,15 @@
 package ast;
 
+import errors.messages.ErrorMessage;
+import symbolTable.SymbolTable;
+
 import java.util.List;
 
 public class ValidName extends Expression {
     String identifier;
 
-    public ValidName(String id, int lineDefined) {
-        super(lineDefined);
+    public ValidName(String id, int lineDefined, SymbolTable symbolTable) {
+        super(lineDefined, symbolTable);
         identifier = id;
     }
 
@@ -23,6 +26,16 @@ public class ValidName extends Expression {
     }
 
     @Override
+    public ErrorMessage errorMessage() {
+        return null;
+    }
+
+    @Override
+    public boolean errorCheck() {
+        return false;
+    }
+
+    @Override
     public String nodeName() {
         return "Variable";
     }
@@ -30,5 +43,10 @@ public class ValidName extends Expression {
     @Override
     public List<Node> childNodes() {
         return null;
+    }
+
+    @Override
+    public String generate() {
+        return identifier;
     }
 }
